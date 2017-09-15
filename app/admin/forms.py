@@ -14,3 +14,14 @@ class CreatePostForm(form.Form):
 
 class EditPostForm(CreatePostForm):
     id = fields.HiddenField()
+
+class CreatePageForm(form.Form):
+    title = fields.StringField('Title', validators=[validators.required()])
+    html = fields.StringField('Text', widget=TextArea(), validators=[validators.required()])
+    published = fields.BooleanField()
+    submit = fields.SubmitField('Submit')
+    history = fields.StringField('History', widget=TextArea())
+
+class EditPageForm(CreatePageForm):
+	id = fields.HiddenField()
+		

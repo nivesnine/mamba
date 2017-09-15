@@ -59,3 +59,8 @@ db.create_all()
 def inject_now():
     return {'now': datetime.utcnow()}
 
+
+from app.admin.models import Page
+@application.context_processor
+def insert_pages():
+    return {'pages': Page.get_pages()}
