@@ -1,5 +1,4 @@
 # Flask Blog
-### Inspired by @m1yag1 https://github.com/m1yag1
 
 1. Clone repo
 2. Create virtual environment
@@ -9,8 +8,9 @@
 6. Run init_db.py
 7. Run / Server wsgi.py app
 
-### To Do
+#### To Do
 
+- [ ] Add better instructions to README file
 - [ ] Add post information to blog posts (auther, datetime, etc)
 - [ ] Add css / js sections to page creation
 - [ ] Add WYSIWYG editor to page creation
@@ -29,3 +29,6 @@
 - [ ] Add HTMLmin
 - [ ] Add dynamic form creation
 - [ ] Add menu creator
+
+##### Inspired by @m1yag1 https://github.com/m1yag1
+##### for sharing his single file Flask blog app and convincing me to finally start this project
