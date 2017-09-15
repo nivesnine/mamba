@@ -73,7 +73,7 @@ def create_page():
         page = Page()
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = "{} created at {}".format(str(login.current_user.email), datetime.now())
+        page.history = "{} created at {}".format(str(login.current_user.email), datetime.now(.strftime('%m-%d-%Y %I:%M %p')))
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
