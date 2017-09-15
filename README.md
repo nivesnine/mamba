@@ -9,3 +9,19 @@
 6. Run init_db.py
 7. Run / Server wsgi.py app
 
+### To Do
+
+- [ ] Add post information to blog posts (auther, datetime, etc)
+- [ ] Add css / js sections to page creation
+- [ ] Add WYSIWYG editor to page creation
+- [ ] Add seperate base/layout for admin pages
+- [ ] Add user managment tools
+- [ ] Add role creation to user managment tools
+- [ ] Add media library concept
+- [ ] Allow image insertion into posts
+- [ ] Make page editor 1000x better
+- [ ] Create installer
+- [ ] Create How To docs
+- [ ] Make templates themeable
+- [ ] Create plugin system
+- [ ] Stay Organized!
