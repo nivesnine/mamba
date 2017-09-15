@@ -18,6 +18,7 @@
 - [ ] Add user managment tools
 - [ ] Add role creation to user managment tools
 - [ ] Add media library concept
+- [ ] Add comments
 - [ ] Allow image insertion into posts
 - [ ] Make page editor 1000x better
 - [ ] Create installer
@@ -25,3 +26,4 @@
 - [ ] Make templates themeable
 - [ ] Create plugin system
 - [ ] Stay Organized!
+
