@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for
-from app import db
+from app import application, db
 from app.admin.models import Post, Page
 
 site = Blueprint('site', __name__, url_prefix='')
@@ -13,9 +13,11 @@ def index():
 		return render_template("site/page.html", page=home)
 	return redirect(url_for('site.blog'))
 
-@site.route('/blog', methods=['GET'])
-def blog():
-    posts = Post.query.filter(Post.published==1).all()
+@site.route('/blog', defaults={'page': 1}, methods=['GET'])
+@site.route('/blog/<int:page>', methods=['GET'])
+def blog(page):
+    per_page = application.config["BLOG_PER_PAGE"]
+    posts = Post.query.filter(Post.published==1).order_by('id desc').paginate(page, per_page, error_out=False)
     return render_template("site/blog.html", posts=posts)
 
 @site.route('/<page>', methods=['GET'])

@@ -29,3 +29,4 @@ CSRF_SESSION_KEY = "<secret>"
 # Secret key for signing cookies
 SECRET_KEY = "<secret>"
 
+BLOG_PER_PAGE = 10

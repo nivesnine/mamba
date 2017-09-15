@@ -5,7 +5,7 @@
 
 <div class="ui one column grid text container">
     {% if posts %}
-      {% for post in posts %}
+      {% for post in posts.items %}
       <div class="column">
 	<div class="ui segments">
 	  <div class="ui segment">
@@ -19,6 +19,21 @@
 	</div>
       </div>
       {% endfor %}
+  <div class='column'>
+	{% if posts.has_next %}
+                <a class='ui mini button blue left floated' 
+			href="{{ url_for('site.blog', page=posts.next_num) }}">
+                        <i class='icon caret left'></i> Older
+                </a>
+        {% endif %}
+
+        {% if posts.has_prev %}
+                <a class='ui mini button blue right floated'
+                        href="{{ url_for('site.blog', page=posts.prev_num) }}">
+                        Newer <i class='icon caret right'></i>
+                </a>
+        {% endif %}
+  </div>
     {% else %}
      <div class="column">
       <p>No posts yet. Try again later</p>
