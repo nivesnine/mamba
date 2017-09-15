@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Blog Index{% endblock %}
+{% block content %}
+
+
+<div class="ui centered one column grid text container">
+  <div class="center aligned column">
+{% if posts %}
+    <table class="ui striped table">
+        <thead>
+            <tr>
+                <th>post id</th>
+                <th>title</th>
+                <th>text</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td><a href="{{ url_for('admin.edit_post', post_id=post.id) }}">{{ post.title }}</a></td>
+                <td>{{ post.text }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  {% else %}
+  <p> You don't have any posts </p>
+  {% endif %}
+  <a href="{{ url_for('admin.create_post') }}" class="ui button green">Create Post</a>
+  </div>
+</div>
+
+{% endblock %}
