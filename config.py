@@ -29,5 +29,3 @@ CSRF_SESSION_KEY = "<secret>"
 # Secret key for signing cookies
 SECRET_KEY = "<secret>"
 
-SECURITY_PASSWORD_HASH = 'bcrypt'
-SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_SALT', 'dev secret')
