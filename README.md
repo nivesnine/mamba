@@ -27,3 +27,5 @@
 - [ ] Create plugin system
 - [ ] Stay Organized!
 - [ ] Add HTMLmin
+- [ ] Add dynamic form creation
+- [ ] Add menu creator
