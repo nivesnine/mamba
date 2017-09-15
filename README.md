@@ -23,7 +23,7 @@
 - [ ] Make page editor 1000x better
 - [ ] Create installer
 - [ ] Create How To docs
-- [ ] Make templates themeable
+- [ ] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
 - [ ] Create plugin system
 - [ ] Stay Organized!
 
