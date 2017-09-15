@@ -26,4 +26,4 @@
 - [ ] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
 - [ ] Create plugin system
 - [ ] Stay Organized!
-
+- [ ] Add HTMLmin
