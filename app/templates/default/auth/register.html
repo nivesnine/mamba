@@ -1,6 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Login{% endblock %}
-
+{% extends "default/base.html" %}
+{% block title %}Register{% endblock %}
 {% block style %}
   <style type="text/css">
     body {
@@ -17,13 +16,11 @@
     }
   </style>
 {% endblock %}
-
 {% block content %}
-
 <div class="ui middle aligned center aligned grid m">
   <div class="column">
       <div class="content">
-             Log-in to your account
+             Sign up for an account!
       </div>
         <form class="ui form" method="POST" action="">
             <div class="ui stacked segment">
@@ -39,17 +36,17 @@
                 {{ form.password(placeholder="password") }}
               </div>
             </div>
-            <input type='submit' class="ui fluid large teal submit button" value="Login">
+            <input type='submit' class="ui fluid large teal submit button" value="Register">
             </div>
         </form>
-        <div class="ui message">
-          Need an account? <a href="{{ url_for('auth.registration_view') }}">Sign Up</a>
-        </div>
         {% if form.errors %}
         <div class='ui error message'>
             <h5>Please check information for errors</h5>
         </div>
         {% endif %}
+        <div class="ui message">
+          Have an account? <a href="{{ url_for('auth.login_view') }}">Sign In</a>
+        </div>
     </div>
 </div>
 

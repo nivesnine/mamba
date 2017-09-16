@@ -33,7 +33,7 @@ db = SQLAlchemy(application)
 # error handling
 @application.errorhandler(404)
 def page_not_found(e):
-    return render_template("error_template.html", status_code=404), 404
+    return render_template("error/error_template.html", status_code=404), 404
 
 
 @application.errorhandler(500)

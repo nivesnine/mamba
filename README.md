@@ -14,7 +14,7 @@
 - [ ] Add post information to blog posts (author, datetime, etc)
 - [ ] Add css / js sections to page creation
 - [ ] Add WYSIWYG editor to page creation
-- [ ] Add seperate base/layout for admin pages
+- [x] Add seperate base/layout for admin pages
 - [ ] Add user managment tools
 - [ ] Add role creation to user managment tools
 - [ ] Add media library concept
@@ -23,7 +23,7 @@
 - [ ] Make page editor 1000x better
 - [ ] Create installer
 - [ ] Create How To docs
-- [ ] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
+- [x] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
 - [ ] Create plugin system
 - [ ] Stay Organized!
 - [ ] Add HTMLmin

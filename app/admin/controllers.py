@@ -12,6 +12,10 @@ import translitcodec
 import difflib
 from datetime import datetime
 import re
+from app.site.models import Templates
+
+active_template = Templates.get_active('admin')
+template_path = active_template.slug
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
@@ -24,7 +28,7 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @check_admin
 def blog_list():
     posts = Post.all()
-    return render_template("admin/blog/list.html", posts=posts)
+    return render_template(template_path + "/admin/blog/list.html", posts=posts)
 
 
 @admin.route('/blog/create', methods=['GET', 'POST'])
@@ -38,7 +42,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    return render_template("admin/blog/post.html", form=form)
+    return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
 @admin.route('/blog/edit/<int:post_id>', methods=['GET', 'POST'])
@@ -52,7 +56,7 @@ def edit_post(post_id):
         db.session.merge(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    return render_template("admin/blog/post.html", form=form)
+    return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
 # Create the page routes
@@ -61,7 +65,7 @@ def edit_post(post_id):
 @check_admin
 def page_list():
     pages = Page.all()
-    return render_template("admin/pages/list.html", pages=pages)
+    return render_template(template_path + "/admin/pages/list.html", pages=pages)
 
 
 @admin.route('/page/create', methods=['GET', 'POST'])
@@ -73,11 +77,11 @@ def create_page():
         page = Page()
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = "{} created at {}".format(str(login.current_user.email), datetime.now(.strftime('%m-%d-%Y %I:%M %p')))
+        page.history = "{} created at {}".format(str(login.current_user.email), datetime.now().strftime('%m-%d-%Y %I:%M %p'))
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    return render_template("admin/pages/page.html", form=form)
+    return render_template(template_path + "/admin/pages/page.html", form=form)
 
 
 @admin.route('/page/edit/<int:page_id>', methods=['GET', 'POST'])
@@ -98,7 +102,7 @@ def edit_page(page_id):
         db.session.merge(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    return render_template("admin/pages/page.html", form=form)
+    return render_template(template_path + "/admin/pages/page.html", form=form)
 
 def slugify(text, delim=u'-'):
     """Generates an ASCII-only slug."""

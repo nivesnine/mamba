@@ -9,6 +9,10 @@ import flask_login as login
 from app import db
 from flask_security import SQLAlchemyUserDatastore
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.site.models import Templates
+
+active_template = Templates.get_active('auth')
+template_path = active_template.slug
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -34,7 +38,7 @@ def login_view():
 
     if login.current_user.is_authenticated:
         return redirect(url_for('site.index'))
-    return render_template('auth/login.html', form=form)
+    return render_template(template_path + '/auth/login.html', form=form)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -60,7 +64,7 @@ def registration_view():
             login.login_user(user)
 
             return redirect(url_for('auth.index'))
-        return render_template('auth/register.html', form=form)
+        return render_template(template_path + '/auth/register.html', form=form)
 
 
 @auth.route('/logout')

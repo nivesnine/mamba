@@ -1,10 +1,10 @@
-{% extends "base.html" %}
-{% block title%}Opps!{% endblock %}
+{% extends "error/base.html" %}
+{% block title%}Oops!{% endblock %}
 {% block content %}
 
-<div class="ui stackable grid container m">
-   <div class='column m'>
-    <div class='ui center aligned m'>
+<div class="ui stackable grid container">
+   <div class='column'>
+    <div class='ui center aligned'>
      	<div id="error">
 		    <h1> Sorry, there was an error</h1>
 		    <p>Error:# {{ status_code }}</p>

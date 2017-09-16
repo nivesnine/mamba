@@ -1,6 +1,7 @@
 from app import db
 from app.auth.models import User, Role
 from app.admin.models import Post, Page
+from app.site.models import Templates
 from flask_security import SQLAlchemyUserDatastore
 from werkzeug.security import generate_password_hash
 
@@ -36,3 +37,27 @@ page.published = 1
 db.session.add(page)
 db.session.commit()
 
+
+template = Templates()
+template.name = 'Default Site'
+template.slug = 'default'
+template.type = 'site'
+template.active = 1
+db.session.add(template)
+db.session.commit()
+
+template = Templates()
+template.name = 'Default Auth'
+template.slug = 'default'
+template.type = 'auth'
+template.active = 1
+db.session.add(template)
+db.session.commit()
+
+template = Templates()
+template.name = 'Default Admin'
+template.slug = 'default'
+template.type = 'admin'
+template.active = 1
+db.session.add(template)
+db.session.commit()
