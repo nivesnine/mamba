@@ -1,5 +1,5 @@
 {% extends "default/base.html" %}
-{% block title %}Blog List{% endblock %}
+{% block title %}Roles{% endblock %}
 {% block content %}
 
 
@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ role.id }}</td>
                 <td><a href="{{ url_for('admin.edit_role', role_id=role.id) }}">{{ role.name }}</a></td>
-                <td>{{ role.descripion }}</td>
+                <td>{{ role.description }}</td>
             </tr>
         {% endfor %}
         </tbody>

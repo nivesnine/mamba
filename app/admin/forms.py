@@ -1,5 +1,7 @@
 from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
+from app.auth.models import Role
+from wtforms_alchemy import QuerySelectMultipleField
 
 # Blog post creation form
 class CreatePostForm(form.Form):
@@ -25,10 +27,17 @@ class CreatePageForm(form.Form):
 class EditPageForm(CreatePageForm):
 	id = fields.HiddenField()
 
+def roles():
+    return Role.all()
+
 class CreateUserForm(form.Form):
-    username = fields.StringField('Username', validators=[validators.required()])
+    display_name = fields.StringField('Display Name', validators=[validators.required()])
     email = fields.StringField('Email', validators=[validators.required()])
     password = fields.StringField('Password')
+
+    roles = QuerySelectMultipleField('User Roles', query_factory=roles,
+                                allow_blank=False)
+    
     active = fields.BooleanField()
     submit = fields.SubmitField('Submit')
 
@@ -36,9 +45,9 @@ class EditUserForm(CreateUserForm):
     id = fields.HiddenField()
 
 class CreateRoleForm(form.Form):
-    name = fields.StringField('Username', validators=[validators.required()])
-    description = fields.StringField('Email', validators=[validators.required()])
+    name = fields.StringField('Name', validators=[validators.required()])
+    description = fields.StringField('Description', validators=[validators.required()])
     submit = fields.SubmitField('Submit')
 
-class EditRoleForm(CreateUserForm):
+class EditRoleForm(CreateRoleForm):
     id = fields.HiddenField()

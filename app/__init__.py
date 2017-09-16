@@ -20,6 +20,16 @@ def check_admin(func):
         return func(*args, **kwargs)
     return decorated_function
 
+def has_role(role):
+    def decorator(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            if not login.current_user.has_role(role):
+                return redirect(url_for('site.index'))
+            return func(*args, **kwargs)
+        return decorated_function
+    return decorator
+    
 # Define the WSGI application object
 application = Flask(__name__)
 

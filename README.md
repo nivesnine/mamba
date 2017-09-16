@@ -15,8 +15,8 @@
 - [ ] Add css / js sections to page creation
 - [ ] Add WYSIWYG editor to page creation
 - [x] Add seperate base/layout for admin pages
-- [ ] Add user managment tools
-- [ ] Add role creation to user managment tools
+- [x] Add user managment tools
+- [x] Add role creation to user managment tools
 - [ ] Add media library concept
 - [ ] Add comments
 - [ ] Allow image insertion into posts

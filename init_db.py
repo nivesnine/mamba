@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
 user = User()
-user.username = 'admin'
+user.display_name = 'admin'
 user.email = 'admin@example.com'
 user.password = generate_password_hash('admin')
 
@@ -20,8 +20,14 @@ db.session.add(user)
 db.session.commit()
 
 role = Role()
-role.name = 'end_user'
-role.description = 'end user role'
+role.name = 'editor'
+role.description = 'can edit pages and posts'
+db.session.add(role)
+db.session.commit()
+
+role = Role()
+role.name = 'writer'
+role.description = 'can create pages and posts'
 db.session.add(role)
 db.session.commit()
 

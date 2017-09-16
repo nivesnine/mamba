@@ -15,6 +15,10 @@ class LoginForm(form.Form):
             self.errors[0] = 'Invalid user'
             return False
 
+        if not user.is_active():
+            self.errors[0] = 'Invalid user'
+            return False
+
         # we're comparing the plaintext pw with the the hash from the db
         if not check_password_hash(user.password, self.password.data):
             self.errors[0] = 'Invalid user'
