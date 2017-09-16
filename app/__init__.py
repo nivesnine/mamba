@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from flask_htmlmin import HTMLMIN
 from functools import wraps
 import flask_login as login
 
@@ -35,6 +36,8 @@ application = Flask(__name__)
 
 # Configurations
 application.config.from_object('config')
+
+HTMLMIN(application)
 
 # Define the database object which is imported
 # by modules and controllers

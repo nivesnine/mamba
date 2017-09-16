@@ -19,7 +19,9 @@ class EditPostForm(CreatePostForm):
 
 class CreatePageForm(form.Form):
     title = fields.StringField('Title', validators=[validators.required()])
-    html = fields.StringField('Text', widget=TextArea(), validators=[validators.required()])
+    html = fields.StringField('HTML content', widget=TextArea(), validators=[validators.required()])
+    css = fields.StringField('Custom CSS', widget=TextArea())
+    js = fields.StringField('Custom JavaScript', widget=TextArea())
     published = fields.BooleanField()
     submit = fields.SubmitField('Submit')
     history = fields.StringField('History', widget=TextArea())

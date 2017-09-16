@@ -12,7 +12,7 @@
 
 - [ ] Add better instructions to README file
 - [ ] Add post information to blog posts (author, datetime, etc)
-- [ ] Add css / js sections to page creation
+- [x] Add css / js sections to page creation
 - [ ] Add WYSIWYG editor to page creation
 - [x] Add seperate base/layout for admin pages
 - [x] Add user managment tools
@@ -26,7 +26,7 @@
 - [x] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
 - [ ] Create plugin system
 - [ ] Stay Organized!
-- [ ] Add HTMLmin
+- [x] Add HTMLmin
 - [ ] Add dynamic form creation
 - [ ] Add menu creator
 

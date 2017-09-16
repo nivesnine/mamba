@@ -31,3 +31,5 @@ CSRF_SESSION_KEY = "<secret>"
 SECRET_KEY = "<secret>"
 
 BLOG_PER_PAGE = 10
+
+MINIFY_PAGE = True
