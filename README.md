@@ -11,7 +11,7 @@
 #### To Do
 
 - [ ] Add better instructions to README file
-- [ ] Add post information to blog posts (auther, datetime, etc)
+- [ ] Add post information to blog posts (author, datetime, etc)
 - [ ] Add css / js sections to page creation
 - [ ] Add WYSIWYG editor to page creation
 - [ ] Add seperate base/layout for admin pages
