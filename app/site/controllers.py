@@ -3,17 +3,15 @@ from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for
 from app import application, db
 from app.admin.models import Post, Page
-from app.site.models import Templates
+from app.site.models import Themes
 
 site = Blueprint('site', __name__, url_prefix='')
-
-active_template = Templates.get_active('site')
-template_path = active_template.slug
 
 @site.route('/', methods=['GET'])
 def index():
 	home = Page.get_home_page()
 	if home:
+		template_path = Themes.get_active('site')
 		return render_template(template_path + "/site/page.html", page=home)
 	return redirect(url_for('site.blog'))
 
@@ -22,8 +20,10 @@ def index():
 def blog(page):
     per_page = application.config["BLOG_PER_PAGE"]
     posts = Post.query.filter(Post.published==1).order_by('id desc').paginate(page, per_page, error_out=False)
+    template_path = Themes.get_active('site')
     return render_template(template_path + "/site/blog.html", posts=posts)
 
 @site.route('/<page>', methods=['GET'])
 def page(page):
+	template_path = Themes.get_active('site')
 	return render_template(template_path + "/site/page.html", page=Page.get_page(page))

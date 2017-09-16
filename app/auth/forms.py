@@ -8,24 +8,30 @@ class LoginForm(form.Form):
     email = fields.StringField(validators=[validators.required(), validators.length(max=80)])
     password = fields.PasswordField(validators=[validators.required(), validators.length(max=256)])
 
-    def validate_login(self, form):
+    def validate_login(self):
         user = self.get_user()
 
         if user is None:
-            raise validators.ValidationError('Invalid user')
+            self.errors[0] = 'Invalid user'
+            return False
 
         # we're comparing the plaintext pw with the the hash from the db
         if not check_password_hash(user.password, self.password.data):
-            raise validators.ValidationError('Invalid password')
+            self.errors[0] = 'Invalid user'
+            return False
+
+        return user
 
     def get_user(self):
-        return db.session.query(User).filter_by(email=self.email.data).first()
+        return db.session.query(User).filter(User.email==self.email.data).first()
 
 
 class RegistrationForm(form.Form):
     email = fields.StringField(validators=[validators.length(max=120)])
     password = fields.PasswordField(validators=[validators.required(), validators.length(max=256)])
 
-    def validate_login(self):
+    def validate_registration(self):
         if db.session.query(User).filter_by(email=self.email.data).count() > 0:
-            raise validators.ValidationError('Duplicate username')
+            self.errors[0] = 'Invalid user'
+            return False
+        return True

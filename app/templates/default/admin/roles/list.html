@@ -1,0 +1,34 @@
+{% extends "default/base.html" %}
+{% block title %}Blog List{% endblock %}
+{% block content %}
+
+
+<div class="ui centered one column grid text container">
+  <div class="center aligned column">
+{% if roles %}
+    <table class="ui striped table">
+        <thead>
+            <tr>
+                <th>role id</th>
+                <th>name</th>
+                <th>description</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for role in roles %}
+            <tr>
+                <td>{{ role.id }}</td>
+                <td><a href="{{ url_for('admin.edit_role', role_id=role.id) }}">{{ role.name }}</a></td>
+                <td>{{ role.descripion }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  {% else %}
+  <p> You don't have any roles </p>
+  {% endif %}
+  <a href="{{ url_for('admin.create_role') }}" class="ui button green">Create Role</a>
+  </div>
+</div>
+
+{% endblock %}

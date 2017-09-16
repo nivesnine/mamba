@@ -24,13 +24,21 @@ class Role(RoleMixin, db.Model):
         return (self.name != other and
                 self.name != getattr(other, 'name', None))
 
+    def get_role(name):
+        return Role.query.filter_by(name=name).first()
+
+    @classmethod
+    def all(cls):
+        return db.session.query(cls).all()
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), unique=True)
     email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(120))
+    password = db.Column(db.String(256))
     active = db.Column(db.Boolean(), default=1)
     registered_at = db.Column(db.DateTime(), default=db.func.current_timestamp())
     roles = db.relationship('Role', secondary=roles_users,
@@ -41,7 +49,7 @@ class User(UserMixin, db.Model):
         return True
 
     def is_active(self):
-        return True
+        return self.active
 
     def is_anonymous(self):
         return False
@@ -58,5 +66,9 @@ class User(UserMixin, db.Model):
     # Required for administrative interface
     def __unicode__(self):
         return self.username
+
+    @classmethod
+    def all(cls):
+        return db.session.query(cls).all()
 
 

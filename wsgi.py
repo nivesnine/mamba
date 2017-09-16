@@ -6,7 +6,7 @@ import os
 
 login_manager = LoginManager()
 login_manager.init_app(application)
-login_manager.login_view = 'login'
+login_manager.login_view = 'admin.login_view'
 
 # Create user loader function
 @login_manager.user_loader

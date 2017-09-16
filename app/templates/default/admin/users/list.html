@@ -1,0 +1,33 @@
+{% extends "default/base.html" %}
+{% block title %}User List{% endblock %}
+{% block content %}
+
+<div class="ui centered one column grid text container">
+  <div class="center aligned column">
+{% if users %}
+    <table class="ui striped table">
+        <thead>
+            <tr>
+                <th>user id</th>
+                <th>username</th>
+                <th>email</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td><a href="{{ url_for('admin.edit_user', user_id=user.id) }}">{{ user.username }}</a></td>
+                <td>{{ user.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  {% else %}
+  <p> You don't have any users </p>
+  {% endif %}
+  <a href="{{ url_for('admin.create_user') }}" class="ui button green">Create User</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -24,4 +24,21 @@ class CreatePageForm(form.Form):
 
 class EditPageForm(CreatePageForm):
 	id = fields.HiddenField()
-		
+
+class CreateUserForm(form.Form):
+    username = fields.StringField('Username', validators=[validators.required()])
+    email = fields.StringField('Email', validators=[validators.required()])
+    password = fields.StringField('Password')
+    active = fields.BooleanField()
+    submit = fields.SubmitField('Submit')
+
+class EditUserForm(CreateUserForm):
+    id = fields.HiddenField()
+
+class CreateRoleForm(form.Form):
+    name = fields.StringField('Username', validators=[validators.required()])
+    description = fields.StringField('Email', validators=[validators.required()])
+    submit = fields.SubmitField('Submit')
+
+class EditRoleForm(CreateUserForm):
+    id = fields.HiddenField()

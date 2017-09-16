@@ -2,20 +2,23 @@
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for
 from app import db
-from app.admin.forms import CreatePostForm, EditPostForm, CreatePageForm, EditPageForm
+from app.admin.forms import CreatePostForm, EditPostForm, \
+                            CreatePageForm, EditPageForm, \
+                            CreateUserForm, EditUserForm, \
+                            CreateRoleForm, EditRoleForm
 from app.admin.models import Post, Page
+from app.auth.models import User, Role, roles_users
+from app.site.models import Themes
 from flask_admin import helpers
 import flask_login as login
 from app import check_login, check_admin
+from werkzeug.security import generate_password_hash
 import codecs
 import translitcodec
 import difflib
 from datetime import datetime
 import re
-from app.site.models import Templates
-
-active_template = Templates.get_active('admin')
-template_path = active_template.slug
+from app.site.models import Themes
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
@@ -28,6 +31,7 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @check_admin
 def blog_list():
     posts = Post.all()
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/blog/list.html", posts=posts)
 
 
@@ -42,6 +46,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
@@ -56,6 +61,7 @@ def edit_post(post_id):
         db.session.merge(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
@@ -65,6 +71,7 @@ def edit_post(post_id):
 @check_admin
 def page_list():
     pages = Page.all()
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/list.html", pages=pages)
 
 
@@ -81,6 +88,7 @@ def create_page():
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/page.html", form=form)
 
 
@@ -102,7 +110,97 @@ def edit_page(page_id):
         db.session.merge(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
+    template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/page.html", form=form)
+
+# Create the user routes
+@admin.route('/user', methods=['GET'])
+@check_login
+@check_admin
+def user_list():
+    users = User.all()
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/users/list.html", users=users)
+
+
+@admin.route('/user/create', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def create_user():
+    form = CreateUserForm(request.form)
+    if helpers.validate_form_on_submit(form):
+        user = User()
+        form.populate_obj(user)
+        user.password = generate_password_hash(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('admin.user_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/users/user.html", form=form)
+
+
+@admin.route('/user/edit/<int:user_id>', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def edit_user(user_id):
+    user = User.query.get(user_id)
+    old_pass = user.password
+    user.password = None
+    form = EditUserForm(request.form, obj=user)
+    if helpers.validate_form_on_submit(form):
+        
+        form.populate_obj(user)
+
+        if user.password == '':
+            user.password = old_pass
+        else:
+            user.password = generate_password_hash(user.password)
+
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('admin.user_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/users/user.html", form=form)
+
+# Create the role routes
+@admin.route('/role', methods=['GET'])
+@check_login
+@check_admin
+def role_list():
+    roles = Role.all()
+    return render_template(template_path + "/admin/roles/list.html", roles=roles)
+
+@admin.route('/role/create', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def create_role():
+    form = CreateRoleForm(request.form)
+    if helpers.validate_form_on_submit(form):
+        user = User()
+        form.populate_obj(user)
+        user.password = generate_password_hash(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('admin.user_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/users/user.html", form=form)
+
+
+@admin.route('/role/edit/<int:role_id>', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def edit_role(role_id):
+    role = User.query.get(role_id)
+    form = EditRoleForm(request.form, obj=role)
+    form.password.data = None
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(role)
+        db.session.merge(role)
+        db.session.commit()
+        return redirect(url_for('admin.role_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/roles/role.html", form=form)
+
 
 def slugify(text, delim=u'-'):
     """Generates an ASCII-only slug."""

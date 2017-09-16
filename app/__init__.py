@@ -36,9 +36,9 @@ def page_not_found(e):
     return render_template("error/error_template.html", status_code=404), 404
 
 
-@application.errorhandler(500)
-def server_error(e):
-    return render_template("error_template.html", status_code=500), 500
+@application.errorhandler(405)
+def bad_request_error(e):
+    return render_template("error/error_template.html", status_code=405), 405
 
 
 # Import a module / component using its blueprint handler variable (mod_auth)
