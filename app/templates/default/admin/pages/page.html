@@ -11,6 +11,9 @@
             			{{ f(class='ui blue right floated button') }}
                 {% elif f.name == 'id' %}
                   {{ f }}
+                {% elif f.name == 'html' %}
+                  {{ f.label }}
+                  {{ f(class='form-control ckeditor')}}
                 {% else %}
             			{{ f.label }}
                   {{ f(placeholder=f.name.replace('_', ' ')) }}
@@ -20,5 +23,8 @@
     </form>
   </div>
 </div>
-
 {% endblock %}
+{% block script %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.0.1/ckeditor.js"></script>
+{% endblock %}
+
