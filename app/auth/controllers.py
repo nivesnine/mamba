@@ -48,9 +48,6 @@ def registration_view():
                 form.populate_obj(user)
                 user.password = generate_password_hash(form.password.data)
                 
-                end_user_role = Role.get_role('end_user')
-
-                user.roles.append(end_user_role)
                 db.session.add(user)
                 db.session.commit()
 

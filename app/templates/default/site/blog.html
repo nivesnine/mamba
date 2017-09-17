@@ -10,6 +10,15 @@
 	<div class="ui segments">
 	  <div class="ui segment">
 	    <h1 class="ui header">{{ post.title }}</h1>
+      {% for author in authors %}
+        {% if author.id == post.writen_by %}
+          <div class="ui blue ribbon label">
+            <i class="user icon"></i>
+              {{ author.display_name }}
+            <div class="detail">{{ post.date_created.strftime('%m/%d/%Y') }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
 	  </div>
 	  <div class="ui segments">
 	    <div class="ui piled segment">

@@ -9,6 +9,10 @@ class Post(db.Model):
     title = db.Column(db.String(100))
     text = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
+    date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
+                              onupdate=db.func.current_timestamp())
+    writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
 
     @classmethod
     def all(cls):
