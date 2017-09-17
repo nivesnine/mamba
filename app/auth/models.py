@@ -52,7 +52,8 @@ class User(UserMixin, db.Model):
     registered_at = db.Column(db.DateTime(), default=db.func.current_timestamp())
     roles = db.relationship('Role', secondary=roles_users,
                         backref=db.backref('users', lazy='dynamic'))
-    posts = db.relationship('Post', backref='users', lazy='dynamic')
+    posts = db.relationship('Post', backref='users', lazy='joined')
+    comments = db.relationship('PostComment', backref='users', lazy='joined')
 
     # Flask-Login integration
     def is_authenticated(self):

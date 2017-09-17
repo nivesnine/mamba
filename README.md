@@ -18,7 +18,7 @@
 - [x] Add user managment tools
 - [x] Add role creation to user managment tools
 - [ ] Add media library concept
-- [ ] Add comments
+- [x] Add comments
 - [x] Allow image insertion into posts
 - [ ] Create installer
 - [ ] Create How To docs

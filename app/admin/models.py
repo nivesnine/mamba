@@ -13,6 +13,7 @@ class Post(db.Model):
     date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
                               onupdate=db.func.current_timestamp())
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    comments = db.relationship('PostComment', backref='posts', lazy='joined')
 
     @classmethod
     def all(cls):

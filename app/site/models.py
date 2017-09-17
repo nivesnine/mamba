@@ -18,3 +18,15 @@ class Themes(db.Model):
     def all(cls):
         return db.session.query(cls).all()
 
+class PostComment(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    comment = db.Column(db.Text())
+    writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    post = db.Column(db.Integer(), db.ForeignKey('posts.id'))
+    date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
+
+    @classmethod
+    def all(cls):
+        return db.session.query(cls).all()
