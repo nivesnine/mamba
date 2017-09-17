@@ -27,7 +27,9 @@
   {% else %}
   <p> You don't have any posts </p>
   {% endif %}
+  {% if current_user.has_role('writer') %}
   <a href="{{ url_for('admin.create_post') }}" class="ui button green">Create Post</a>
+  {% endif %}
   </div>
 </div>
 

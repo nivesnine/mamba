@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
         return True if 'admin' in self.roles else False
 
     def has_role(self, role):
-        return True if 'admin' or role in self.roles else False
+        return True if role in self.roles else False
 
     # Required for administrative interface
     def __unicode__(self):
