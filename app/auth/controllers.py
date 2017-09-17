@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  redirect, url_for
+                  redirect, url_for, abort
 from app.auth.forms import LoginForm, RegistrationForm
 from app.auth.models import User, Role, roles_users
 from flask_admin.contrib import sqla
@@ -32,8 +32,14 @@ def login_view():
         if user:
             login.login_user(user)
 
+            user.last_login_ip = str(request.remote_addr)
+            db.session.merge(user)
+            db.session.commit()
+
             if login.current_user.is_authenticated:
                 return redirect(url_for('site.index'))
+            else:
+                abort(404)
     template_path = Themes.get_active('auth')
     return render_template(template_path + '/auth/login.html', form=form)
 
@@ -47,7 +53,7 @@ def registration_view():
 
                 form.populate_obj(user)
                 user.password = generate_password_hash(form.password.data)
-                
+                user.registered_ip = str(request.remote_addr)
                 db.session.add(user)
                 db.session.commit()
 

@@ -5,8 +5,8 @@ from app.auth.models import User
 
 
 class LoginForm(form.Form):
-    email = fields.StringField(validators=[validators.required(), validators.length(max=80)])
-    password = fields.PasswordField(validators=[validators.required(), validators.length(max=256)])
+    email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
+    password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
 
     def validate_login(self):
         user = self.get_user()
@@ -32,7 +32,7 @@ class LoginForm(form.Form):
 
 class RegistrationForm(form.Form):
     email = fields.StringField(validators=[validators.length(max=120)])
-    password = fields.PasswordField(validators=[validators.required(), validators.length(max=256)])
+    password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
 
     def validate_registration(self):
         if db.session.query(User).filter_by(email=self.email.data).count() > 0:

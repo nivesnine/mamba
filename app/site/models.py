@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy import and_
+from app.auth.models import User
 
 class Themes(db.Model):
     __tablename__ = 'themes'
@@ -26,6 +27,18 @@ class PostComment(db.Model):
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     post = db.Column(db.Integer(), db.ForeignKey('posts.id'))
     date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
+    published = db.Column(db.Boolean(), default=0)
+    viewed = db.Column(db.Boolean(), default=0)
+
+    def get_author(self):
+        if self.writen_by:
+            user = User.query.get(self.writen_by)
+            if user:
+                return user.get_display_name()
+        return 'Unknown'
+
+    def get_new_comments():
+        return PostComment.query.filter_by(viewed = 0).count()
 
     @classmethod
     def all(cls):

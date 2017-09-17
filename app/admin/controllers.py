@@ -5,7 +5,9 @@ from app import db
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
                             CreateUserForm, EditUserForm, \
-                            CreateRoleForm, EditRoleForm
+                            CreateRoleForm, EditRoleForm, \
+                            CreateCommentForm, EditCommentForm, EditProfileForm
+from app.site.models import Themes, PostComment
 from app.admin.models import Post, Page
 from app.auth.models import User, Role, roles_users
 from app.site.models import Themes
@@ -67,6 +69,16 @@ def edit_post(post_id):
     return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
+@admin.route('/blog/delete/<int:post_id>', methods=['POST'])
+@check_login
+@check_admin
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('admin.blog_list'))
+
+
 # Create the page routes
 @admin.route('/page', methods=['GET'])
 @check_login
@@ -115,6 +127,17 @@ def edit_page(page_id):
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/page.html", form=form)
 
+
+@admin.route('/page/delete/<int:page_id>', methods=['POST'])
+@check_login
+@check_admin
+def delete_page(page_id):
+    page = Page.query.get_or_404(post_id)
+    db.session.delete(page)
+    db.session.commit()
+    return redirect(url_for('admin.page_list'))
+
+
 # Create the user routes
 @admin.route('/user', methods=['GET'])
 @check_login
@@ -148,6 +171,7 @@ def edit_user(user_id):
     user = User.query.get(user_id)
     old_pass = user.password
     user.password = None
+    last_login = user.last_login_ip
     form = EditUserForm(request.form, obj=user)
     if helpers.validate_form_on_submit(form):
         
@@ -158,12 +182,23 @@ def edit_user(user_id):
         else:
             user.password = generate_password_hash(user.password)
 
-        db.session.add(user)
+        db.session.merge(user)
         db.session.commit()
 
         return redirect(url_for('admin.user_list'))
     template_path = Themes.get_active('admin')
-    return render_template(template_path + "/admin/users/user.html", form=form)
+    return render_template(template_path + "/admin/users/user.html", form=form, last_login=last_login)
+
+
+@admin.route('/user/delete/<int:user_id>', methods=['POST'])
+@check_login
+@check_admin
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('admin.user_list'))
+
 
 # Create the role routes
 @admin.route('/role', methods=['GET'])
@@ -202,6 +237,92 @@ def edit_role(role_id):
         return redirect(url_for('admin.role_list'))
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/roles/role.html", form=form)
+
+
+@admin.route('/role/delete/<int:role_id>', methods=['POST'])
+@check_login
+@check_admin
+def delete_role(role_id):
+    role = Role.query.get_or_404(role_id)
+    db.session.delete(role)
+    db.session.commit()
+    return redirect(url_for('admin.role_list'))
+
+
+# Create the comment routes
+@admin.route('/comment', methods=['GET'])
+@check_login
+@has_role('editor')
+def comment_list():
+    comments = PostComment.all()
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/comments/list.html", comments=comments)
+
+@admin.route('/comment/create', methods=['GET', 'POST'])
+@check_login
+@has_role('writer')
+def create_comment():
+    form = CreateCommentForm(request.form)
+    if helpers.validate_form_on_submit(form):
+        comment = PostComment()
+        form.populate_obj(comment)
+        comment.viewed = 1
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('admin.comment_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/comments/comment.html", form=form)
+
+
+@admin.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
+@check_login
+@has_role('editor')
+def edit_comment(comment_id):
+    comment = PostComment.query.get(comment_id)
+    form = EditCommentForm(request.form, obj=comment)
+    if request.method == 'GET':
+        comment.viewed = 1
+        db.session.merge(comment)
+        db.session.commit()
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(comment)
+        db.session.merge(comment)
+        db.session.commit()
+        return redirect(url_for('admin.comment_list'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/comments/comment.html", form=form)
+
+
+@admin.route('/comment/delete/<int:comment_id>', methods=['POST'])
+@check_login
+@check_admin
+def delete_comment(comment_id):
+    comment = PostComment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('admin.comment_list'))
+
+
+@admin.route('/profile', methods=['GET', 'POST'])
+@check_login
+def edit_profile():
+    user = login.current_user
+    old_pass = user.password
+    user.password = None
+    form = EditProfileForm(request.form, obj=user)
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(user)
+
+        if user.password == '':
+            user.password = old_pass
+        else:
+            user.password = generate_password_hash(user.password)
+
+        db.session.merge(user)
+        db.session.commit()
+        return redirect(url_for('site.index'))
+    template_path = Themes.get_active('admin')
+    return render_template(template_path + "/admin/edit_profile.html", form=form)
 
 
 def slugify(text, delim=u'-'):

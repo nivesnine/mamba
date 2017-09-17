@@ -9,16 +9,20 @@
         <thead>
             <tr>
                 <th>user id</th>
-                <th>username</th>
-                <th>email</th>
+                <th>display name</th>
+                <th>is active</th>
+                <th>edit</th>
+                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.display_name }}</td>
-                <td><a href="{{ url_for('admin.edit_user', user_id=user.id) }}">{{ user.email }}</a></td>
+                <td>{{ user.get_display_name() }}</td>
+                <td>{{ user.active }}</td>
+                <td><a class='ui tiny yellow button' href="{{ url_for('admin.edit_user', user_id=user.id) }}"><i class='pencil icon'></i>Edit</a></td>
+                {% if current_user.is_admin() %}<td><a class='ui tiny red button' href="{{ url_for('admin.delete_user', user_id=user.id) }}"><i class='trash icon'></i>Delete</a></td>{% endif %}
             </tr>
         {% endfor %}
         </tbody>

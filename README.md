@@ -10,23 +10,10 @@
 
 #### To Do
 
-- [ ] Add better instructions to README file
-- [x] Add post information to blog posts (author, datetime, etc)
-- [x] Add css / js sections to page creation
-- [x] Add WYSIWYG editor to page creation
-- [x] Add seperate base/layout for admin pages
-- [x] Add user managment tools
-- [x] Add role creation to user managment tools
-- [ ] Add media library concept
-- [x] Add comments
-- [x] Allow image insertion into posts
-- [ ] Create installer
-- [ ] Create How To docs
-- [x] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
-- [ ] Create plugin system
-- [x] Add HTMLmin
-- [ ] Add dynamic form creation
-- [ ] Add menu creator
+Add better instructions to README file
+Add dynamic form creation
+Add menu creator
+Add pagination to admin lists
 
 ##### Inspired by @m1yag1 https://github.com/m1yag1
 ##### for sharing his single file Flask blog app and convincing me to finally start this project

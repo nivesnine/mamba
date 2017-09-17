@@ -2,6 +2,7 @@ from app import db
 from flask_security import RoleMixin
 from flask_login import UserMixin
 from sqlalchemy.sql import and_
+from sqlalchemy.orm import column_property
 
 roles_users = db.Table(
     'roles_users',
@@ -44,9 +45,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    display_name = db.Column(db.String(255), unique=True)
+    full_name = column_property(first_name + " " + last_name)
+    display_name = db.Column(db.String(255), default='email')
+    alias = db.Column(db.String(255))
     bio = db.Column(db.String(255))
-    email = db.Column(db.String(255), unique=True)
+    email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean(), default=1)
     registered_at = db.Column(db.DateTime(), default=db.func.current_timestamp())
@@ -54,6 +57,8 @@ class User(UserMixin, db.Model):
                         backref=db.backref('users', lazy='dynamic'))
     posts = db.relationship('Post', backref='users', lazy='joined')
     comments = db.relationship('PostComment', backref='users', lazy='joined')
+    registered_ip = db.Column(db.String(255))
+    last_login_ip = db.Column(db.String(255))
 
     # Flask-Login integration
     def is_authenticated(self):
@@ -71,8 +76,19 @@ class User(UserMixin, db.Model):
     def get_roles(self):
         return self.roles
 
+    def get_display_name(self):
+
+        def get_display_name_type(x):
+            return {
+                        'first_name': self.first_name,
+                        'full_name': self.full_name,
+                        'alias' : self.alias
+                    }.get(x, self.email)
+
+        return get_display_name_type(self.display_name)
+
     def get_user(email):
-        return User.query.filter_by(email = email).first()
+        return User.query.filter_by(email = email).first() 
 
     def is_admin(self):
         return True if 'admin' in self.roles else False

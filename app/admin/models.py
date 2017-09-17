@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy import and_
+from app.auth.models import User
 
 # Create the Models
 class Post(db.Model):
@@ -14,6 +15,13 @@ class Post(db.Model):
                               onupdate=db.func.current_timestamp())
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     comments = db.relationship('PostComment', backref='posts', lazy='joined')
+
+    def get_author(self):
+        if self.writen_by:
+            user = User.query.get(self.writen_by)
+            if user:
+                return user.get_display_name()
+        return 'Unknown'
 
     @classmethod
     def all(cls):

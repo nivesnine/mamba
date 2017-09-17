@@ -12,14 +12,18 @@
                 <th>page id</th>
                 <th>title</th>
                 <th>published</th>
+                <th>edit</th>
+                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
         {% for page in pages %}
             <tr>
                 <td>{{ page.id }}</td>
-                <td><a href="{{ url_for('admin.edit_page', page_id=page.id) }}">{{ page.title }}</a></td>
+                <td>{{ page.title }}</td>
                 <td>{% if page.published == 1 %}Yes{% else %}No{% endif %}</td>
+                <td><a class='ui tiny yellow button' href="{{ url_for('admin.edit_page', page_id=page.id) }}"><i class='pencil icon'></i>Edit</a></td>
+                {% if current_user.is_admin() %}<td><a class='ui tiny red button' href="{{ url_for('admin.delete_page', page_id=page.id) }}"><i class='pencil icon'></i>Delete</a></td>{% endif %}
             </tr>
         {% endfor %}
         </tbody>

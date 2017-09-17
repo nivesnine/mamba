@@ -72,8 +72,12 @@ db.create_all()
 def inject_now():
     return {'now': datetime.utcnow()}
 
-
 from app.admin.models import Page
 @application.context_processor
 def insert_pages():
     return {'pages': Page.get_pages()}
+
+from app.site.models import PostComment
+@application.context_processor
+def get_new_comments():
+    return {'new_comments': PostComment.get_new_comments()}

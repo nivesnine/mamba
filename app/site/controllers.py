@@ -28,7 +28,7 @@ def blog(page):
         comment = PostComment()
         form.populate_obj(comment)
         comment.writen_by = login.current_user.id
-        db.session.merge(comment)
+        db.session.add(comment)
         db.session.commit()
     per_page = application.config["BLOG_PER_PAGE"]
     posts = Post.query.filter(Post.published==1).order_by(desc('posts_id')).paginate(page, per_page, error_out=False)

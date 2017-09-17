@@ -1,7 +1,8 @@
 from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
 from app.auth.models import Role
-from wtforms_alchemy import QuerySelectMultipleField
+from app.site.models import PostComment
+from wtforms_alchemy import QuerySelectMultipleField, ModelForm
 
 # Blog post creation form
 class CreatePostForm(form.Form):
@@ -53,3 +54,27 @@ class CreateRoleForm(form.Form):
 
 class EditRoleForm(CreateRoleForm):
     id = fields.HiddenField()
+
+class CreateCommentForm(form.Form):
+    comment = fields.StringField('comment', widget=TextArea(), validators=[validators.required()])
+    published = fields.BooleanField()
+    post = fields.StringField()
+    writen_by = fields.StringField()
+    submit = fields.SubmitField('Submit')
+
+class EditCommentForm(CreateCommentForm):
+    id = fields.HiddenField()
+
+class EditProfileForm(form.Form):
+    first_name = fields.StringField(validators=[validators.length(max=255)])
+    last_name = fields.StringField(validators=[validators.length(max=255)])
+    alias = fields.StringField(validators=[validators.length(max=255)])
+    display_name = fields.SelectField(
+         'Display Name',
+         choices=[('first_name', 'First Name'), ('full_name', 'Full Name'), ('alias', 'Alias')]
+        )
+    bio = fields.StringField(validators=[validators.length(max=255)])
+    email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
+    password = fields.PasswordField(validators=[validators.length(max=255)])
+    submit = fields.SubmitField('Submit')
+    

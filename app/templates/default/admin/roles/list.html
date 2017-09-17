@@ -12,14 +12,18 @@
                 <th>role id</th>
                 <th>name</th>
                 <th>description</th>
+                <th>edit</th>
+                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
         {% for role in roles %}
             <tr>
                 <td>{{ role.id }}</td>
-                <td><a href="{{ url_for('admin.edit_role', role_id=role.id) }}">{{ role.name }}</a></td>
+                <td>{{ role.name }}</td>
                 <td>{{ role.description }}</td>
+                <td><a class='ui tiny yellow button' href="{{ url_for('admin.edit_role', role_id=role.id) }}"><i class='pencil icon'></i>Edit</a></td>
+                {% if current_user.is_admin() %}<td><a class='ui tiny red button' href="{{ url_for('admin.delete_role', role_id=role.id) }}"><i class='trash icon'></i>Edit</a></td>{% endif %}
             </tr>
         {% endfor %}
         </tbody>
