@@ -11,7 +11,7 @@
 #### To Do
 
 - [ ] Add better instructions to README file
-- [ ] Add post information to blog posts (author, datetime, etc)
+- [x] Add post information to blog posts (author, datetime, etc)
 - [x] Add css / js sections to page creation
 - [x] Add WYSIWYG editor to page creation
 - [x] Add seperate base/layout for admin pages
@@ -19,7 +19,7 @@
 - [x] Add role creation to user managment tools
 - [ ] Add media library concept
 - [ ] Add comments
-- [ ] Allow image insertion into posts
+- [x] Allow image insertion into posts
 - [ ] Create installer
 - [ ] Create How To docs
 - [x] Make templates themeable (templates/theme-name/... templates/admin/theme-name/...)
