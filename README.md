@@ -10,10 +10,10 @@
 
 #### To Do
 
-Add better instructions to README file
-Add dynamic form creation
-Add menu creator
-Add pagination to admin lists
+- Add better instructions to README file
+- Add dynamic form creation
+- Add menu creator
+- Add pagination to admin lists
 
 ##### Inspired by @m1yag1 https://github.com/m1yag1
 ##### for sharing his single file Flask blog app and convincing me to finally start this project
