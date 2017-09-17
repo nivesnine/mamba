@@ -10,7 +10,6 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
 from app.site.models import Themes, PostComment
 from app.admin.models import Post, Page
 from app.auth.models import User, Role, roles_users
-from app.site.models import Themes
 from flask_admin import helpers
 import flask_login as login
 from app import check_login, check_admin, has_role

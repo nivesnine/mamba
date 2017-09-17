@@ -2,7 +2,7 @@ from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
 from app.auth.models import Role
 from app.site.models import PostComment
-from wtforms_alchemy import QuerySelectMultipleField, ModelForm
+from wtforms_alchemy import QuerySelectMultipleField
 
 # Blog post creation form
 class CreatePostForm(form.Form):
