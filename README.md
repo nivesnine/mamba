@@ -10,7 +10,6 @@
 
 #### To Do
 
-- Add back buttons in admin edit/create pages
 - Additional basic themes (materialize, bootstrap, foundation)
 - Theme manger
 - Improve README.md

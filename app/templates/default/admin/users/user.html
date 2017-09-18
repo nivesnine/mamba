@@ -23,6 +23,7 @@
               </div>
         {% endfor %}
           <div class="field">
+            <a class="ui red left floated button" href="{{ url_for('admin.user_list') }}">Cancel</a>
             {{ form.submit(class='ui blue right floated button') }}
           </div>
     </form>
