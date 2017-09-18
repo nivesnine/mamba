@@ -4,7 +4,20 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_htmlmin import HTMLMIN
 from functools import wraps
 import flask_login as login
+    
+# Define the WSGI application object
+application = Flask(__name__)
 
+# Configurations
+application.config.from_object('config')
+
+HTMLMIN(application)
+
+# Define the database object which is imported
+# by modules and controllers
+db = SQLAlchemy(application)
+
+# custom decorators
 def check_login(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
@@ -21,6 +34,7 @@ def check_admin(func):
         return func(*args, **kwargs)
     return decorated_function
 
+
 def has_role(role):
     def decorator(func):
         @wraps(func)
@@ -30,28 +44,6 @@ def has_role(role):
             return func(*args, **kwargs)
         return decorated_function
     return decorator
-    
-# Define the WSGI application object
-application = Flask(__name__)
-
-# Configurations
-application.config.from_object('config')
-
-HTMLMIN(application)
-
-# Define the database object which is imported
-# by modules and controllers
-db = SQLAlchemy(application)
-
-# error handling
-@application.errorhandler(404)
-def page_not_found(e):
-    return render_template("error/error_template.html", status_code=404), 404
-
-
-@application.errorhandler(405)
-def bad_request_error(e):
-    return render_template("error/error_template.html", status_code=405), 405
 
 
 # Import a module / component using its blueprint handler variable (mod_auth)
@@ -68,19 +60,37 @@ application.register_blueprint(auth_module)
 # This will create the database file using SQLAlchemy
 db.create_all()
 
+# error handling
+from app.site.models import Themes
+@application.errorhandler(404)
+def page_not_found(e):
+    template_path = Themes.get_active('error')
+    return render_template(template_path+"/error/error_template.html", status_code=404), 404
+
+
+@application.errorhandler(405)
+def bad_request_error(e):
+    template_path = Themes.get_active('error')
+    return render_template(template_path+"error/error_template.html", status_code=405), 405
+
+
+# getters for templates
 @application.context_processor
 def inject_now():
     return {'now': datetime.utcnow()}
 
+
 from app.admin.models import Page
 @application.context_processor
 def insert_pages():
-    return {'pages': Page.get_pages()}
+    return {'menu_pages': Page.get_pages()}
+
 
 from app.site.models import PostComment
 @application.context_processor
 def get_new_comments():
     return {'new_comments': PostComment.get_new_comments()}
+
 
 #custom filters
 @application.template_filter('truncate_after_tag')

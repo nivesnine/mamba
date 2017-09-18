@@ -6,29 +6,32 @@ from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
 user = User()
-user.display_name = 'admin'
+user.display_name = 'alias'
 user.email = 'admin@example.com'
+user.alias = 'Admin'
+
 user.password = generate_password_hash('admin')
 
 role = Role()
 role.name = 'admin'
 role.description = 'top level admin role'
 db.session.add(role)
-
 user.roles.append(role)
-db.session.add(user)
 db.session.commit()
 
 role = Role()
 role.name = 'editor'
 role.description = 'can edit pages and posts'
 db.session.add(role)
+user.roles.append(role)
 db.session.commit()
 
 role = Role()
 role.name = 'writer'
 role.description = 'can create pages and posts'
 db.session.add(role)
+user.roles.append(role)
+db.session.add(user)
 db.session.commit()
 
 post = Post()
@@ -36,6 +39,7 @@ post.title = 'Hello World'
 post.slug = 'hello-world'
 post.text = 'This is your first blog post!'
 post.published = 1
+post.writen_by = 1
 db.session.add(post)
 db.session.commit()
 
@@ -71,6 +75,15 @@ template = Themes()
 template.name = 'Default Admin'
 template.slug = 'default'
 template.type_ = 'admin'
+template.author = 'default'
+template.active = 1
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Default Error'
+template.slug = 'default'
+template.type_ = 'error'
 template.author = 'default'
 template.active = 1
 db.session.add(template)

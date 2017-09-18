@@ -2,22 +2,35 @@
 {% block title %}Roles{% endblock %}
 {% block content %}
 
-
 <div class="ui centered one column grid text container">
   <div class="center aligned column">
 {% if roles %}
     <table class="ui striped table">
         <thead>
             <tr>
-                <th>role id</th>
-                <th>name</th>
+                <th>role id
+                    <a href="{{url_for('admin.role_list', page=1)}}?sort=id&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.role_list', page=1)}}?sort=id&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>name
+                    <a href="{{url_for('admin.role_list', page=1)}}?sort=name&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.role_list', page=1)}}?sort=name&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
                 <th>description</th>
                 <th>edit</th>
                 {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
-        {% for role in roles %}
+        {% for role in roles.items %}
             <tr>
                 <td>{{ role.id }}</td>
                 <td>{{ role.name }}</td>
@@ -31,7 +44,23 @@
   {% else %}
   <p> You don't have any roles </p>
   {% endif %}
-  <a href="{{ url_for('admin.create_role') }}" class="ui button green">Create Role</a>
+ 
+  {% if roles.has_prev %}
+    <a class='ui mini button blue left floated' href="{{ url_for('admin.role_list', page=roles.prev_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret left'></i>
+    </a>
+  {% endif %}
+
+  {% if current_user.has_role('writer') %}
+    <a href="{{ url_for('admin.create_role') }}" class="ui mini button green"><i class='plus icon'></i> Create Role</a>
+  {% endif %}
+
+  {% if roles.has_next %}
+    <a class='ui mini button blue right floated' href="{{ url_for('admin.role_list', page=roles.next_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret right'></i>
+    </a>
+  {% endif %}
+
   </div>
 </div>
 

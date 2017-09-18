@@ -2,23 +2,50 @@
 {% block title %}Comments{% endblock %}
 {% block content %}
 
-
 <div class="ui centered one column grid text container">
   <div class="center aligned column">
 {% if comments %}
     <table class="ui striped table">
         <thead>
             <tr>
-                <th>comment id</th>
-                <th>post id</th>
-                <th>comment</th>
-                <th>author id</th>
+                <th>comment id
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=id&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=id&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>post id
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=post&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=post&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>comment
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=comment&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=comment&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>author id
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=writen_by&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.comment_list', page=1)}}?sort=writen_by&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
                 <th>edit</th>
                 {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
-        {% for comment in comments|reverse %}
+        {% for comment in comments.items %}
             <tr>
                 <td>{{ comment.id }}</td>
                 <td>{{ comment.post }}</td>
@@ -34,7 +61,23 @@
   {% else %}
   <p> You don't have any comments </p>
   {% endif %}
-  <a href="{{ url_for('admin.create_comment') }}" class="ui button green">Create Comment</a>
+
+  {% if comments.has_prev %}
+    <a class='ui mini button blue left floated' href="{{ url_for('admin.comment_list', page=comments.prev_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret left'></i>
+    </a>
+  {% endif %}
+
+  {% if current_user.has_role('writer') %}
+    <a href="{{ url_for('admin.create_comment') }}" class="ui mini button green"><i class='plus icon'></i> Create Comment</a>
+  {% endif %}
+
+  {% if comments.has_next %}
+    <a class='ui mini button blue right floated' href="{{ url_for('admin.comment_list', page=comments.next_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret right'></i>
+    </a>
+  {% endif %}
+
   </div>
 </div>
 

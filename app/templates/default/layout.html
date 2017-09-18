@@ -5,7 +5,7 @@
       <i class="sidebar icon"></i>
     </a>
     <a class="item inverted" href="{{ url_for('site.index') }}">Home</a>
-    {% for page in pages %}
+    {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
       <a class="item inverted" href="{{ url_for('site.page', page=page.slug) }}">{{ page.title }}</a>
      {% endif %}
@@ -46,7 +46,7 @@
 {% macro mobile_menu() -%}
 <div class="ui vertical inverted sidebar menu left">
     <a class="item" href="{{ url_for('site.index') }}">Home</a>
-    {% for page in pages %}
+    {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
       <a class="item" href="{{ url_for('site.page', page=page.slug) }}">{{ page.title }}</a>
      {% endif %}

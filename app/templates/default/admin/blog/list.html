@@ -2,22 +2,42 @@
 {% block title %}Blog List{% endblock %}
 {% block content %}
 
-
 <div class="ui centered one column grid text container">
   <div class="center aligned column">
 {% if posts %}
     <table class="ui striped table">
         <thead>
             <tr>
-                <th>post id</th>
-                <th>title</th>
-                <th>published</th>
+                <th>post id
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=id&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=id&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>title
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=title&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=title&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>published
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=published&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.blog_list', page=1)}}?sort=published&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
                 <th>edit</th>
                 {% if current_user.is_admin() %}<th>delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>
-        {% for post in posts %}
+        {% for post in posts.items %}
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
@@ -31,9 +51,23 @@
   {% else %}
   <p> You don't have any posts </p>
   {% endif %}
-  {% if current_user.has_role('writer') %}
-  <a href="{{ url_for('admin.create_post') }}" class="ui button green">Create Post</a>
+
+  {% if posts.has_prev %}
+    <a class='ui mini button blue left floated' href="{{ url_for('admin.blog_list', page=posts.prev_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret left'></i>
+    </a>
   {% endif %}
+
+  {% if current_user.has_role('writer') %}
+    <a href="{{ url_for('admin.create_post') }}" class="ui mini button green"><i class='plus icon'></i> Create Post</a>
+  {% endif %}
+
+  {% if posts.has_next %}
+    <a class='ui mini button blue right floated' href="{{ url_for('admin.blog_list', page=posts.next_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret right'></i>
+    </a>
+  {% endif %}
+
   </div>
 </div>
 

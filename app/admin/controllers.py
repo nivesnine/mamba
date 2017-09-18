@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
                   flash, g, session, redirect, url_for
-from app import db
+from app import application, db
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
                             CreateUserForm, EditUserForm, \
@@ -27,11 +27,15 @@ _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 # Create the blog routes
-@admin.route('/blog', methods=['GET'])
+@admin.route('/blog', defaults={'page': 1}, methods=['GET'])
+@admin.route('/blog/<int:page>', methods=['GET'])
 @check_login
 @has_role('editor')
-def blog_list():
-    posts = Post.all()
+def blog_list(page):
+    order = 'posts_'+request.args['sort'] if 'sort' in request.args else 'posts_id'
+    direction = request.args['d'] if 'd' in request.args else 'desc'
+    per_page = application.config["ADMIN_PER_PAGE"]
+    posts = Post.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/blog/list.html", posts=posts)
 
@@ -70,7 +74,7 @@ def edit_post(post_id):
     return render_template(template_path + "/admin/blog/post.html", form=form)
 
 
-@admin.route('/blog/delete/<int:post_id>', methods=['POST'])
+@admin.route('/blog/delete/<int:post_id>', methods=['GET'])
 @check_login
 @check_admin
 def delete_post(post_id):
@@ -81,11 +85,15 @@ def delete_post(post_id):
 
 
 # Create the page routes
-@admin.route('/page', methods=['GET'])
+@admin.route('/page', defaults={'page': 1}, methods=['GET'])
+@admin.route('/page/<int:page>', methods=['GET'])
 @check_login
 @has_role('editor')
-def page_list():
-    pages = Page.all()
+def page_list(page):
+    order = request.args['sort'] if 'sort' in request.args else 'id'
+    direction = request.args['d'] if 'd' in request.args else 'desc'
+    per_page = application.config["ADMIN_PER_PAGE"]
+    pages = Page.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/list.html", pages=pages)
 
@@ -129,7 +137,7 @@ def edit_page(page_id):
     return render_template(template_path + "/admin/pages/page.html", form=form)
 
 
-@admin.route('/page/delete/<int:page_id>', methods=['POST'])
+@admin.route('/page/delete/<int:page_id>', methods=['GET'])
 @check_login
 @check_admin
 def delete_page(page_id):
@@ -140,11 +148,15 @@ def delete_page(page_id):
 
 
 # Create the user routes
-@admin.route('/user', methods=['GET'])
+@admin.route('/user', defaults={'page': 1}, methods=['GET'])
+@admin.route('/user/<int:page>', methods=['GET'])
 @check_login
 @check_admin
-def user_list():
-    users = User.all()
+def user_list(page):
+    order = 'users_'+request.args['sort'] if 'sort' in request.args else 'users_id'
+    direction = request.args['d'] if 'd' in request.args else 'desc'
+    per_page = application.config["ADMIN_PER_PAGE"]
+    users = User.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/users/list.html", users=users)
 
@@ -191,7 +203,7 @@ def edit_user(user_id):
     return render_template(template_path + "/admin/users/user.html", form=form, last_login=last_login)
 
 
-@admin.route('/user/delete/<int:user_id>', methods=['POST'])
+@admin.route('/user/delete/<int:user_id>', methods=['GET'])
 @check_login
 @check_admin
 def delete_user(user_id):
@@ -202,13 +214,18 @@ def delete_user(user_id):
 
 
 # Create the role routes
-@admin.route('/role', methods=['GET'])
+@admin.route('/role', defaults={'page': 1}, methods=['GET'])
+@admin.route('/role/<int:page>', methods=['GET'])
 @check_login
 @check_admin
-def role_list():
-    roles = Role.all()
+def role_list(page):
+    order = request.args['sort'] if 'sort' in request.args else 'id'
+    direction = request.args['d'] if 'd' in request.args else 'desc'
+    per_page = application.config["ADMIN_PER_PAGE"]
+    roles = Role.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/roles/list.html", roles=roles)
+
 
 @admin.route('/role/create', methods=['GET', 'POST'])
 @check_login
@@ -240,7 +257,7 @@ def edit_role(role_id):
     return render_template(template_path + "/admin/roles/role.html", form=form)
 
 
-@admin.route('/role/delete/<int:role_id>', methods=['POST'])
+@admin.route('/role/delete/<int:role_id>', methods=['GET'])
 @check_login
 @check_admin
 def delete_role(role_id):
@@ -251,13 +268,18 @@ def delete_role(role_id):
 
 
 # Create the comment routes
-@admin.route('/comment', methods=['GET'])
+@admin.route('/comment', defaults={'page': 1}, methods=['GET'])
+@admin.route('/comment/<int:page>', methods=['GET'])
 @check_login
 @has_role('editor')
-def comment_list():
-    comments = PostComment.all()
+def comment_list(page):
+    order = request.args['sort'] if 'sort' in request.args else 'id'
+    direction = request.args['d'] if 'd' in request.args else 'desc'
+    per_page = application.config["ADMIN_PER_PAGE"]
+    comments = PostComment.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/comments/list.html", comments=comments)
+
 
 @admin.route('/comment/create', methods=['GET', 'POST'])
 @check_login
@@ -294,7 +316,7 @@ def edit_comment(comment_id):
     return render_template(template_path + "/admin/comments/comment.html", form=form)
 
 
-@admin.route('/comment/delete/<int:comment_id>', methods=['POST'])
+@admin.route('/comment/delete/<int:comment_id>', methods=['GET'])
 @check_login
 @check_admin
 def delete_comment(comment_id):
@@ -323,7 +345,7 @@ def edit_profile():
         db.session.commit()
         return redirect(url_for('site.index'))
     template_path = Themes.get_active('admin')
-    return render_template(template_path + "/admin/edit_profile.html", form=form)
+    return render_template(template_path + "/admin/users/edit_profile.html", form=form)
 
 
 def slugify(text, delim=u'-'):
