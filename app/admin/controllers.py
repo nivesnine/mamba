@@ -44,6 +44,7 @@ def create_post():
     if helpers.validate_form_on_submit(form):
         post = Post()
         form.populate_obj(post)
+        post.slug = slugify(post.title)
         post.writen_by = login.current_user.id
         db.session.add(post)
         db.session.commit()
@@ -60,6 +61,7 @@ def edit_post(post_id):
     form = EditPostForm(request.form, obj=post)
     if helpers.validate_form_on_submit(form):
         form.populate_obj(post)
+        post.slug = slugify(post.title)
         post.writen_by = login.current_user.id
         db.session.merge(post)
         db.session.commit()

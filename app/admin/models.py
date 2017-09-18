@@ -8,6 +8,7 @@ class Post(db.Model):
 
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(100))
+    slug = db.Column(db.String(100))
     text = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
     date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
@@ -22,6 +23,9 @@ class Post(db.Model):
             if user:
                 return user.get_display_name()
         return 'Unknown'
+
+    def get_by_slug(slug):
+        return Post.query.filter_by(slug=slug).first()
 
     @classmethod
     def all(cls):

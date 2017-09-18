@@ -81,3 +81,14 @@ from app.site.models import PostComment
 @application.context_processor
 def get_new_comments():
     return {'new_comments': PostComment.get_new_comments()}
+
+#custom filters
+@application.template_filter('truncate_after_tag')
+def truncate_after_tag(text, target_length):
+    last_closing_tag_begining = text.find('</', target_length)
+    end = text.find('>', last_closing_tag_begining)
+    new_text = text[:end + 1]
+    if len(new_text) == 0:
+        return text
+    return new_text
+

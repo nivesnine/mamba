@@ -33,6 +33,7 @@ db.session.commit()
 
 post = Post()
 post.title = 'Hello World'
+post.slug = 'hello-world'
 post.text = 'This is your first blog post!'
 post.published = 1
 db.session.add(post)

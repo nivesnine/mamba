@@ -32,9 +32,23 @@ def blog(page):
         db.session.commit()
     per_page = application.config["BLOG_PER_PAGE"]
     posts = Post.query.filter(Post.published==1).order_by(desc('posts_id')).paginate(page, per_page, error_out=False)
-    authors = User.all()
     template_path = Themes.get_active('site')
-    return render_template(template_path + "/site/blog.html", posts=posts, authors=authors, form=form)
+    return render_template(template_path + "/site/blog.html", posts=posts, form=form)
+
+
+@site.route('/blog/<slug>', methods=['GET', 'POST'])
+def single_post(slug):
+    form = CommentForm(request.form)
+    if helpers.validate_form_on_submit(form):
+        comment = PostComment()
+        form.populate_obj(comment)
+        comment.writen_by = login.current_user.id
+        db.session.add(comment)
+        db.session.commit()
+    post = Post.get_by_slug(slug)
+    template_path = Themes.get_active('site')
+    return render_template(template_path + "/site/single_post.html", post=post, form=form)
+
 
 @site.route('/<page>', methods=['GET'])
 def page(page):
