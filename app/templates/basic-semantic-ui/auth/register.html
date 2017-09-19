@@ -1,0 +1,54 @@
+{% extends "basic-semantic-ui/base.html" %}
+{% block title %}Register{% endblock %}
+{% block style %}
+  <style type="text/css">
+    body {
+      background-color: #DADADA;
+    }
+    body > .grid {
+      height: 100%;
+    }
+    .image {
+      margin-top: -100px;
+    }
+    .column {
+      max-width: 450px;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div class="ui middle aligned center aligned grid m">
+  <div class="column">
+      <div class="content">
+             Sign up for an account!
+      </div>
+        <form class="ui form" method="POST" action="">
+            <div class="ui stacked segment">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                {{ form.email(placeholder="email") }}
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="lock icon"></i>
+                {{ form.password(placeholder="password") }}
+              </div>
+            </div>
+            <input type='submit' class="ui fluid large teal submit button" value="Register">
+            </div>
+        </form>
+        {% if form.errors %}
+        <div class='ui error message'>
+            <h5>Please check information for errors</h5>
+        </div>
+        {% endif %}
+        <div class="ui message">
+          Have an account? <a href="{{ url_for('auth.login_view') }}">Sign In</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

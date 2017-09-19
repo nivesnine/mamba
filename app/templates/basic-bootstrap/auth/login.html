@@ -1,0 +1,40 @@
+{% extends "basic-bootstrap/base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mb-3">
+        <div class="col-6">
+            <form class="form-login" method="POST">
+              <h4>Welcome back</h4>
+              {{ form.email(placeholder="email", class="form-control mt-3") }}
+              {{ form.password(placeholder="password", class="form-control mt-3") }}
+              <div class="wrapper mt-3">
+              <span class="group-btn">     
+                  <input type='submit' class="btn btn-primary btn-md" value="Login">
+              </span>
+              </div>
+            </form>
+            {% if form.errors %}
+              {% for e in form.errors %}
+              <div class="alert alert-danger mt-3" role="alert">
+                  <h4 class="card-title">Please check information for errors</h4>
+                  <p class="card-text">{{ e }}: {{ form.errors[e] }}</p>
+              </div>
+              {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class='row justify-content-center'>
+      <div class="card col-6">
+        <div class="card-body">
+          <h4 class="card-title">Need an account?</h4>
+          <p class="card-text"><a href="{{ url_for('auth.registration_view') }}">Sign Up</a></p>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock %}
+

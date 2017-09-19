@@ -10,10 +10,11 @@
 
 #### To Do
 
-- Additional basic themes (materialize, bootstrap, foundation)
+- Finish additional basic themes (materialize, foundation)
+- Make sure all themes/endpoints handle form errors properly
 - Theme manger
 - Improve README.md
-- Site settings
+- Site settings (blog sort, homepage(blog/page), per_page, site logo)
 - Blog search
 - Menu creator
 - Form creator

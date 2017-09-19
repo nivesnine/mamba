@@ -1,0 +1,25 @@
+{% extends "basic-bootstrap/base.html" %}
+{% block title %}Comments{% endblock %}
+{% block content %}
+
+<div class="container">
+    <form action="{% if form.id %} {{url_for('admin.edit_comment', comment_id=form.id.data) }} {% else %} {{ url_for('admin.create_comment') }} {% endif %}" method="POST" name="post_form">
+        {% for f in form %}
+            		{% if f.name == 'submit' %}
+                  <div class="form-control">
+                    <a class="btn btn-danger" href="{{ url_for('admin.comment_list') }}">Cancel</a>
+              			{{ f(class='btn btn-primary') }}
+                  </div>
+                {% elif f.name == 'id' %}
+                  {{ f }}
+                {% else %}
+                  <div class="form-control">
+              			{{ f.label }}
+                    {{ f(placeholder=f.name.replace('_', ' '), class='form-control') }}
+                  </div>
+            		{% endif %}
+        {% endfor %}
+    </form>
+</div>
+
+{% endblock %}

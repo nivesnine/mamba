@@ -1,0 +1,116 @@
+{% extends "basic-bootstrap/base.html" %}
+{% block title %}Home{% endblock %}
+{% block style %}
+<style>
+  .hidden{
+    display: none;
+  }
+  .read_full_post{
+    display: block;
+    text-align: right;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% if posts %}
+      {% for post in posts.items %}
+    	 <div class="card">
+          <div class="card-header">
+            {{ post.title }}
+            <p class="card-text"><small class="text-muted">{{ post.date_created.strftime('%m/%d/%Y') }} - by {{ post.get_author() }}</small></p>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              {% set text = post.text|truncate_after_tag(250) %}
+              {{ text | safe }}
+              {% if text != post.text %}
+                <a class='read_full_post' href="{{ url_for('site.single_post', slug=post.slug)}}"> ...Read Full Post</a>
+              {% endif %}
+            </p>
+            <button class="btn btn-primary comment" data-post='{{post.id}}'>Comment</button>
+          </div>
+          {% if post.comments %}
+          <div class="card">
+            <div class="card-header">
+              Comments
+            </div>
+            {% for comment in post.comments if comment.published == 1 %}
+            <div class="card-body {% if loop.index > 3 %}hidden hidden-{{post.id}}{% endif %}">
+              <blockquote class="blockquote mb-0">
+                <p>{{ comment.comment }}</p>
+                <footer class="blockquote-footer">{{ comment.date_created.strftime('%m/%d/%Y') }}<cite title="Source Title"> - {{ comment.get_author() }}</cite></footer>
+              </blockquote>
+            </div>
+              {% if loop.index == 4 %}
+                <button class='btn btn-primary readmore' data-post='{{post.id}}'>Read More</button>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <h2>No Posts Here</h2>
+  {% endif %}
+</div>
+
+{% if posts.has_next %}
+  <a class='btn btn-primary' href="{{ url_for('site.blog', page=posts.next_num) }}">Older</a>
+{% endif %}
+
+{% if posts.has_prev %}
+  <a class='btn btn-primary' href="{{ url_for('site.blog', page=posts.prev_num) }}">Newer</a>
+{% endif %}
+
+{% if current_user.is_authenticated %}
+
+<div class="modal" id="comment-form">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Comment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST">
+          {% for f in form %}
+            <div class='form-group'>
+            {% if f.name == 'post' %}
+              {{ f(id='post-id') }}
+            {% else %}
+              {{ f.label }}
+              {{ f(class="form-control") }}
+            {% endif %}
+            </div>
+          {% endfor %}
+          <input class='btn btn-primary' type='submit'>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block script %}
+<script>
+$(function(){
+{% if current_user.is_authenticated %}
+  $('button.comment').on('click', function(){
+      $('#comment-form #post-id').val($(this).data('post'))
+      $('#comment-form').modal('show')
+  })
+{% endif %}
+  $('button.readmore').on('click', function(){
+      var post_id = $(this).data('post')
+      $(this).hide()
+      $('.hidden-' + post_id).show()
+  })
+})
+
+</script>
+{% endblock %}

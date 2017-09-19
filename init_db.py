@@ -54,8 +54,8 @@ db.session.commit()
 
 
 template = Themes()
-template.name = 'Default Site'
-template.slug = 'default'
+template.name = 'Basic Semantic-ui Site'
+template.slug = 'basic-semantic-ui'
 template.author = 'default'
 template.type_ = 'site'
 template.active = 1
@@ -63,8 +63,8 @@ db.session.add(template)
 db.session.commit()
 
 template = Themes()
-template.name = 'Default Auth'
-template.slug = 'default'
+template.name = 'Basic Semantic-ui Auth'
+template.slug = 'basic-semantic-ui'
 template.author = 'default'
 template.type_ = 'auth'
 template.active = 1
@@ -72,8 +72,8 @@ db.session.add(template)
 db.session.commit()
 
 template = Themes()
-template.name = 'Default Admin'
-template.slug = 'default'
+template.name = 'Basic Semantic-ui Admin'
+template.slug = 'basic-semantic-ui'
 template.type_ = 'admin'
 template.author = 'default'
 template.active = 1
@@ -81,10 +81,120 @@ db.session.add(template)
 db.session.commit()
 
 template = Themes()
-template.name = 'Default Error'
-template.slug = 'default'
+template.name = 'Basic Semantic-ui Error'
+template.slug = 'basic-semantic-ui'
 template.type_ = 'error'
 template.author = 'default'
 template.active = 1
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Foundation Site'
+template.slug = 'basic-foundation'
+template.author = 'default'
+template.type_ = 'site'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Foundation Auth'
+template.slug = 'basic-foundation'
+template.author = 'default'
+template.type_ = 'auth'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Foundation Admin'
+template.slug = 'basic-foundation'
+template.type_ = 'admin'
+template.author = 'default'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Foundation Error'
+template.slug = 'basic-foundation'
+template.type_ = 'error'
+template.author = 'default'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+
+template = Themes()
+template.name = 'Basic Bootstrap Site'
+template.slug = 'basic-bootstrap'
+template.author = 'default'
+template.type_ = 'site'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Bootstrap Auth'
+template.slug = 'basic-bootstrap'
+template.author = 'default'
+template.type_ = 'auth'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Bootstrap Admin'
+template.slug = 'basic-bootstrap'
+template.type_ = 'admin'
+template.author = 'default'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Bootstrap Error'
+template.slug = 'basic-bootstrap'
+template.type_ = 'error'
+template.author = 'default'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+
+template = Themes()
+template.name = 'Basic Materialize Site'
+template.slug = 'basic-materialize'
+template.author = 'default'
+template.type_ = 'site'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Materialize Auth'
+template.slug = 'basic-materialize'
+template.author = 'default'
+template.type_ = 'auth'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Materialize Admin'
+template.slug = 'basic-materialize'
+template.type_ = 'admin'
+template.author = 'default'
+template.active = 0
+db.session.add(template)
+db.session.commit()
+
+template = Themes()
+template.name = 'Basic Materialize Error'
+template.slug = 'basic-materialize'
+template.type_ = 'error'
+template.author = 'default'
+template.active = 0
 db.session.add(template)
 db.session.commit()

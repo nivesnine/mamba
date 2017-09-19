@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  flash, g, session, redirect, url_for
+                  flash, g, session, redirect, url_for, abort
 from app import application, db
 from app.admin.models import Post, Page
 from app.auth.models import User
@@ -52,5 +52,8 @@ def single_post(slug):
 
 @site.route('/<page>', methods=['GET'])
 def page(page):
-	template_path = Themes.get_active('site')
-	return render_template(template_path + "/site/page.html", page=Page.get_page(page))
+    template_path = Themes.get_active('site')
+    page = Page.get_page(page)
+    if not page:
+        abort(404)
+    return render_template(template_path + "/site/page.html", page=page)

@@ -1,0 +1,23 @@
+{% extends "basic-bootstrap/base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+
+<div class="container">
+    <form action="{{url_for('admin.edit_profile')}}" method="POST">
+        {% for f in form %}
+            		{% if f.name != 'submit' %}
+                  <div class="form-control">
+              			{{ f.label }}
+                    {{ f(placeholder=f.name.replace('_', ' '), class="form-control") }}
+                  </div>
+                {% endif %}
+        {% endfor %}
+          <div class="form-control">
+            <a class="btn btn-danger" href="{{ url_for('site.index') }}">Cancel</a>
+            {{ form.submit(class='btn btn-primary') }}
+          </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
