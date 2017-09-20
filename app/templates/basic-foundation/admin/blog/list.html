@@ -2,9 +2,9 @@
 {% block title %}Blog List{% endblock %}
 {% block content %}
 
-<div class="ui centered one column grid text container">
-  <div class="center aligned column">
+<div class="grid-x">
 {% if posts %}
+  <div class="small-12 medium-offset-2 medium-8 cell">
     <table class="ui striped table">
         <thead>
             <tr>
@@ -67,7 +67,6 @@
       <i class='icon caret right'></i>
     </a>
   {% endif %}
-
   </div>
 </div>
 

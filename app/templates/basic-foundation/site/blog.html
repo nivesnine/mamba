@@ -1,10 +1,10 @@
 {% extends "basic-foundation/base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="row">
+<div class="grid-x">
   {% if posts %}
     {% for post in posts.items %}
-      <div class="small-12 medium-offset-2 medium-8 columns">
+      <div class="small-12 medium-offset-2 medium-8 cell">
         <div class="blog-post">
           <h3><a href="{{ url_for('site.single_post', slug=post.slug)}}">{{ post.title }}</a> <small>{{ post.date_created.strftime('%m/%d/%Y') }}</small></h3>
           <p>

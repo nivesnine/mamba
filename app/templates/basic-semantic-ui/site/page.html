@@ -1,6 +1,25 @@
 {% extends "basic-semantic-ui/base.html" %}
-{% block title %}{{ page.title }}{% endblock %}
 
-{% block style %}<style>{{ page.css | safe }}</style>{% endblock %}
-{% block content %}{{ page.html | safe }}{% endblock %}
-{% block script %}<script>{{ page.js | safe }}</script>{% endblock %}
+{% block title %}
+	{% if page.title %}
+		{{ page.title }}
+	{% endif %}
+{% endblock %}
+
+{% block style %}
+	{% if page.css %}
+		<style>{{ page.css | safe }}</style>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+	{% if page.html %}
+		{{ page.html | safe }}
+	{% endif %}
+{% endblock %}
+
+{% block script %}
+	{% if page.js %}
+		<script>{{ page.js | safe }}</script>
+	{% endif %}
+{% endblock %}
