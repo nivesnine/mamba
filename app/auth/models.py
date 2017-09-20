@@ -81,13 +81,12 @@ class User(UserMixin, db.Model):
         def get_display_name_type(x):
             return {
                         'first_name': self.first_name,
-                        'full_name': self.full_name,
-                        'alias' : self.alias
-                    }.get(x, self.email)
+                        'full_name': self.full_name
+                    }.get(x, self.alias)
 
         return get_display_name_type(self.display_name)
 
-    def get_user(email):
+    def get_user_by_email(email):
         return User.query.filter_by(email = email).first() 
 
     def is_admin(self):

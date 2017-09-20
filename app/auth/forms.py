@@ -9,7 +9,7 @@ class LoginForm(form.Form):
     password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
 
     def validate_login(self):
-        user = self.get_user()
+        user = self.get_user_by_email()
 
         if user is None:
             self.errors[0] = 'Invalid user'
@@ -26,7 +26,7 @@ class LoginForm(form.Form):
 
         return user
 
-    def get_user(self):
+    def get_user_by_email(self):
         return db.session.query(User).filter(User.email==self.email.data).first()
 
 

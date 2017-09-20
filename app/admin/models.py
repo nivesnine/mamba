@@ -1,6 +1,7 @@
 from app import db
 from sqlalchemy import and_
 from app.auth.models import User
+from app.site.models import PostComment
 
 # Create the Models
 class Post(db.Model):
@@ -26,6 +27,9 @@ class Post(db.Model):
 
     def get_by_slug(slug):
         return Post.query.filter_by(slug=slug).first()
+
+    def comment_count(self):
+        return PostComment.query.filter(and_(PostComment.post==self.id, PostComment.published==1)).count()
 
     @classmethod
     def all(cls):

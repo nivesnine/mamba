@@ -54,6 +54,7 @@ def registration_view():
                 form.populate_obj(user)
                 user.password = generate_password_hash(form.password.data)
                 user.registered_ip = str(request.remote_addr)
+                user.alias = user.email.split("@")[0]
                 db.session.add(user)
                 db.session.commit()
 

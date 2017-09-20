@@ -1,0 +1,44 @@
+<ul>
+	<li>User Class
+		<dl>
+			<dt>User.all()</dt>
+			<dd>Returns all Users</dd>
+		</dl>
+	</li>
+	<li>User Object
+		<dl>
+			<dt>user.is_authenticated()</dt>
+			<dd>Returns True if User is logged in</dd>
+			
+			<dt>user.is_anonymous()</dt>
+			<dd>Returns False if User is logged in</dd>
+
+			<dt>user.is_active()</dt>
+			<dd>Returns True if the User account is active</dd>
+
+			<dt>user.get_id()</dt>
+			<dd>Returns the User's id</dd>
+
+			<dt>user.get_roles()</dt>
+			<dd>Returns a list of the User's Roles</dd>
+
+			<dt>user.get_display_name()</dt>
+			<dd>Returns either first name, full name, or alias of the User depending on what they have selected to show in their profile, default is alias (default alias is the users email without '@domain.tdl')</dd>
+
+			<dt>user.get_user_by_email(email)</dt>
+			<dd>Returns User</dd>
+
+			<dt>user.is_admin()</dt>
+			<dd>Returns True if User has admin Role</dd>
+
+			<dt>user.has_role(role)</dt>
+			<dd>Return True if User has role in Roles</dd>
+		</dl>
+	</li>
+	<li>
+		<dl>In the view:
+			<dt>current_user</dt>
+			<dd>this is the current user, check if they are logged in: current_user.is_authenticated()</dd>
+		</dl>
+	</li>
+</ul>
