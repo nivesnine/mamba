@@ -43,7 +43,6 @@ def single_post(slug):
 
 @site.route('/<page>', methods=['GET'])
 def site_page(page):
-    template_path = Themes.get_active('site')
     page = Page.get_page(page)
     if not page:
         abort(404)

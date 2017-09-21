@@ -119,9 +119,11 @@ def edit_page(page_id):
     if helpers.validate_form_on_submit(form):
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = str(login.current_user.email) + ' updated site at ' \
-                       + datetime.now().strftime('%m-%d-%Y %I:%M %p') + '\n' \
-                       + _unidiff_output(last_edit, page.html) + '\n\n' + page.history
+        page.history = '{} updated site at {} \n {} \n\n {}'\
+            .format(login.current_user.email,
+                    datetime.now().strftime('%m-%d-%Y %I:%M %p'),
+                    _unidiff_output(last_edit, page.html),
+                    page.history)
         db.session.merge(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
