@@ -6,7 +6,9 @@
     {% for post in posts.items %}
       <div class="small-12 medium-offset-2 medium-8 cell">
         <div class="blog-post">
-          <h3><a href="{{ url_for('site.single_post', slug=post.slug)}}">{{ post.title }}</a> <small>{{ post.date_created.strftime('%m/%d/%Y') }}</small></h3>
+          <a href="{{ url_for('site.single_post', slug=post.slug)}}">
+            <h3>{{ post.title }} <small>{{ post.date_created.strftime('%m/%d/%Y') }}</small></h3>
+          </a>
           <p>
             {% set text = post.text|truncate_after_tag(250) %}
             {{ text | safe }}

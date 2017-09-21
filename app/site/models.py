@@ -1,4 +1,4 @@
-from app import db
+from app import application, db
 from sqlalchemy import and_
 from app.auth.models import User
 
@@ -39,6 +39,10 @@ class PostComment(db.Model):
 
     def get_new_comments():
         return PostComment.query.filter_by(viewed = 0).count()
+
+    def get_sortable_list(order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return PostComment.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):

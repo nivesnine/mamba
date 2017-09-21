@@ -1,4 +1,4 @@
-from app import db
+from app import application, db
 from flask_security import RoleMixin
 from flask_login import UserMixin
 from sqlalchemy.sql import and_
@@ -33,6 +33,10 @@ class Role(RoleMixin, db.Model):
 
     def get_role(name):
         return Role.query.filter_by(name=name).first()
+
+    def get_sortable_list(order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return Role.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):
@@ -85,6 +89,10 @@ class User(UserMixin, db.Model):
                     }.get(x, self.alias)
 
         return get_display_name_type(self.display_name)
+
+    def get_sortable_list(order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return User.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
 
     def get_user_by_email(email):
         return User.query.filter_by(email = email).first() 

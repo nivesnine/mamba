@@ -1,5 +1,5 @@
-from app import db
-from sqlalchemy import and_
+from app import application, db
+from sqlalchemy import and_, desc
 from app.auth.models import User
 from app.site.models import PostComment
 
@@ -17,6 +17,14 @@ class Post(db.Model):
                               onupdate=db.func.current_timestamp())
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     comments = db.relationship('PostComment', backref='posts', lazy='joined')
+
+    def get_blog(page):
+        per_page = application.config["BLOG_PER_PAGE"]
+        return Post.query.filter(Post.published==1).order_by(desc('posts_id')).paginate(page, per_page, error_out=False)
+
+    def get_sortable_list(order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return Post.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
 
     def get_author(self):
         if self.writen_by:
@@ -46,6 +54,10 @@ class Page(db.Model):
     html = db.Column(db.Text())
     history = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
+
+    def get_sortable_list(order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return Page.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
 
     def get_home_page():
         home_page = Page.query.filter(and_(Page.slug=='home', Page.published==1)).first()

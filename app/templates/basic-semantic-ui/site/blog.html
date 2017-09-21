@@ -1,16 +1,5 @@
 {% extends "basic-semantic-ui/base.html" %}
 {% block title %}Home{% endblock %}
-{% block style %}
-<style>
-  .hidden{
-    display: none;
-  }
-  .read_full_post{
-    display: block;
-    text-align: right;
-  }
-</style>
-{% endblock %}
 {% block content %}
 <div class="ui one column grid text container">
     {% if posts %}
@@ -18,11 +7,16 @@
       <div class="column">
     	<div class="ui segments">
     	  <div class="ui segment">
-    	    <h1 class="ui header">{{ post.title }}</h1>
+          <a href="{{ url_for('site.single_post', slug=post.slug)}}">
+    	     <h1 class="ui header">{{ post.title }}</h1>
+          </a>
           <div class="ui teal ribbon label">
             <i class="user icon"></i>
               {{ post.get_author() }}
             <div class="detail">{{ post.date_created.strftime('%m/%d/%Y') }}</div>
+            {% if post.comments %}
+            <div class="detail">Comments: {{ post.comment_count() }}</div>
+            {% endif %}
           </div>
     	  </div>
     	  <div class="ui segments">
@@ -30,51 +24,11 @@
             {% set text = post.text|truncate_after_tag(250) %}
     	      {{ text | safe }}
             {% if text != post.text %}
-            <a class='read_full_post' href="{{ url_for('site.single_post', slug=post.slug)}}"> ...Read Full Post</a>
+             ...
             {% endif %}
     	    </div>
         </div>
-        {% if post.comments %}
-        <div class="ui segment">
-          {% for comment in post.comments if comment.published == 1 %}
-            {% if loop.first %}
-              <h3 class="ui header">Comments</h3>
-              <div class="ui comments">
-            {% endif %}
-              <div class="comment {% if loop.index > 3 %}hidden hidden-{{post.id}}{% endif %}">
-                <div class="avatar">
-                  <i class='user icon'></i>
-                </div>
-                <div class='author'>
-                    {{ comment.get_author() }}
-                </div>
-                <div class="metadata">
-                  <div class="date">
-                    {{ comment.date_created.strftime('%m/%d/%Y') }}
-                  </div>
-                  <div class="text">
-                     {{ comment.comment }}
-                  </div>
-                </div>
-               </div>
-               {% if loop.index == 4 %}
-                <button class='ui teal tiny centered button readmore' data-post='{{post.id}}'>Read More</button>
-               {% endif %}
-            {% if loop.last %}
-              </div>
-            {% endif %}
-          {% endfor %}
-          {% if current_user.is_authenticated %}
-          <button class='ui teal tiny button comment' data-post='{{post.id}}'>Comment</button>
-          {% endif %}
-        </div>
-        {% else %}
-        {% if current_user.is_authenticated %}
-        <div class="ui segment">
-          <button class='ui teal tiny button comment' data-post='{{post.id}}'>Comment</button>
-        </div>
-        {% endif %}
-        {% endif %}
+
       </div>
     </div>
   {% endfor %}
@@ -99,47 +53,5 @@
      </div>
     {% endif %}
 </div>
-{% if current_user.is_authenticated %}
-<div class="ui small modal" id="comment-form">
-  <i class="close icon"></i>
-  <div class="header">
-    Comment
-  </div>
-  <div class="content">
-    <div class="description">
-      <form method="POST" class='ui form'>
-      {% for f in form %}
-        <div class='field'>
-        {% if f.name == 'post' %}
-          {{ f(id='post-id') }}
-        {% else %}
-          {{ f.label }}
-          {{ f }}
-        {% endif %}
-        </div>
-      {% endfor %}
-      <input class='ui button' type='submit'>
-      </form>
-    </div>
-  </div>
-</div>
-{% endif %}
-{% endblock %}
-{% block script %}
-<script>
-$(function(){
-{% if current_user.is_authenticated %}
-  $('button.comment').on('click', function(){
-      $('#comment-form #post-id').val($(this).data('post'))
-      $('#comment-form').modal('show')
-  })
-{% endif %}
-  $('button.readmore').on('click', function(){
-      var post_id = $(this).data('post')
-      $(this).hide()
-      $('.hidden-' + post_id).show()
-  })
-})
 
-</script>
 {% endblock %}

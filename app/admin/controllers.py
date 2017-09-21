@@ -1,7 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  flash, g, session, redirect, url_for
-from app import application, db
+                  redirect, url_for
+from app import db, check_login, check_admin, has_role
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
                             CreateUserForm, EditUserForm, \
@@ -12,14 +12,12 @@ from app.admin.models import Post, Page
 from app.auth.models import User, Role, roles_users
 from flask_admin import helpers
 import flask_login as login
-from app import check_login, check_admin, has_role
 from werkzeug.security import generate_password_hash
 import codecs
 import translitcodec
 import difflib
 from datetime import datetime
 import re
-from app.site.models import Themes
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
@@ -34,8 +32,7 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 def blog_list(page):
     order = 'posts_'+request.args['sort'] if 'sort' in request.args else 'posts_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
-    per_page = application.config["ADMIN_PER_PAGE"]
-    posts = Post.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+    posts = Post.get_sortable_list(order, direction, page)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/blog/list.html", posts=posts)
 
@@ -92,8 +89,7 @@ def delete_post(post_id):
 def page_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
-    per_page = application.config["ADMIN_PER_PAGE"]
-    pages = Page.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+    pages = Page.get_sortable_list(order, direction, page)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/pages/list.html", pages=pages)
 
@@ -155,8 +151,7 @@ def delete_page(page_id):
 def user_list(page):
     order = 'users_'+request.args['sort'] if 'sort' in request.args else 'users_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
-    per_page = application.config["ADMIN_PER_PAGE"]
-    users = User.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+    users = User.get_sortable_list(order, direction, page)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/users/list.html", users=users)
 
@@ -221,8 +216,7 @@ def delete_user(user_id):
 def role_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
-    per_page = application.config["ADMIN_PER_PAGE"]
-    roles = Role.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+    roles = Role.get_sortable_list(order, direction, page)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/roles/list.html", roles=roles)
 
@@ -275,8 +269,7 @@ def delete_role(role_id):
 def comment_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
-    per_page = application.config["ADMIN_PER_PAGE"]
-    comments = PostComment.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+    comments = PostComment.get_sortable_list(order, direction, page)
     template_path = Themes.get_active('admin')
     return render_template(template_path + "/admin/comments/list.html", comments=comments)
 

@@ -1,16 +1,16 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  flash, g, session, redirect, url_for, abort
-from app import application, db
+                  redirect, url_for, abort
 from app.admin.models import Post, Page
 from app.auth.models import User
 from app.site.models import Themes, PostComment
 from app.site.forms import CommentForm
 from flask_admin import helpers
 import flask_login as login
-from sqlalchemy import desc
+from app import db
 
 site = Blueprint('site', __name__, url_prefix='')
+
 
 @site.route('/', methods=['GET'])
 def index():
@@ -20,20 +20,13 @@ def index():
 		return render_template(template_path + "/site/page.html", page=home)
 	return redirect(url_for('site.blog'))
 
+
 @site.route('/blog', defaults={'page': 1}, methods=['GET', 'POST'])
-@site.route('/blog/<int:page>', methods=['GET', 'POST'])
+@site.route('/blog/<int:page>', methods=['GET'])
 def blog(page):
-    form = CommentForm(request.form)
-    if helpers.validate_form_on_submit(form):
-        comment = PostComment()
-        form.populate_obj(comment)
-        comment.writen_by = login.current_user.id
-        db.session.add(comment)
-        db.session.commit()
-    per_page = application.config["BLOG_PER_PAGE"]
-    posts = Post.query.filter(Post.published==1).order_by(desc('posts_id')).paginate(page, per_page, error_out=False)
+    posts = Post.get_blog(page)
     template_path = Themes.get_active('site')
-    return render_template(template_path + "/site/blog.html", posts=posts, form=form)
+    return render_template(template_path + "/site/blog.html", posts=posts)
 
 
 @site.route('/blog/<slug>', methods=['GET', 'POST'])
@@ -46,6 +39,8 @@ def single_post(slug):
         db.session.add(comment)
         db.session.commit()
     post = Post.get_by_slug(slug)
+    if not post:
+        abort(404)
     template_path = Themes.get_active('site')
     return render_template(template_path + "/site/single_post.html", post=post, form=form)
 
