@@ -10,7 +10,7 @@
           {% for page in menu_pages %}
            {% if page.published == 1 and page.slug != 'home' %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('site.page', page=page.slug) }}">{{ page.title }}</a>
+              <a class="nav-link" href="{{ url_for('site.site_page', page=page.slug) }}">{{ page.title }}</a>
           </li>
            {% endif %}
           {% endfor %}

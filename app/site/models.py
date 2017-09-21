@@ -2,6 +2,7 @@ from app import application, db
 from sqlalchemy import and_
 from app.auth.models import User
 
+
 class Themes(db.Model):
     __tablename__ = 'themes'
 
@@ -12,12 +13,14 @@ class Themes(db.Model):
     type_ = db.Column(db.String(100))
     active = db.Column(db.Boolean(), default=0)
 
-    def get_active(type):
-        return str(db.session.query(Themes.slug).filter(and_(Themes.type_==type, Themes.active==1)).first()[0])
+    @classmethod
+    def get_active(cls, type_):
+        return str(db.session.query(Themes.slug).filter(and_(Themes.type_ == type_, Themes.active == 1)).first()[0])
 
     @classmethod
     def all(cls):
         return db.session.query(cls).all()
+
 
 class PostComment(db.Model):
     __tablename__ = 'comments'
@@ -37,12 +40,14 @@ class PostComment(db.Model):
                 return user.get_display_name()
         return 'Unknown'
 
-    def get_new_comments():
-        return PostComment.query.filter_by(viewed = 0).count()
+    @classmethod
+    def get_new_comments(cls):
+        return PostComment.query.filter_by(viewed=0).count()
 
-    def get_sortable_list(order, direction, page):
+    @classmethod
+    def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return PostComment.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+        return PostComment.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):

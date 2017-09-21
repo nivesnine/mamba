@@ -9,7 +9,7 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreateCommentForm, EditCommentForm, EditProfileForm
 from app.site.models import Themes, PostComment
 from app.admin.models import Post, Page
-from app.auth.models import User, Role, roles_users
+from app.auth.models import User, Role
 from flask_admin import helpers
 import flask_login as login
 from werkzeug.security import generate_password_hash
@@ -23,6 +23,7 @@ _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 # Create blog blueprint
 admin = Blueprint('admin', __name__, url_prefix='/admin')
+
 
 # Create the blog routes
 @admin.route('/blog', defaults={'page': 1}, methods=['GET'])
@@ -103,7 +104,8 @@ def create_page():
         page = Page()
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = "{} created at {}".format(str(login.current_user.email), datetime.now().strftime('%m-%d-%Y %I:%M %p'))
+        page.history = "{} created at {}".format(str(login.current_user.email),
+                                                 datetime.now().strftime('%m-%d-%Y %I:%M %p'))
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
@@ -121,11 +123,9 @@ def edit_page(page_id):
     if helpers.validate_form_on_submit(form):
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = str(login.current_user.email) \
-                       + ' updated site at ' \
-                       + datetime.now().strftime('%m-%d-%Y %I:%M %p') \
-                       + '\n' + _unidiff_output(last_edit, page.html) \
-                       + '\n\n' + page.history
+        page.history = str(login.current_user.email) + ' updated site at ' \
+                       + datetime.now().strftime('%m-%d-%Y %I:%M %p') + '\n' \
+                       + _unidiff_output(last_edit, page.html) + '\n\n' + page.history
         db.session.merge(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
@@ -137,7 +137,7 @@ def edit_page(page_id):
 @check_login
 @check_admin
 def delete_page(page_id):
-    page = Page.query.get_or_404(post_id)
+    page = Page.query.get_or_404(page_id)
     db.session.delete(page)
     db.session.commit()
     return redirect(url_for('admin.page_list'))
@@ -165,6 +165,7 @@ def create_user():
         user = User()
         form.populate_obj(user)
         user.password = generate_password_hash(form.password.data)
+        user.alias = user.email.split("@")[0]
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('admin.user_list'))
@@ -350,13 +351,14 @@ def slugify(text, delim=u'-'):
             result.append(word)
     return str(delim.join(result))
 
+
 def _unidiff_output(expected, actual):
     """
     Helper function. Returns a string containing the unified diff of two multiline strings.
     """
-    expected=expected.splitlines(1)
-    actual=actual.splitlines(1)
+    expected = expected.splitlines(1)
+    actual = actual.splitlines(1)
 
-    diff=difflib.unified_diff(expected, actual)
+    diff = difflib.unified_diff(expected, actual)
 
     return ''.join(diff)

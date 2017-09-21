@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template, \
                   redirect, url_for, abort
 from app.auth.forms import LoginForm, RegistrationForm
-from app.auth.models import User, Role, roles_users
+from app.auth.models import User
 from flask_admin.contrib import sqla
 from flask_admin import helpers
 import flask_login as login
@@ -11,6 +11,7 @@ from werkzeug.security import generate_password_hash
 from app.site.models import Themes
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
+
 
 class MyModelView(sqla.ModelView):
     def is_accessible(self):

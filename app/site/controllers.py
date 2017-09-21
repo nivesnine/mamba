@@ -1,8 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  redirect, url_for, abort
+    redirect, url_for, abort
 from app.admin.models import Post, Page
-from app.auth.models import User
 from app.site.models import Themes, PostComment
 from app.site.forms import CommentForm
 from flask_admin import helpers
@@ -14,11 +13,11 @@ site = Blueprint('site', __name__, url_prefix='')
 
 @site.route('/', methods=['GET'])
 def index():
-	home = Page.get_home_page()
-	if home:
-		template_path = Themes.get_active('site')
-		return render_template(template_path + "/site/page.html", page=home)
-	return redirect(url_for('site.blog'))
+    home = Page.get_home_page()
+    if home:
+        template_path = Themes.get_active('site')
+        return render_template(template_path + "/site/page.html", page=home)
+    return redirect(url_for('site.blog'))
 
 
 @site.route('/blog', defaults={'page': 1}, methods=['GET', 'POST'])
@@ -46,7 +45,7 @@ def single_post(slug):
 
 
 @site.route('/<page>', methods=['GET'])
-def page(page):
+def site_page(page):
     template_path = Themes.get_active('site')
     page = Page.get_page(page)
     if not page:

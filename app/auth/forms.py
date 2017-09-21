@@ -27,7 +27,7 @@ class LoginForm(form.Form):
         return user
 
     def get_user_by_email(self):
-        return db.session.query(User).filter(User.email==self.email.data).first()
+        return db.session.query(User).filter(User.email == self.email.data).first()
 
 
 class RegistrationForm(form.Form):

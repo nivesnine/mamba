@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_htmlmin import HTMLMIN
 from functools import wraps
 import flask_login as login
-    
+
 # Define the WSGI application object
 application = Flask(__name__)
 
@@ -17,6 +17,7 @@ HTMLMIN(application)
 # by modules and controllers
 db = SQLAlchemy(application)
 
+
 # custom decorators
 def check_login(func):
     @wraps(func)
@@ -24,7 +25,9 @@ def check_login(func):
         if not login.current_user.is_authenticated:
             return redirect(url_for('auth.login_view'))
         return func(*args, **kwargs)
+
     return decorated_function
+
 
 def check_admin(func):
     @wraps(func)
@@ -32,6 +35,7 @@ def check_admin(func):
         if not login.current_user.is_admin():
             return redirect(url_for('site.index'))
         return func(*args, **kwargs)
+
     return decorated_function
 
 
@@ -42,7 +46,9 @@ def has_role(role):
             if not login.current_user.has_role(role):
                 return redirect(url_for('site.index'))
             return func(*args, **kwargs)
+
         return decorated_function
+
     return decorator
 
 
@@ -62,16 +68,18 @@ db.create_all()
 
 # error handling
 from app.site.models import Themes
+
+
 @application.errorhandler(404)
 def page_not_found(e):
     template_path = Themes.get_active('error')
-    return render_template(template_path+"/error/error_template.html", status_code=404), 404
+    return render_template(template_path + "/error/error_template.html", status_code=404, error=e), 404
 
 
 @application.errorhandler(405)
 def bad_request_error(e):
     template_path = Themes.get_active('error')
-    return render_template(template_path+"error/error_template.html", status_code=405), 405
+    return render_template(template_path + "error/error_template.html", status_code=405, error=e), 405
 
 
 # getters for templates
@@ -81,24 +89,27 @@ def inject_now():
 
 
 from app.admin.models import Page
+
+
 @application.context_processor
 def insert_pages():
-    return {'menu_pages': Page.get_pages()}
+    return {'menu_pages': Page.all()}
 
 
 from app.site.models import PostComment
+
+
 @application.context_processor
 def get_new_comments():
     return {'new_comments': PostComment.get_new_comments()}
 
 
-#custom filters
+# custom filters
 @application.template_filter('truncate_after_tag')
 def truncate_after_tag(text, target_length):
-    last_closing_tag_begining = text.find('</', target_length)
-    end = text.find('>', last_closing_tag_begining)
+    last_closing_tag_beginning = text.find('</', target_length)
+    end = text.find('>', last_closing_tag_beginning)
     new_text = text[:end + 1]
     if len(new_text) == 0:
         return text
     return new_text
-

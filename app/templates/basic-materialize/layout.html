@@ -7,7 +7,7 @@
     <a class="item inverted" href="{{ url_for('site.index') }}">Home</a>
     {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
-      <a class="item inverted" href="{{ url_for('site.page', page=page.slug) }}">{{ page.title }}</a>
+      <a class="item inverted" href="{{ url_for('site.site_page', page=page.slug) }}">{{ page.title }}</a>
      {% endif %}
     {% endfor %}
     <div class="right item" style='padding: 0;'>
@@ -48,7 +48,7 @@
     <a class="item" href="{{ url_for('site.index') }}">Home</a>
     {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
-      <a class="item" href="{{ url_for('site.page', page=page.slug) }}">{{ page.title }}</a>
+      <a class="item" href="{{ url_for('site.site_page', page=page.slug) }}">{{ page.title }}</a>
      {% endif %}
     {% endfor %}
     {% if not current_user.is_authenticated %}

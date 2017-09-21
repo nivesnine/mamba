@@ -1,7 +1,6 @@
 from app import application, db
 from flask_security import RoleMixin
 from flask_login import UserMixin
-from sqlalchemy.sql import and_
 from sqlalchemy.orm import column_property
 
 roles_users = db.Table(
@@ -31,12 +30,14 @@ class Role(RoleMixin, db.Model):
     def __str__(self):
         return self.name.replace('_', ' ')
 
-    def get_role(name):
+    @classmethod
+    def get_role(cls, name):
         return Role.query.filter_by(name=name).first()
 
-    def get_sortable_list(order, direction, page):
+    @classmethod
+    def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return Role.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
+        return Role.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):
@@ -57,8 +58,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean(), default=1)
     registered_at = db.Column(db.DateTime(), default=db.func.current_timestamp())
-    roles = db.relationship('Role', secondary=roles_users,
-                        backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     posts = db.relationship('Post', backref='users', lazy='joined')
     comments = db.relationship('PostComment', backref='users', lazy='joined')
     registered_ip = db.Column(db.String(255))
@@ -80,6 +80,10 @@ class User(UserMixin, db.Model):
     def get_roles(self):
         return self.roles
 
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.username
+
     def get_display_name(self):
 
         def get_display_name_type(x):
@@ -90,25 +94,21 @@ class User(UserMixin, db.Model):
 
         return get_display_name_type(self.display_name)
 
-    def get_sortable_list(order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
-        return User.query.order_by(order+' ' +direction).paginate(page, per_page, error_out=False)
-
-    def get_user_by_email(email):
-        return User.query.filter_by(email = email).first() 
-
     def is_admin(self):
         return True if 'admin' in self.roles else False
 
     def has_role(self, role):
         return True if role in self.roles else False
 
-    # Required for administrative interface
-    def __unicode__(self):
-        return self.username
+    @classmethod
+    def get_sortable_list(cls, order, direction, page):
+        per_page = application.config["ADMIN_PER_PAGE"]
+        return User.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+
+    @classmethod
+    def get_user_by_email(cls, email):
+        return User.query.filter_by(email=email).first()
 
     @classmethod
     def all(cls):
         return db.session.query(cls).all()
-
-
