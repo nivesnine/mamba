@@ -1,9 +1,8 @@
 from app import db
-from app.auth.models import User, Role, roles_users
+from app.auth.models import User, Role
 from app.admin.models import Post, Page
 from app.site.models import Themes
 from werkzeug.security import generate_password_hash
-from flask_sqlalchemy import SQLAlchemy
 
 user = User()
 user.display_name = 'alias'
@@ -47,7 +46,7 @@ page = Page()
 page.title = 'About'
 page.slug = 'about'
 page.history = 'Example'
-page.html = '<div class="ui one column grid text container"><h1 class="ui header">This is an about page example!</h1></div>'
+page.html = '<div class="ui one column grid text container"><h1>This is an about page example!</h1></div>'
 page.published = 1
 db.session.add(page)
 db.session.commit()

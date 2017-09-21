@@ -10,7 +10,8 @@ from app import db
 from werkzeug.security import generate_password_hash
 from app.site.models import Themes
 
-auth = Blueprint('auth', __name__, url_prefix='/auth')
+auth = Blueprint('auth', __name__, url_prefix='/auth',
+                 template_folder='../templates/{}/'.format(Themes.get_active('auth')))
 
 
 class MyModelView(sqla.ModelView):
@@ -41,8 +42,7 @@ def login_view():
                 return redirect(url_for('site.index'))
             else:
                 abort(404)
-    template_path = Themes.get_active('auth')
-    return render_template(template_path + '/auth/login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -62,8 +62,7 @@ def registration_view():
                 login.login_user(user)
 
                 return redirect(url_for('auth.index'))
-        template_path = Themes.get_active('auth')
-        return render_template(template_path + '/auth/register.html', form=form)
+        return render_template('auth/register.html', form=form)
 
 
 @auth.route('/logout')
