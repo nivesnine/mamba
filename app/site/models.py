@@ -52,3 +52,47 @@ class PostComment(db.Model):
     @classmethod
     def all(cls):
         return db.session.query(cls).all()
+
+
+class Settings(db.Model):
+    __tablename__ = 'settings'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    site_name = db.Column(db.String(255))
+    use_site_logo = db.Column(db.Boolean())
+    site_logo_url = db.Column(db.String(255))
+    home_page = db.Column(db.String(100))
+    posts_per_page = db.Column(db.Integer())
+    blog_sort = db.Column(db.String(6))
+
+    @classmethod
+    def get_site_name(cls):
+        use_logo = cls.get_use_site_logo()
+        if use_logo:
+            return "<img src='{}' class='logo'>".format(cls.get_site_logo_url())
+        else:
+            return cls.get_settings().site_name
+
+    @classmethod
+    def get_use_site_logo(cls):
+        return cls.get_settings().use_site_logo
+
+    @classmethod
+    def get_site_logo_url(cls):
+        return cls.get_settings().site_logo_url
+
+    @classmethod
+    def get_home_page(cls):
+        return cls.get_settings().home_page
+
+    @classmethod
+    def get_blog_per_page(cls):
+        return cls.get_settings().posts_per_page
+
+    @classmethod
+    def get_blog_order(cls):
+        return cls.get_settings().blog_sort
+
+    @classmethod
+    def get_settings(cls):
+        return cls.query.get(1)

@@ -14,11 +14,11 @@
 
 #### To Do
 ------------
-- Finish additional basic themes (materialize, foundation)
+- Finish additional basic themes (only semantic-ui can be trusted right now)
 - Make sure all themes/endpoints handle form errors properly
 - Theme manger
 - Improve README.md
-- Site settings (blog sort, homepage(blog/page), per_page, site logo)
+- Add tags to posts
 - Blog search
 - Menu creator
 - Form creator

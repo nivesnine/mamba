@@ -6,8 +6,9 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
                             CreateUserForm, EditUserForm, \
                             CreateRoleForm, EditRoleForm, \
-                            CreateCommentForm, EditCommentForm, EditProfileForm
-from app.site.models import Themes, PostComment
+                            CreateCommentForm, EditCommentForm,\
+                            EditProfileForm, SettingsForm
+from app.site.models import Themes, PostComment, Settings
 from app.admin.models import Post, Page
 from app.auth.models import User, Role
 from flask_admin import helpers
@@ -322,6 +323,23 @@ def delete_comment(comment_id):
     return redirect(url_for('admin.comment_list'))
 
 
+# Admin Site Settings
+@admin.route('/settings', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def site_settings():
+    settings = Settings.get_settings()
+    form = SettingsForm(request.form, obj=settings)
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(settings)
+        db.session.merge(settings)
+        db.session.commit()
+        return redirect(url_for('site.index'))
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/site/settings.html", form=form)
+
+
+# User Profile Editor
 @admin.route('/profile', methods=['GET', 'POST'])
 @check_login
 def edit_profile():
@@ -341,7 +359,7 @@ def edit_profile():
         db.session.commit()
         return redirect(url_for('site.index'))
     theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/users/edit_profile.html", form=form)
+    return render_template(theme + "/admin/site/edit_profile.html", form=form)
 
 
 def slugify(text, delim=u'-'):

@@ -1,8 +1,17 @@
 from app import db
 from app.auth.models import User, Role
 from app.admin.models import Post, Page
-from app.site.models import Themes
+from app.site.models import Themes, Settings
 from werkzeug.security import generate_password_hash
+
+settings = Settings()
+settings.site_name = 'My Site'
+settings.use_site_logo = 0
+settings.home_page = 'blog'
+settings.posts_per_page = 10
+settings.blog_sort = 'desc'
+db.session.add(settings)
+db.session.commit()
 
 user = User()
 user.display_name = 'alias'

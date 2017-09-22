@@ -4,7 +4,7 @@
     <a class="toc item">
       <i class="sidebar icon"></i>
     </a>
-    <a class="item inverted" href="{{ url_for('site.index') }}">Home</a>
+    <a class="item inverted" href="{{ url_for('site.index') }}">{{ site_name | safe }}</a>
     {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
       <a class="item inverted" href="{{ url_for('site.site_page', page=page.slug) }}">{{ page.title }}</a>
@@ -23,15 +23,16 @@
        <i class="dropdown icon" aria-hidden="true"></i>
        <div class="menu">
          {% if current_user.has_role('editor') %}
-         <a class="item" href="{{ url_for('admin.blog_list') }}">Edit Blog</a>
-         <a class="item" href="{{ url_for('admin.page_list') }}">Edit Pages</a>
-         <a class="item" href="{{ url_for('admin.comment_list') }}">Edit Comments</a>
+         <a class="item" href="{{ url_for('admin.blog_list') }}">Blog</a>
+         <a class="item" href="{{ url_for('admin.page_list') }}">Pages</a>
+         <a class="item" href="{{ url_for('admin.comment_list') }}">Comments</a>
          {% endif %}
          {% if current_user.is_admin() %}
-         <a class="item" href="{{ url_for('admin.user_list') }}">Edit Users</a>
-         <a class="item" href="{{ url_for('admin.role_list') }}">Edit Roles</a>
+         <a class="item" href="{{ url_for('admin.user_list') }}">Users</a>
+         <a class="item" href="{{ url_for('admin.role_list') }}">Roles</a>
+             <a class="item" href="{{ url_for('admin.site_settings') }}">Settings</a>
          {% endif %}
-         <a class="item" href="{{ url_for('admin.edit_profile') }}">Edit Profile</a>
+         <a class="item" href="{{ url_for('admin.edit_profile') }}">Profile</a>
          <a class="item" href="{{ url_for('auth.logout_view') }}">Logout</a>
        </div>
      </div>

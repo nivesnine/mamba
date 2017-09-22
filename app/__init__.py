@@ -96,12 +96,26 @@ def insert_pages():
     return {'menu_pages': Page.all()}
 
 
-from app.site.models import PostComment
+from app.site.models import PostComment, Settings
 
 
 @application.context_processor
 def get_new_comments():
     return {'new_comments': PostComment.get_new_comments()}
+
+
+@application.context_processor
+def get_site_name():
+    return {'site_name': Settings().get_site_name()}
+
+
+@application.context_processor
+def get_older_newer():
+    sort_order = Settings().get_blog_order()
+    order = 0
+    if sort_order == 'desc':
+        order = 1
+    return {'sort_order': order}
 
 
 # custom filters

@@ -1,7 +1,7 @@
 from app import application, db
-from sqlalchemy import and_, desc
+from sqlalchemy import and_
 from app.auth.models import User
-from app.site.models import PostComment
+from app.site.models import PostComment, Settings
 
 
 # Create the Models
@@ -31,8 +31,9 @@ class Post(db.Model):
 
     @classmethod
     def get_blog(cls, page):
-        per_page = application.config["BLOG_PER_PAGE"]
-        return Post.query.filter(Post.published == 1).order_by(desc('posts_id'))\
+        per_page = Settings().get_blog_per_page()
+        order = Settings().get_blog_order()
+        return Post.query.filter(Post.published == 1).order_by(('posts_id {}'.format(order)))\
             .paginate(page, per_page, error_out=False)
 
     @classmethod
@@ -61,19 +62,28 @@ class Page(db.Model):
     history = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
 
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.username
+
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return Page.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        return cls.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
 
     @classmethod
     def get_home_page(cls):
-        home_page = Page.query.filter(and_(Page.slug == 'home', Page.published == 1)).first()
+        slug = Settings().get_home_page()
+        home_page = cls.query.filter(and_(Page.slug == slug, Page.published == 1)).first()
         return home_page if home_page else None
 
     @classmethod
     def get_page(cls, slug):
-        return Page.query.filter(Page.slug == slug).first()
+        return cls.query.filter(Page.slug == slug).first()
+
+    @classmethod
+    def get_published_pages(cls):
+        return cls.query.filter_by(published=1).all()
 
     @classmethod
     def all(cls):

@@ -36,14 +36,24 @@
 	{% if posts.has_next %}
                 <a class='ui mini button blue left floated' 
 			href="{{ url_for('site.blog', page=posts.next_num) }}">
-                        <i class='icon caret left'></i> Older
+                        <i class='icon caret left'></i>
+                    {% if sort_order %}
+                        Older
+                    {% else %}
+                        Newer
+                    {% endif %}
                 </a>
         {% endif %}
 
         {% if posts.has_prev %}
                 <a class='ui mini button blue right floated'
                         href="{{ url_for('site.blog', page=posts.prev_num) }}">
-                        Newer <i class='icon caret right'></i>
+                    {% if sort_order %}
+                        Newer
+                    {% else %}
+                        Older
+                    {% endif %}
+                    <i class='icon caret right'></i>
                 </a>
         {% endif %}
   </div>

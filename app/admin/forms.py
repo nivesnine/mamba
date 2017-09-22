@@ -2,6 +2,7 @@ from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
 from app.auth.models import Role
 from wtforms_alchemy import QuerySelectMultipleField
+from app.admin.models import Page
 
 
 # Blog post creation form
@@ -89,4 +90,27 @@ class EditProfileForm(form.Form):
     bio = fields.StringField(validators=[validators.length(max=255)])
     email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
     password = fields.PasswordField(validators=[validators.length(max=255)])
+    submit = fields.SubmitField('Submit')
+
+
+class SettingsForm(form.Form):
+    choices = [('blog', 'Blog')]
+    try:
+        pages = Page.get_published_pages()
+        for page in pages:
+            choices.append((page.slug, page.title))
+    except:
+        pass
+    site_name = fields.StringField('Site Name', validators=[validators.length(max=255)])
+    use_site_logo = fields.BooleanField('Use Logo Instead of Site Name?')
+    site_logo_url = fields.StringField('Logo Image Url', validators=[validators.length(max=255)])
+    home_page = fields.SelectField(
+        'Home Page',
+        choices=choices, validators=[validators.required()]
+    )
+    posts_per_page = fields.IntegerField('Posts per page', validators=[validators.required()])
+    blog_sort = fields.SelectField(
+        'Blog Sort Direction',
+        choices=[('desc', 'Newest Post First'), ('asc', 'Oldest Post First')], validators=[validators.required()]
+    )
     submit = fields.SubmitField('Submit')
