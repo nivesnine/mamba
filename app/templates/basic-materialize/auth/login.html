@@ -1,57 +1,44 @@
 {% extends "basic-materialize/base.html" %}
 {% block title %}Login{% endblock %}
 
-{% block style %}
-  <style type="text/css">
-    body {
-      background-color: #DADADA;
-    }
-    body > .grid {
-      height: 100%;
-    }
-    .image {
-      margin-top: -100px;
-    }
-    .column {
-      max-width: 450px;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
 
-<div class="ui middle aligned center aligned grid m">
-  <div class="column">
-      <div class="content">
-             Log-in to your account
+     <div class="row">
+    <form class="col s12 m6 offset-m3" method="POST">
+      <div class="row">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">account_circle</i>
+          {{ form.email(placeholder="email") }}
+          <label for="icon_prefix">Email</label>
+        </div>
+        <div class="input-field col s6">
+          <i class="material-icons prefix">lock</i>
+           {{ form.password(placeholder="password") }}
+          <label for="icon_lock">Password</label>
+        </div>
       </div>
-        <form class="ui form" method="POST" action="">
-            <div class="ui stacked segment">
-            <div class="field">
-              <div class="ui left icon input">
-                <i class="user icon"></i>
-                {{ form.email(placeholder="email") }}
-              </div>
+        <div class="row s12 m6 offset-m3">
+            <div class="input-field col s12">
+                <input type='submit' class="btn right" value="Login">
             </div>
-            <div class="field">
-              <div class="ui left icon input">
-                <i class="lock icon"></i>
-                {{ form.password(placeholder="password") }}
-              </div>
-            </div>
-            <input type='submit' class="ui fluid large teal submit button" value="Login">
-            </div>
-        </form>
-        <div class="ui message">
-          Need an account? <a href="{{ url_for('auth.registration_view') }}">Sign Up</a>
+        </div>
+    </form>
+     </div>
+    <div class="row">
+      <div class="col s12 m6 offset-m3">
+      <div class="card-panel blue lighten-2">
+          Need an account? <a class='btn' href="{{ url_for('auth.registration_view') }}">Sign Up</a>
         </div>
         {% if form.errors %}
-        <div class='ui error message'>
-            <h5>Please check information for errors</h5>
-        </div>
+         <div class="card-panel red lighten-2">
+             <h5>Please check information for errors</h5>
+            {%  for error in form.errors %}
+                <p>{{ error }}: {{ form.errors[error] }}</p>
+            {% endfor %}
+         </div>
         {% endif %}
-    </div>
-</div>
+      </div>
+  </div>
 
 {% endblock %}
 

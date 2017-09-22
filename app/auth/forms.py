@@ -31,7 +31,7 @@ class LoginForm(form.Form):
 
 
 class RegistrationForm(form.Form):
-    email = fields.StringField(validators=[validators.length(max=120)])
+    email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
     password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
 
     def validate_registration(self):
