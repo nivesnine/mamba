@@ -65,7 +65,6 @@ def edit_post(post_id):
     if helpers.validate_form_on_submit(form):
         form.populate_obj(post)
         post.slug = slugify(post.title)
-        post.writen_by = login.current_user.id
         db.session.merge(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
