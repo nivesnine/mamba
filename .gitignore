@@ -7,6 +7,5 @@ env/
 venv/
 *.log
 .DS_Store
-app.db
 run.py
 error.log
