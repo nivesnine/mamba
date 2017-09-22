@@ -1,4 +1,9 @@
-{% extends "basic-semantic-ui/base.html" %}
+{% if current_user.has_role('editor') %}
+    {% extends "basic-semantic-ui/admin/admin-base.html" %}
+{% else %}
+    {% extends "basic-semantic-ui/base.html" %}
+{% endif %}
+
 {% block title %}Edit Profile{% endblock %}
 {% block content %}
 

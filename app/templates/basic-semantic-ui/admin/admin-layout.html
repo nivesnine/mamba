@@ -1,0 +1,44 @@
+{% macro menu() -%}
+
+<div class="ui container">
+  <div class="ui large inverted secondary pointing menu">
+    <a class="toc item">
+      <i class="sidebar icon"></i>
+    </a>
+      <div class="right item" style="padding: 0;">
+           <a class="item inverted" href="{{ url_for('site.index') }}">View Site</a>
+          <a class="item inverted" href="{{ url_for('auth.logout_view') }}">Logout</a>
+      </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro mobile_menu() -%}
+<div class="ui vertical inverted sidebar menu left">
+
+    <a href="{{ url_for('admin.edit_profile') }}" class="item">
+        <i class='user icon' aria-hidden="true"></i> {{ current_user.get_display_name() }}
+    </a>
+
+      {% if current_user.has_role('editor') %}
+       <a class="item" href="{{ url_for('admin.blog_list') }}">Blog</a>
+       <a class="item" href="{{ url_for('admin.page_list') }}">Pages</a>
+       <a class="item" href="{{ url_for('admin.comment_list') }}">Comments</a>
+      {% endif %}
+      {% if current_user.is_admin() %}
+       <a class="item" href="{{ url_for('admin.user_list') }}">Users</a>
+       <a class="item" href="{{ url_for('admin.role_list') }}">Roles</a>
+      <a class="item" href="{{ url_for('admin.site_settings') }}">Settings</a>
+      {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro footer() -%}
+<div class="ui vertical footer segment m">
+    <div class="ui center aligned text container">
+      <div class="row">
+		    <p><i class='copyright icon'></i> {{ now.year }}</p>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}
