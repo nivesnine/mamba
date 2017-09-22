@@ -7,8 +7,14 @@ from app.site.forms import CommentForm
 from flask_admin import helpers
 import flask_login as login
 from app import db
+from sqlalchemy import exc
 
-site = Blueprint('site', __name__, url_prefix='', template_folder='../templates/{}/'.format(Themes.get_active('site')))
+try:
+    theme = Themes.get_active('site')
+except exc.OperationalError:
+    theme = 'basic-semantic-ui'
+
+site = Blueprint('site', __name__, url_prefix='', template_folder='../templates/{}/'.format(theme))
 
 
 @site.route('/', methods=['GET'])

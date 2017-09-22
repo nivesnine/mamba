@@ -18,12 +18,18 @@ import translitcodec
 import difflib
 from datetime import datetime
 import re
+from sqlalchemy import exc
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
+try:
+    theme = Themes.get_active('admin')
+except exc.OperationalError:
+    theme = 'basic-semantic-ui'
+
 # Create blog blueprint
 admin = Blueprint('admin', __name__, url_prefix='/admin',
-                  template_folder='../templates/{}/'.format(Themes.get_active('admin')))
+                  template_folder='../templates/{}/'.format(theme))
 
 
 # Create the blog routes

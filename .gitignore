@@ -9,3 +9,4 @@ venv/
 .DS_Store
 run.py
 error.log
+app.db

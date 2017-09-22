@@ -9,9 +9,15 @@ import flask_login as login
 from app import db
 from werkzeug.security import generate_password_hash
 from app.site.models import Themes
+from sqlalchemy import exc
+
+try:
+    theme = Themes.get_active('auth')
+except exc.OperationalError:
+    theme = 'basic-semantic-ui'
 
 auth = Blueprint('auth', __name__, url_prefix='/auth',
-                 template_folder='../templates/{}/'.format(Themes.get_active('auth')))
+                 template_folder='../templates/{}/'.format(theme))
 
 
 class MyModelView(sqla.ModelView):
