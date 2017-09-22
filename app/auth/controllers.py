@@ -9,15 +9,8 @@ import flask_login as login
 from app import db
 from werkzeug.security import generate_password_hash
 from app.site.models import Themes
-from sqlalchemy import exc
 
-try:
-    theme = Themes.get_active('auth')
-except exc.OperationalError:
-    theme = 'basic-semantic-ui'
-
-auth = Blueprint('auth', __name__, url_prefix='/auth',
-                 template_folder='../templates/{}/'.format(theme))
+auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 class MyModelView(sqla.ModelView):
@@ -48,7 +41,8 @@ def login_view():
                 return redirect(url_for('site.index'))
             else:
                 abort(404)
-    return render_template('auth/login.html', form=form)
+    theme = Themes.get_active('auth')
+    return render_template(theme + '/auth/login.html', form=form)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -68,7 +62,8 @@ def registration_view():
                 login.login_user(user)
 
                 return redirect(url_for('auth.index'))
-        return render_template('auth/register.html', form=form)
+        theme = Themes.get_active('auth')
+        return render_template(theme + '/auth/register.html', form=form)
 
 
 @auth.route('/logout')

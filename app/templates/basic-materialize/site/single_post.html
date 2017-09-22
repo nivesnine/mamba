@@ -1,5 +1,5 @@
 {% extends "basic-materialize/base.html" %}
-{% block title %}{% if post %}{{ post.title }}{% endif %}{% endblock %}
+{% block title %}{% if post %}{{post.title}}{% endif %}{% endblock %}
 {% block style %}
 <style>
   .hidden{
@@ -8,81 +8,73 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="ui one column grid text container">
+    <div class="container">
+          <div id="main" role="main">
+              <section class="content">
     {% if post %}
-      <div class="column">
-    	<div class="ui segments">
-    	  <div class="ui segment">
-    	    <h1 class="ui header">{{ post.title }}</h1>
-          <div class="ui teal ribbon label">
-            <i class="user icon"></i>
-              {{ post.get_author() }}
-            <div class="detail">{{ post.date_created.strftime('%m/%d/%Y') }}</div>
-          </div>
-    	  </div>
-    	  <div class="ui segments">
-    	    <div class="ui piled segment">
-    	      {{ post.text | safe }}
-    	    </div>
-        </div>
+      <article >
+    	<h3>{{ post.title }}</h3>
+          <h5>By - {{ post.get_author() }}</h5>
+        <p>
+    	      {{ text | safe }}
+        </p>
+    	  <time datetime="{{ post.date_created.strftime('%Y-%m-%d') }}">
+            Posted: {{ post.date_created.strftime('%m/%d/%Y') }}
+        </time>
+
         {% if post.comments %}
-        <div class="ui segment">
+        <div>
           {% for comment in post.comments if comment.published == 1 %}
             {% if loop.first %}
-              <h3 class="ui header">Comments</h3>
-              <div class="ui comments">
+              <h4>Comments</h4>
+              <div>
             {% endif %}
               <div class="comment {% if loop.index > 3 %}hidden hidden-{{post.id}}{% endif %}">
-                <div class="avatar">
-                  <i class='user icon'></i>
-                </div>
+
                 <div class='author'>
                     {{ comment.get_author() }}
                 </div>
                 <div class="metadata">
-                  <div class="date">
+                  <time datetime="{{ comment.date_created.strftime('%Y-%m-%d') }}">
                     {{ comment.date_created.strftime('%m/%d/%Y') }}
-                  </div>
+                  </time>
                   <div class="text">
                      {{ comment.comment }}
                   </div>
                 </div>
                </div>
                {% if loop.index == 4 %}
-                <button class='ui teal tiny centered button readmore' data-post='{{post.id}}'>Read More</button>
+                <button class='btn readmore' data-post='{{post.id}}'>Read More</button>
                {% endif %}
             {% if loop.last %}
               </div>
             {% endif %}
           {% endfor %}
           {% if current_user.is_authenticated %}
-          <button class='ui teal tiny button comment' data-post='{{post.id}}'>Comment</button>
+          <button class='btn comment' data-post='{{post.id}}'>Comment</button>
           {% endif %}
         </div>
         {% else %}
         {% if current_user.is_authenticated %}
-        <div class="ui segment">
-          <button class='ui teal tiny button comment' data-post='{{post.id}}'>Comment</button>
+        <div>
+          <button class='btn comment' data-post='{{post.id}}'>Comment</button>
         </div>
         {% endif %}
         {% endif %}
       </div>
     </div>
     {% else %}
-     <div class="column">
+     <div>
       <p>Post not found</p>
      </div>
     {% endif %}
 </div>
+
 {% if current_user.is_authenticated %}
-<div class="ui small modal" id="comment-form">
-  <i class="close icon"></i>
-  <div class="header">
-    Comment
-  </div>
-  <div class="content">
-    <div class="description">
-      <form method="POST" class='ui form'>
+
+    <div id="comment-modal" class="modal">
+    <div class="modal-content">
+      <form method="POST" id='comment-form'>
       {% for f in form %}
         <div class='field'>
         {% if f.name == 'post' %}
@@ -93,27 +85,33 @@
         {% endif %}
         </div>
       {% endfor %}
-      <input class='ui button' type='submit'>
       </form>
     </div>
+    <div class="modal-footer">
+      <input class='btn' type='submit' form="comment-form">
+    </div>
   </div>
-</div>
+
 {% endif %}
 {% endblock %}
+
 {% block script %}
 <script>
 $(function(){
 {% if current_user.is_authenticated %}
+
+    $('#comment-modal').modal();
+
   $('button.comment').on('click', function(){
-      $('#comment-form #post-id').val($(this).data('post'))
-      $('#comment-form').modal('show')
-  })
+      $('#comment-form #post-id').val($(this).data('post'));
+      $('#comment-modal').modal('open');
+  });
 {% endif %}
   $('button.readmore').on('click', function(){
-      var post_id = $(this).data('post')
-      $(this).hide()
-      $('.hidden-' + post_id).show()
-  })
+      var post_id = $(this).data('post');
+      $(this).hide();
+      $('.hidden-' + post_id).show();
+  });
 })
 
 </script>

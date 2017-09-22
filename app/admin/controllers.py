@@ -18,18 +18,11 @@ import translitcodec
 import difflib
 from datetime import datetime
 import re
-from sqlalchemy import exc
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
-try:
-    theme = Themes.get_active('admin')
-except exc.OperationalError:
-    theme = 'basic-semantic-ui'
-
 # Create blog blueprint
-admin = Blueprint('admin', __name__, url_prefix='/admin',
-                  template_folder='../templates/{}/'.format(theme))
+admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 
 # Create the blog routes
@@ -41,7 +34,8 @@ def blog_list(page):
     order = 'posts_'+request.args['sort'] if 'sort' in request.args else 'posts_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     posts = Post.get_sortable_list(order, direction, page)
-    return render_template("admin/blog/list.html", posts=posts)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/blog/list.html", posts=posts)
 
 
 @admin.route('/blog/create', methods=['GET', 'POST'])
@@ -57,7 +51,8 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    return render_template("admin/blog/post.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/blog/post.html", form=form)
 
 
 @admin.route('/blog/edit/<int:post_id>', methods=['GET', 'POST'])
@@ -73,7 +68,8 @@ def edit_post(post_id):
         db.session.merge(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    return render_template("admin/blog/post.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/blog/post.html", form=form)
 
 
 @admin.route('/blog/delete/<int:post_id>', methods=['GET'])
@@ -95,7 +91,8 @@ def page_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     pages = Page.get_sortable_list(order, direction, page)
-    return render_template("admin/pages/list.html", pages=pages)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/pages/list.html", pages=pages)
 
 
 @admin.route('/page/create', methods=['GET', 'POST'])
@@ -112,7 +109,8 @@ def create_page():
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    return render_template("admin/pages/page.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/pages/page.html", form=form)
 
 
 @admin.route('/page/edit/<int:page_id>', methods=['GET', 'POST'])
@@ -133,7 +131,8 @@ def edit_page(page_id):
         db.session.merge(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    return render_template("admin/pages/page.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/pages/page.html", form=form)
 
 
 @admin.route('/page/delete/<int:page_id>', methods=['GET'])
@@ -155,7 +154,8 @@ def user_list(page):
     order = 'users_'+request.args['sort'] if 'sort' in request.args else 'users_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     users = User.get_sortable_list(order, direction, page)
-    return render_template("admin/users/list.html", users=users)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/users/list.html", users=users)
 
 
 @admin.route('/user/create', methods=['GET', 'POST'])
@@ -171,7 +171,8 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('admin.user_list'))
-    return render_template("admin/users/user.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/users/user.html", form=form)
 
 
 @admin.route('/user/edit/<int:user_id>', methods=['GET', 'POST'])
@@ -196,7 +197,8 @@ def edit_user(user_id):
         db.session.commit()
 
         return redirect(url_for('admin.user_list'))
-    return render_template("admin/users/user.html", form=form, last_login=last_login)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/users/user.html", form=form, last_login=last_login)
 
 
 @admin.route('/user/delete/<int:user_id>', methods=['GET'])
@@ -218,7 +220,8 @@ def role_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     roles = Role.get_sortable_list(order, direction, page)
-    return render_template("admin/roles/list.html", roles=roles)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/roles/list.html", roles=roles)
 
 
 @admin.route('/role/create', methods=['GET', 'POST'])
@@ -232,7 +235,8 @@ def create_role():
         db.session.add(role)
         db.session.commit()
         return redirect(url_for('admin.role_list'))
-    return render_template("admin/roles/role.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/roles/role.html", form=form)
 
 
 @admin.route('/role/edit/<int:role_id>', methods=['GET', 'POST'])
@@ -246,7 +250,8 @@ def edit_role(role_id):
         db.session.merge(role)
         db.session.commit()
         return redirect(url_for('admin.role_list'))
-    return render_template("admin/roles/role.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/roles/role.html", form=form)
 
 
 @admin.route('/role/delete/<int:role_id>', methods=['GET'])
@@ -268,7 +273,8 @@ def comment_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     comments = PostComment.get_sortable_list(order, direction, page)
-    return render_template("admin/comments/list.html", comments=comments)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/comments/list.html", comments=comments)
 
 
 @admin.route('/comment/create', methods=['GET', 'POST'])
@@ -283,7 +289,8 @@ def create_comment():
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('admin.comment_list'))
-    return render_template("admin/comments/comment.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/comments/comment.html", form=form)
 
 
 @admin.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
@@ -301,7 +308,8 @@ def edit_comment(comment_id):
         db.session.merge(comment)
         db.session.commit()
         return redirect(url_for('admin.comment_list'))
-    return render_template("admin/comments/comment.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/comments/comment.html", form=form)
 
 
 @admin.route('/comment/delete/<int:comment_id>', methods=['GET'])
@@ -332,7 +340,8 @@ def edit_profile():
         db.session.merge(user)
         db.session.commit()
         return redirect(url_for('site.index'))
-    return render_template("admin/users/edit_profile.html", form=form)
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/users/edit_profile.html", form=form)
 
 
 def slugify(text, delim=u'-'):
