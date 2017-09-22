@@ -1,6 +1,5 @@
 # Flask Blog
-=========
-
+------------
 [![Build Status](https://travis-ci.org/thewhowhatwhere/flask-blog.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/flask-blog)
 
 ### Setup
