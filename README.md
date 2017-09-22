@@ -1,5 +1,10 @@
 # Flask Blog
+=========
 
+[![Build Status](https://travis-ci.org/thewhowhatwhere/flask-blog.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/flask-blog)
+
+### Setup
+------------
 1. Clone repo
 2. Create virtual environment
 3. Install requirements
@@ -9,7 +14,7 @@
 7. Run / Server wsgi.py app
 
 #### To Do
-
+------------
 - Finish additional basic themes (materialize, foundation)
 - Make sure all themes/endpoints handle form errors properly
 - Theme manger
