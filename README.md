@@ -2,6 +2,13 @@
 ------------
 [![Build Status](https://travis-ci.org/thewhowhatwhere/flask-blog.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/flask-blog)
 
+### Warning
+------------
+This code is not even close to ready.
+It's still being frequently developed.
+It likely won't help you in anyway yet.
+Wait for the release! :D
+
 ### Setup
 ------------
 1. Clone repo
