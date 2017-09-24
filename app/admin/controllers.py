@@ -8,8 +8,7 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreateRoleForm, EditRoleForm, \
                             CreateCommentForm, EditCommentForm,\
                             EditProfileForm, SettingsForm
-from app.site.models import Themes, PostComment, Settings
-from app.admin.models import Post, Page
+from app.site.models import Themes, PostComment, Settings, Post, Page
 from app.auth.models import User, Role
 from flask_admin import helpers
 import flask_login as login

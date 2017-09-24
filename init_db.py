@@ -1,7 +1,6 @@
 from app import db
 from app.auth.models import User, Role
-from app.admin.models import Post, Page
-from app.site.models import Themes, Settings
+from app.site.models import Themes, Settings, Post, Page
 from werkzeug.security import generate_password_hash
 
 settings = Settings()

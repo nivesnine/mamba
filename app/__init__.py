@@ -82,21 +82,18 @@ def bad_request_error(e):
     return render_template(template_path + "error/error_template.html", status_code=405, error=e), 405
 
 
+from app.site.models import PostComment, Settings, Page
+
+
 # getters for templates
 @application.context_processor
 def inject_now():
     return {'now': datetime.utcnow()}
 
 
-from app.admin.models import Page
-
-
 @application.context_processor
 def insert_pages():
     return {'menu_pages': Page.all()}
-
-
-from app.site.models import PostComment, Settings
 
 
 @application.context_processor

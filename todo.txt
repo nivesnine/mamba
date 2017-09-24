@@ -1,0 +1,54 @@
+todo
+
+ThemeAdmin():
+	id =
+	theme_slug = 
+	page_title = 
+	page_slug = 
+	page_type = 
+	options = 
+
+ThemeOption():
+	id =
+	theme_admin_id =
+	option = 
+	value = 
+
+ThemeOptionEntryForm():
+	id = field.HiddenField()
+	value = field.StringField(option)
+
+ThemeOptionsForm():
+	options = FieldList(FormField(ThemeOptionEntryForm))
+
+example: 
+	#create social links admin page 
+	#with the options to set facebook and twitter urls
+	
+	template_functions:
+	theme_admin_id = register_admin_page(Social Links, edit)
+ 	register_theme_options(theme_admin_id, [{'facebook':''}, {'twitter':''}])
+
+ 	Admin controller:
+ 	page = ThemeAdminPage(theme_slug, page_slug)
+ 	forms = ThemeOptionsForm(request.form, obj=page.options)
+
+ 	for form in forms:
+ 		theme_option = ThemeOption.get_by_id(form.id.data)
+ 		form.populate_obj(theme_option)
+ 		db.session.merge(theme_option)
+ 		db.session.commit()
+
+ 	render(blah, forms=forms)
+
+ 	Admin template:
+ 	{% for form in forms.options}
+ 		{% for f in form %}
+ 			{{ f.label }}
+ 			{{ f }}
+ 		{% endfor %}
+ 	{% endfor %}
+
+simplify admin themes
+
+theme manager

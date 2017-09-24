@@ -1,8 +1,7 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
     redirect, url_for, abort
-from app.admin.models import Post, Page
-from app.site.models import Themes, PostComment
+from app.site.models import Themes, PostComment, Post, Page
 from app.site.forms import CommentForm
 from flask_admin import helpers
 import flask_login as login
