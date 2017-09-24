@@ -1,6 +1,6 @@
 from app import db
 from app.auth.models import User, Role
-from app.site.models import Themes, Settings, Post, Page
+from app.site.models import Themes, Settings, Post, Page, ThemeAdminPage, ThemeOption
 from werkzeug.security import generate_password_hash
 
 settings = Settings()
@@ -205,3 +205,8 @@ template.author = 'default'
 template.active = 0
 db.session.add(template)
 db.session.commit()
+
+theme_admin_id = ThemeAdminPage.register_admin_page('basic-semantic-ui', 'Test Admin')
+ThemeOption.register_theme_options(theme_admin_id, 'Facebook URL')
+ThemeOption.register_theme_options(theme_admin_id, 'G+ URL')
+ThemeOption.register_theme_options(theme_admin_id, 'LinkedIn URL')

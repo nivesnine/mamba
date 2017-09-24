@@ -80,10 +80,6 @@ class User(UserMixin, db.Model):
     def get_roles(self):
         return self.roles
 
-    # Required for administrative interface
-    def __unicode__(self):
-        return self.username
-
     def get_display_name(self):
 
         def get_display_name_type(x):

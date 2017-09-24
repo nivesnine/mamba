@@ -1,0 +1,30 @@
+{% extends "basic-semantic-ui/admin/admin-base.html" %}
+
+{% block title %}{{ page.page_title }}{% endblock %}
+{% block content %}
+
+<div class="ui centered one column grid text container">
+  <div class="column">
+    <form action="{{url_for('admin.theme_admin', page_slug=page.page_slug)}}" method="POST" class="ui form">
+        {% for form in forms.options %}
+            <div class="ui labeled input fluid" style="margin: 8px 0;">
+                {% for f in form if '-id' not in f.name %}
+                    {%  if '-option' in f.name %}
+                        <div class="ui label">{{ f.data }}</div>
+                    {% else %}
+                        {{ f }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% for f in form if '-id' in f.name %}
+                {{ f }}
+            {% endfor %}
+        {% endfor %}
+          <div class="field">
+            <input type="submit" name="submit" class="ui blue right floated button">
+          </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

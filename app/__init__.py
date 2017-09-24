@@ -54,13 +54,13 @@ def has_role(role):
 
 # Import a module / component using its blueprint handler variable (mod_auth)
 from app.site.controllers import site as site_module
-from app.admin.controllers import admin as admin_module
 from app.auth.controllers import auth as auth_module
+from app.admin.controllers import admin as admin_module
 
 # Register blueprint(s)
 application.register_blueprint(site_module)
-application.register_blueprint(admin_module)
 application.register_blueprint(auth_module)
+application.register_blueprint(admin_module)
 
 # Build the database:
 # This will create the database file using SQLAlchemy
@@ -82,7 +82,7 @@ def bad_request_error(e):
     return render_template(template_path + "error/error_template.html", status_code=405, error=e), 405
 
 
-from app.site.models import PostComment, Settings, Page
+from app.site.models import PostComment, Settings, Page, ThemeAdminPage, ThemeOption
 
 
 # getters for templates
@@ -94,6 +94,18 @@ def inject_now():
 @application.context_processor
 def insert_pages():
     return {'menu_pages': Page.all()}
+
+
+@application.context_processor
+def insert_theme_admin():
+    return {'theme_admin': ThemeAdminPage.all()}
+
+
+@application.context_processor
+def get_theme_options():
+    def get_theme_option(theme_option):
+        return ThemeOption.get_option(theme_option)
+    return {'theme_option': get_theme_option}
 
 
 @application.context_processor

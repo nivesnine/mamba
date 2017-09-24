@@ -114,3 +114,13 @@ class SettingsForm(form.Form):
         choices=[('desc', 'Newest Post First'), ('asc', 'Oldest Post First')], validators=[validators.required()]
     )
     submit = fields.SubmitField('Submit')
+
+
+class ThemeOptionEntryForm(form.Form):
+    id = fields.HiddenField()
+    option = fields.StringField()
+    value = fields.StringField()
+
+
+class ThemeOptionsForm(form.Form):
+    options = fields.FieldList(fields.FormField(ThemeOptionEntryForm))

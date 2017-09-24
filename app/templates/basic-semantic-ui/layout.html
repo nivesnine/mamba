@@ -5,6 +5,7 @@
       <i class="sidebar icon"></i>
     </a>
     <a class="item inverted" href="{{ url_for('site.index') }}">{{ site_name | safe }}</a>
+    <a class="item inverted" href="{{ theme_option('Facebook URL') }}">facebook</a>
     {% for page in menu_pages %}
      {% if page.published == 1 and page.slug != 'home' %}
       <a class="item inverted" href="{{ url_for('site.site_page', page=page.slug) }}">{{ page.title }}</a>

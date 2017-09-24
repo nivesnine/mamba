@@ -7,19 +7,15 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreateUserForm, EditUserForm, \
                             CreateRoleForm, EditRoleForm, \
                             CreateCommentForm, EditCommentForm,\
-                            EditProfileForm, SettingsForm
-from app.site.models import Themes, PostComment, Settings, Post, Page
+                            EditProfileForm, SettingsForm, \
+                            ThemeOptionsForm
+from app.site.models import Themes, PostComment, Settings, Post, Page, ThemeAdminPage, ThemeOption
 from app.auth.models import User, Role
 from flask_admin import helpers
 import flask_login as login
 from werkzeug.security import generate_password_hash
-import codecs
-import translitcodec
-import difflib
 from datetime import datetime
-import re
-
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+from app.utils import slugify, _unidiff_output
 
 # Create blog blueprint
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -360,23 +356,20 @@ def edit_profile():
     return render_template(theme + "/admin/site/edit_profile.html", form=form)
 
 
-def slugify(text, delim=u'-'):
-    """Generates an ASCII-only slug."""
-    result = []
-    for word in _punct_re.split(text.lower()):
-        word = codecs.encode(word, 'translit/long')
-        if word:
-            result.append(word)
-    return str(delim.join(result))
+# Theme admin pages
+@admin.route('/theme/<page_slug>', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def theme_admin(page_slug):
+    theme = Themes.get_active('admin')
 
+    page = ThemeAdminPage.get_page(theme, page_slug)
 
-def _unidiff_output(expected, actual):
-    """
-    Helper function. Returns a string containing the unified diff of two multiline strings.
-    """
-    expected = expected.splitlines(1)
-    actual = actual.splitlines(1)
+    forms = ThemeOptionsForm(request.form, obj=page)
 
-    diff = difflib.unified_diff(expected, actual)
+    if helpers.validate_form_on_submit(forms):
+        for form in forms.options.data:
+            ThemeOption.update_by_id(form['id'], form['value'])
+        return redirect( url_for('admin.theme_admin', page_slug=page_slug))
 
-    return ''.join(diff)
+    return render_template(theme + "/admin/theme/theme_admin.html", page=page, forms=forms)
