@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  redirect, url_for
+                  redirect, url_for, flash
 from app import db, check_login, check_admin, has_role
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
@@ -357,6 +357,30 @@ def edit_profile():
 
 
 # Theme admin pages
+@admin.route('/theme', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def select_theme():
+
+    themes = Themes.all()
+
+    if request.method == 'POST' and 'site' in request.form \
+            and 'auth' in request.form and 'admin' in request.form and 'error' in request.form:
+
+        db.session.query(Themes).update({Themes.active: 0})
+        db.session.commit()
+
+        Themes.activate_theme(request.form['site'])
+        Themes.activate_theme(request.form['auth'])
+        Themes.activate_theme(request.form['admin'])
+        Themes.activate_theme(request.form['error'])
+        flash('theme updated')
+
+    theme = Themes.get_active('admin')
+    return render_template(theme + "/admin/theme/theme_selector.html", themes=themes)
+
+
+# Theme admin pages
 @admin.route('/theme/<page_slug>', methods=['GET', 'POST'])
 @check_login
 @check_admin
@@ -370,6 +394,7 @@ def theme_admin(page_slug):
     if helpers.validate_form_on_submit(forms):
         for form in forms.options.data:
             ThemeOption.update_by_id(form['id'], form['value'])
+        flash('theme options updated')
         return redirect( url_for('admin.theme_admin', page_slug=page_slug))
 
     return render_template(theme + "/admin/theme/theme_admin.html", page=page, forms=forms)

@@ -26,6 +26,7 @@
        <a class="item" href="{{ url_for('admin.comment_list') }}">Comments</a>
       {% endif %}
       {% if current_user.is_admin() %}
+      <a class="item" href="{{ url_for('admin.select_theme') }}">Theme</a>
           {% for page in theme_admin %}
           <a class="item" href="{{ url_for('admin.theme_admin', page_slug=page.page_slug) }}">{{ page.page_title }}</a>
           {% endfor %}

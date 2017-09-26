@@ -173,6 +173,13 @@ class Themes(db.Model):
     active = db.Column(db.Boolean(), default=0)
 
     @classmethod
+    def activate_theme(cls, id):
+        theme = Themes.query.get(id)
+        theme.active = 1
+        db.session.add(theme)
+        db.session.commit()
+
+    @classmethod
     def get_active(cls, type_):
         return str(db.session.query(Themes.slug).filter(and_(Themes.type_ == type_, Themes.active == 1)).first()[0])
 

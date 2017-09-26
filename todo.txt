@@ -1,7 +1,5 @@
 todo
 
-make theme admin menu item that contains links to all theme admin pages for theme if theme has admin pages
+admin menu organization
 
 simplify admin themes
-
-theme manager
