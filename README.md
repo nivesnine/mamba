@@ -1,7 +1,7 @@
 # Flask Blog
 ------------
 [![Build Status](https://travis-ci.org/thewhowhatwhere/flask-blog.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/flask-blog)
-
+[![codecov](https://codecov.io/gh/thewhowhatwhere/flask-blog/branch/master/graph/badge.svg)](https://codecov.io/gh/thewhowhatwhere/flask-blog)
 ### Warning
 ------------
 This code is not even close to ready.

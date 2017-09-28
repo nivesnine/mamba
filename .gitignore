@@ -10,3 +10,4 @@ venv/
 run.py
 error.log
 app.db
+.coverage

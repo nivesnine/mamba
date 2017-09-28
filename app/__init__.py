@@ -5,11 +5,14 @@ from flask_htmlmin import HTMLMIN
 from functools import wraps
 import flask_login as login
 
-# Define the WSGI application object
-application = Flask(__name__)
 
-# Configurations
-application.config.from_object('config')
+def create_app(TESTING=False):
+    application = Flask(__name__)
+    application.config.from_object('config')
+    application.config['TESTING'] = TESTING
+    return application
+
+application = create_app()
 
 HTMLMIN(application)
 

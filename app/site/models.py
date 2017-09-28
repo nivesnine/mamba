@@ -1,5 +1,5 @@
 from app import application, db
-from sqlalchemy import and_
+from sqlalchemy import and_, desc, asc
 from app.auth.models import User
 from app.utils import slugify
 
@@ -69,7 +69,11 @@ class Post(db.Model):
     def get_blog(cls, page):
         per_page = Settings().get_blog_per_page()
         order = Settings().get_blog_order()
-        return Post.query.filter(Post.published == 1).order_by(('posts_id {}'.format(order)))\
+        if order == 'desc':
+            o = desc('posts_id')
+        else:
+            o = asc('posts_id')
+        return Post.query.filter(Post.published == 1).order_by(o)\
             .paginate(page, per_page, error_out=False)
 
     @classmethod
