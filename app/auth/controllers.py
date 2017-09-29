@@ -41,7 +41,7 @@ def login_view():
                 return redirect(url_for('site.index'))
             else:
                 abort(404)
-    theme = Themes.get_active('auth')
+    theme = Themes.get_active()
     return render_template(theme + '/auth/login.html', form=form)
 
 
@@ -62,7 +62,7 @@ def registration_view():
                 login.login_user(user)
 
                 return redirect(url_for('auth.index'))
-        theme = Themes.get_active('auth')
+        theme = Themes.get_active()
         return render_template(theme + '/auth/register.html', form=form)
 
 

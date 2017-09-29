@@ -406,5 +406,5 @@ def test_home_page(live_server, client):
 ### Render_template error ##
 ############################
 def test_render_error(client):
-    theme = my_app.site.models.Themes().get_active('error')
+    theme = my_app.site.models.Themes().get_active()
     assert my_app.render_template(theme + '/error/error_template.html', status_code=747, error='big ol plane')

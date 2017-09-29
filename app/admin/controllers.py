@@ -30,8 +30,8 @@ def blog_list(page):
     order = 'posts_'+request.args['sort'] if 'sort' in request.args else 'posts_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     posts = Post.get_sortable_list(order, direction, page)
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/blog/list.html", posts=posts)
+
+    return render_template("admin/blog/list.html", posts=posts)
 
 
 @admin.route('/blog/create', methods=['GET', 'POST'])
@@ -47,8 +47,8 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/blog/post.html", form=form)
+
+    return render_template("admin/blog/post.html", form=form)
 
 
 @admin.route('/blog/edit/<int:post_id>', methods=['GET', 'POST'])
@@ -63,8 +63,8 @@ def edit_post(post_id):
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/blog/post.html", form=form)
+
+    return render_template("admin/blog/post.html", form=form)
 
 
 @admin.route('/blog/delete/<int:post_id>', methods=['GET'])
@@ -86,8 +86,8 @@ def page_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     pages = Page.get_sortable_list(order, direction, page)
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/pages/list.html", pages=pages)
+
+    return render_template("admin/pages/list.html", pages=pages)
 
 
 @admin.route('/page/create', methods=['GET', 'POST'])
@@ -104,8 +104,8 @@ def create_page():
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/pages/page.html", form=form)
+
+    return render_template("admin/pages/page.html", form=form)
 
 
 @admin.route('/page/edit/<int:page_id>', methods=['GET', 'POST'])
@@ -126,8 +126,8 @@ def edit_page(page_id):
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/pages/page.html", form=form)
+
+    return render_template("admin/pages/page.html", form=form)
 
 
 @admin.route('/page/delete/<int:page_id>', methods=['GET'])
@@ -149,8 +149,8 @@ def user_list(page):
     order = 'users_'+request.args['sort'] if 'sort' in request.args else 'users_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     users = User.get_sortable_list(order, direction, page)
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/users/list.html", users=users)
+
+    return render_template("admin/users/list.html", users=users)
 
 
 @admin.route('/user/create', methods=['GET', 'POST'])
@@ -166,8 +166,8 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('admin.user_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/users/user.html", form=form)
+
+    return render_template("admin/users/user.html", form=form)
 
 
 @admin.route('/user/edit/<int:user_id>', methods=['GET', 'POST'])
@@ -192,8 +192,8 @@ def edit_user(user_id):
         db.session.commit()
 
         return redirect(url_for('admin.user_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/users/user.html", form=form, last_login=last_login)
+
+    return render_template("admin/users/user.html", form=form, last_login=last_login)
 
 
 @admin.route('/user/delete/<int:user_id>', methods=['GET'])
@@ -215,8 +215,8 @@ def role_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     roles = Role.get_sortable_list(order, direction, page)
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/roles/list.html", roles=roles)
+
+    return render_template("admin/roles/list.html", roles=roles)
 
 
 @admin.route('/role/create', methods=['GET', 'POST'])
@@ -230,8 +230,8 @@ def create_role():
         db.session.add(role)
         db.session.commit()
         return redirect(url_for('admin.role_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/roles/role.html", form=form)
+
+    return render_template("admin/roles/role.html", form=form)
 
 
 @admin.route('/role/edit/<int:role_id>', methods=['GET', 'POST'])
@@ -245,8 +245,8 @@ def edit_role(role_id):
         db.session.add(role)
         db.session.commit()
         return redirect(url_for('admin.role_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/roles/role.html", form=form)
+
+    return render_template("admin/roles/role.html", form=form)
 
 
 @admin.route('/role/delete/<int:role_id>', methods=['GET'])
@@ -268,8 +268,8 @@ def comment_list(page):
     order = request.args['sort'] if 'sort' in request.args else 'id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     comments = PostComment.get_sortable_list(order, direction, page)
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/comments/list.html", comments=comments)
+
+    return render_template("admin/comments/list.html", comments=comments)
 
 
 @admin.route('/comment/create', methods=['GET', 'POST'])
@@ -284,8 +284,8 @@ def create_comment():
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('admin.comment_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/comments/comment.html", form=form)
+
+    return render_template("admin/comments/comment.html", form=form)
 
 
 @admin.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
@@ -303,8 +303,8 @@ def edit_comment(comment_id):
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('admin.comment_list'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/comments/comment.html", form=form)
+
+    return render_template("admin/comments/comment.html", form=form)
 
 
 @admin.route('/comment/delete/<int:comment_id>', methods=['GET'])
@@ -329,8 +329,8 @@ def site_settings():
         db.session.add(settings)
         db.session.commit()
         return redirect(url_for('site.index'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/site/settings.html", form=form)
+
+    return render_template("admin/site/settings.html", form=form)
 
 
 # User Profile Editor
@@ -352,8 +352,8 @@ def edit_profile():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('site.index'))
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/site/edit_profile.html", form=form)
+
+    return render_template("admin/site/edit_profile.html", form=form)
 
 
 # Theme admin pages
@@ -364,20 +364,15 @@ def select_theme():
 
     themes = Themes.all()
 
-    if request.method == 'POST' and 'site' in request.form \
-            and 'auth' in request.form and 'admin' in request.form and 'error' in request.form:
+    if request.method == 'POST' and 'site' in request.form:
 
         db.session.query(Themes).update({Themes.active: 0})
         db.session.commit()
 
         Themes.activate_theme(request.form['site'])
-        Themes.activate_theme(request.form['auth'])
-        Themes.activate_theme(request.form['admin'])
-        Themes.activate_theme(request.form['error'])
         flash('theme updated')
 
-    theme = Themes.get_active('admin')
-    return render_template(theme + "/admin/theme/theme_selector.html", themes=themes)
+    return render_template("admin/theme/theme_selector.html", themes=themes)
 
 
 # Theme admin pages
@@ -385,7 +380,7 @@ def select_theme():
 @check_login
 @check_admin
 def theme_admin(page_slug):
-    theme = Themes.get_active('admin')
+    theme = Themes.get_active()
 
     page = ThemeAdminPage.get_page(theme, page_slug)
 
@@ -397,4 +392,4 @@ def theme_admin(page_slug):
         flash('theme options updated')
         return redirect( url_for('admin.theme_admin', page_slug=page_slug))
 
-    return render_template(theme + "/admin/theme/theme_admin.html", page=page, forms=forms)
+    return render_template("admin/theme/theme_admin.html", page=page, forms=forms)

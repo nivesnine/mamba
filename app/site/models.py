@@ -215,8 +215,8 @@ class Themes(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_active(cls, type_):
-        return str(db.session.query(Themes.slug).filter(and_(Themes.type_ == type_, Themes.active == 1)).first()[0])
+    def get_active(cls):
+        return str(db.session.query(Themes.slug).filter(Themes.active == 1).first()[0])
 
     @classmethod
     def all(cls):

@@ -75,14 +75,14 @@ from app.site.models import Themes
 
 @application.errorhandler(404)
 def page_not_found(e):
-    template_path = Themes.get_active('error')
+    template_path = Themes.get_active()
     return render_template(template_path + "/error/error_template.html", status_code=404, error=e), 404
 
 
 @application.errorhandler(405)
 def bad_request_error(e):
-    template_path = Themes.get_active('error')
-    return render_template(template_path + "error/error_template.html", status_code=405, error=e), 405
+    template_path = Themes.get_active()
+    return render_template(template_path + "/error/error_template.html", status_code=405, error=e), 405
 
 
 from app.site.models import PostComment, Settings, Page, ThemeAdminPage, ThemeOption

@@ -1,0 +1,24 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}Site Settings{% endblock %}
+{% block content %}
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="ten wide column">
+    <form method="POST" class="ui form">
+        {% for f in form %}
+             <div class="field">
+            		{% if f.name != 'submit' %}
+              			{{ f.label }}
+                    {{ f(placeholder=f.name.replace('_', ' ')) }}
+                {% endif %}
+              </div>
+        {% endfor %}
+          <div class="field">
+            {{ form.submit(class='ui blue right floated button') }}
+          </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

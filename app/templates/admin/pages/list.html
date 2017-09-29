@@ -1,0 +1,75 @@
+{% extends "admin/admin-base.html" %}
+{% block title %}Page List{% endblock %}
+{% block content %}
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="center aligned ten wide column">
+{% if pages %}
+    <table class="ui striped table">
+        <thead>
+            <tr>
+                <th>page id
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=id&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=id&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>title
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=title&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=title&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>published
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=published&d=asc">
+                      <i class='caret up icon'></i>
+                    </a>
+                    <a href="{{url_for('admin.page_list', page=1)}}?sort=published&d=desc">
+                      <i class='caret down icon'></i>
+                    </a>
+                </th>
+                <th>edit</th>
+                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for page in pages.items %}
+            <tr>
+                <td>{{ page.id }}</td>
+                <td>{{ page.title }}</td>
+                <td>{% if page.published == 1 %}Yes{% else %}No{% endif %}</td>
+                <td><a class='ui tiny yellow button' href="{{ url_for('admin.edit_page', page_id=page.id) }}"><i class='pencil icon'></i>Edit</a></td>
+                {% if current_user.is_admin() %}<td><a class='ui tiny red button' href="{{ url_for('admin.delete_page', page_id=page.id) }}"><i class='pencil icon'></i>Delete</a></td>{% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+  {% else %}
+  <p> You don't have any pages </p>
+  {% endif %}
+
+  {% if pages.has_prev %}
+    <a class='ui mini button blue left floated' href="{{ url_for('admin.page_list', page=pages.prev_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret left'></i>
+    </a>
+  {% endif %}
+
+  {% if current_user.has_role('writer') %}
+    <a href="{{ url_for('admin.create_page') }}" class="ui mini button green"><i class='plus icon'></i> Create Page</a>
+  {% endif %}
+
+  {% if pages.has_next %}
+    <a class='ui mini button blue right floated' href="{{ url_for('admin.page_list', page=pages.next_num) }}{% if 'sort' in request.args %}?sort={{request.args['sort']}}&d={{request.args['d']}}{% endif %}">
+      <i class='icon caret right'></i>
+    </a>
+  {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

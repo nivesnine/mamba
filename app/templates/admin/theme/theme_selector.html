@@ -1,0 +1,55 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Theme Manager{% endblock %}
+{% block content %}
+
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="center aligned ten wide column">
+    <form action="" method="POST">
+        <div class="ui centered one column grid text container">
+            <div class="ui cards">
+            {% for theme in themes | reverse %}
+                  <div class="card">
+                    <div class="image">
+                      <img src="{{ url_for('static', filename=theme.slug+'/'+theme.slug+'-img.png')}}">
+                    </div>
+                    <div class="content">
+                      <div class="header">{{ theme.name }}</div>
+                      <div class="meta">
+                          Created by: <br> {{ theme.author }}
+                      </div>
+                    </div>
+                    <div class="extra content">
+                      <div class="grouped fields">
+                        <div class="field">
+                          <div class="ui slider checkbox">
+                            <input type="radio" name="site" {% if theme.active %}checked{% endif %} data-id="{{ theme.id }}">
+                            <label>Active</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
+            </div>
+        </div>
+    <input type="submit" class="ui right floated small blue button" value="Save" id="save">
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+
+    $('#save').on('click', function(event){
+        event.preventDefault();
+        var site =  $('input[name="site"]:checked');
+        site.val(site.data('id'));
+        $('form').submit();
+    });
+
+</script>
+{% endblock %}

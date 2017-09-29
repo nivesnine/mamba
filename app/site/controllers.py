@@ -14,7 +14,7 @@ site = Blueprint('site', __name__, url_prefix='')
 def index():
     home = Page.get_home_page()
     if home:
-        theme = Themes.get_active('site')
+        theme = Themes.get_active()
         return render_template(theme + "/site/page.html", page=home)
     return redirect(url_for('site.blog'))
 
@@ -23,7 +23,7 @@ def index():
 @site.route('/blog/<int:page>', methods=['GET'])
 def blog(page):
     posts = Post.get_blog(page)
-    theme = Themes.get_active('site')
+    theme = Themes.get_active()
     return render_template(theme + "/site/blog.html", posts=posts)
 
 
@@ -39,7 +39,7 @@ def single_post(slug):
     post = Post.get_by_slug(slug)
     if not post:
         abort(404)
-    theme = Themes.get_active('site')
+    theme = Themes.get_active()
     return render_template(theme + "/site/single_post.html", post=post, form=form)
 
 
@@ -48,5 +48,5 @@ def site_page(page):
     page = Page.get_page(page)
     if not page:
         abort(404)
-    theme = Themes.get_active('site')
+    theme = Themes.get_active()
     return render_template(theme + "/site/page.html", page=page)
