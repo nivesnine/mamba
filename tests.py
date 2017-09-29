@@ -5,6 +5,7 @@ from flask_login import LoginManager
 import flask_login as login
 from urllib.request import urlopen
 
+
 @pytest.fixture
 def app():
     login_manager = LoginManager()
@@ -22,6 +23,7 @@ def app():
 @pytest.fixture
 def session():
     return my_app.db.session
+
 
 ########################
 ### Live server tests ##
@@ -108,7 +110,7 @@ def test_admin_blog_post_edit(live_server, client):
     assert b'updated' in res.read()
 
 
-def test_admin_blog_post_delete(client, session):
+def test_admin_blog_post_delete(live_server, client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
@@ -121,14 +123,105 @@ def test_admin_blog_post_delete(client, session):
 #####################
 ### ADMIN Comments ##
 #####################
+def test_admin_comments_list(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.comment_list'))
+    assert res.status_code == 200
+
+
+def test_admin_comment_create(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    post = my_app.site.models.Post.get_by_id(1)
+    comment = {'written_by' : '1', 'post' : post.get_id(), 'comment' : 'testing comment','published' : '1'}
+    client.post(url_for('admin.create_comment'), data=comment)
+    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
+    assert res.code == 200
+    assert b'testing comment' in res.read()
+
+
+def test_admin_comment_edit(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    post = my_app.site.models.Post.get_by_id(1)
+    cid = post.comments[-1].get_id()
+    comment = {'id' : cid, 'written_by' : '1', 'post' : post.get_id(), 'comment' : 'updated testing comment','published' : '1'}
+    client.post(url_for('admin.edit_comment', comment_id=cid), data=comment)
+    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
+    assert res.code == 200
+    assert b'updated testing comment' in res.read()
+
+
+def test_admin_comment_delete(live_server, client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    post = my_app.site.models.Post.get_by_id(1)
+    cid = post.comments[-1].get_id()
+    client.get(url_for('admin.delete_comment', comment_id=cid))
+    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
+    assert res.code == 200
+    assert b'updated testing comment' not in res.read()
+
 
 ##################
 ### ADMIN Pages ##
 ##################
+def test_admin_pages_list(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.page_list'))
+    assert res.status_code == 200
+
+
+def test_admin_page_create(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    page = {'title' : 'test page', 'html' : 'testing page','published' : '1'}
+    client.post(url_for('admin.create_page'), data=page)
+    res = urlopen(url_for('site.site_page', page='test-page', _external=True))
+    assert res.code == 200
+    assert b'testing' in res.read()
+
+
+def test_admin_page_edit(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    pid = my_app.site.models.Page.get_by_slug('test-page').get_id()
+    page = {'id' : pid, 'title': 'test page', 'html': 'updated testing page', 'published': '1'}
+    client.post(url_for('admin.edit_page', page_id=pid), data=page)
+    res = urlopen(url_for('site.site_page', page='test-page', _external=True))
+    assert res.code == 200
+    assert b'updated' in res.read()
+
+
+def test_admin_page_delete(live_server, client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    pid = my_app.site.models.Page.get_by_slug('test-page').get_id()
+    client.get(url_for('admin.delete_page', page_id=pid))
+    res = client.get(url_for('site.site_page', page='test-page'))
+    assert res.status_code == 404
+
 
 ##################
 ### ADMIN Roles ##
 ##################
+def test_admin_roles_list(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.role_list'))
+    assert res.status_code == 200
+
 
 ##################
 ### ADMIN Theme ##
@@ -140,6 +233,7 @@ def test_admin_themes(client):
     res = client.get(url_for('admin.select_theme'))
     assert res.status_code == 200
 
+
 def test_admin_theme_pages(client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
@@ -150,7 +244,23 @@ def test_admin_theme_pages(client):
 ##################
 ### ADMIN Users ##
 ##################
+def test_admin_users_list(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.user_list'))
+    assert res.status_code == 200
 
+
+##########################
+### ADMIN Site Settings ##
+##########################
+def test_admin_site_settings(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.site_settings'))
+    assert res.status_code == 200
 
 
 ####################
@@ -200,9 +310,6 @@ def test_delete_newly_registered_user(session):
 #################
 ### Site theme ##
 #################
-
-
-
 
 
 ############################

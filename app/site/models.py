@@ -16,6 +16,8 @@ class Page(db.Model):
     history = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
 
+    def get_id(self):
+        return self.id
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
@@ -41,6 +43,10 @@ class Page(db.Model):
         return cls.query.filter_by(published=1).all()
 
     @classmethod
+    def get_by_slug(cls, slug):
+        return Page.query.filter_by(slug=slug).first()
+
+    @classmethod
     def all(cls):
         return db.session.query(cls).all()
 
@@ -61,6 +67,9 @@ class Post(db.Model):
 
     def get_id(self):
         return self.id
+
+    def get_slug(self):
+        return self.slug
 
     def get_author(self):
         if self.writen_by:
@@ -88,6 +97,10 @@ class Post(db.Model):
         return Post.query.filter_by(slug=slug).first()
 
     @classmethod
+    def get_by_id(cls, page_id):
+        return db.session.query(cls).get(page_id)
+
+    @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
@@ -111,6 +124,9 @@ class PostComment(db.Model):
     date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
     published = db.Column(db.Boolean(), default=0)
     viewed = db.Column(db.Boolean(), default=0)
+
+    def get_id(self):
+        return self.id
 
     def get_author(self):
         if self.writen_by:
