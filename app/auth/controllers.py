@@ -34,7 +34,7 @@ def login_view():
             login.login_user(user)
 
             user.last_login_ip = str(request.remote_addr)
-            db.session.merge(user)
+            db.session.add(user)
             db.session.commit()
 
             if login.current_user.is_authenticated:

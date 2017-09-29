@@ -6,5 +6,4 @@ python wsgi.py &
 LASTPID=$!
 sleep 4; kill $LASTPID
 
-coverage run tests.py
-
+py.test tests.py --cov=./app

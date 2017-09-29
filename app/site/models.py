@@ -20,7 +20,11 @@ class Page(db.Model):
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return cls.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        if direction == 'desc':
+            o = desc(order)
+        else:
+            o = asc(order)
+        return cls.query.order_by(o).paginate(page, per_page, error_out=False)
 
     @classmethod
     def get_home_page(cls):
@@ -55,6 +59,9 @@ class Post(db.Model):
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     comments = db.relationship('PostComment', backref='posts', lazy='joined')
 
+    def get_id(self):
+        return self.id
+
     def get_author(self):
         if self.writen_by:
             user = User.query.get(self.writen_by)
@@ -83,7 +90,11 @@ class Post(db.Model):
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return Post.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        if direction == 'desc':
+            o = desc(order)
+        else:
+            o = asc(order)
+        return Post.query.order_by(o).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):
@@ -115,7 +126,11 @@ class PostComment(db.Model):
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return PostComment.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        if direction == 'desc':
+            o = desc(order)
+        else:
+            o = asc(order)
+        return PostComment.query.order_by(o).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):

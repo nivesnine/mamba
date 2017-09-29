@@ -1,55 +1,293 @@
-import unittest
-from app import application, db
-from app.auth.models import User
-from flask_login import LoginManager, current_user
+import app as my_app
+import pytest
+from flask import url_for
+from flask_login import LoginManager
+import flask_login as login
+from urllib.request import urlopen
+
+@pytest.fixture
+def app():
+    login_manager = LoginManager()
+    login_manager.init_app(my_app.application)
+
+    app = my_app.application
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return my_app.auth.models.User().get_by_id(user_id)
+
+    return app
 
 
-class MyTestClass(unittest.TestCase):
+@pytest.fixture
+def session():
+    return my_app.db.session
 
-    @classmethod
-    def setUpClass(cls):
-        pass
+########################
+### Live server tests ##
+########################
+@pytest.mark.usefixtures('live_server')
+class TestLiveServer:
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
+    def test_serve_site_index(self):
+        res = urlopen(url_for('site.index', _external=True))
+        assert res.code == 200
 
-    def setUp(self):
-        self.app = application.test_client()
-        self.app.testing = True
-        login_manager = LoginManager()
-        login_manager.init_app(application)
+    def test_serve_site_blog(self):
+        res = urlopen(url_for('site.blog', _external=True))
+        assert b'Blog' in res.read()
+        assert res.code == 200
 
-    def tearDown(self):
-        pass
-
-    def test_user_in_db(self):
-        user = User()
-        user.alias = 'test'
-        user.email = 'test@example.com'
-        user.password = 'test'
-        db.session.add(user)
-        db.session.commit()
-        self.assertNotEqual(None, User().get_user_by_email('test@example.com'))
-
-        user = User().get_user_by_email('test@example.com')
-        self.assertEqual(False, user.has_role('admin'))
-        self.assertEqual(False, user.has_role('writer'))
-        self.assertEqual(False, user.has_role('editor'))
-        self.assertEqual([], user.get_roles())
-
-        db.session.delete(user)
-        db.session.commit()
-        self.assertEqual(None, User().get_user_by_email('test@example.com'))
-
-    def test_home_status_code(self):
-        result = self.app.get('/about')
-        self.assertEqual(result.status_code, 200)
-
-    def test_blog_status_code(self):
-        result = self.app.get('/blog')
-        self.assertEqual(result.status_code, 200)
+    def test_serve_site_about(self):
+        res = urlopen(url_for('site.site_page', page='about', _external=True))
+        assert b'About' in res.read()
+        assert res.code == 200
 
 
-if __name__ == '__main__':
-    unittest.main()
+#################
+### Utils Test ##
+#################
+def test_slugify(client):
+    expected = 'test-this'
+    assert my_app.utils.slugify('test this') == expected
+
+
+#######################
+### ADMIN Login Test ##
+#######################
+def test_login(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+
+
+#########################
+### ADMIN Edit Profile ##
+#########################
+def test_admin_edit_profile(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.edit_profile'))
+    assert res.status_code == 200
+    client.post(url_for('admin.edit_profile'), data={'first_name':'test', 'email':'admin@example.com', 'password':'admin', 'alias':'Admin'})
+    assert login.current_user.first_name == 'test'
+
+
+#################
+### ADMIN BLOG ##
+#################
+def test_admin_blog_list(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.blog_list'))
+    assert res.status_code == 200
+
+
+def test_admin_blog_post_create(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    post = {'title' : 'blog create test', 'text' : 'testing blog post','published' : '1'}
+    client.post(url_for('admin.create_post'), data=post)
+    res = urlopen(url_for('site.single_post', slug='blog-create-test', _external=True))
+    assert res.code == 200
+    assert b'testing' in res.read()
+
+
+def test_admin_blog_post_edit(live_server, client):
+    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    pid = my_app.site.models.Post.get_by_slug('blog-create-test').get_id()
+    post = {'id' : pid, 'title' : 'blog create test', 'text' : 'updated testing blog post','published' : '1'}
+    client.post(url_for('admin.edit_post', post_id=pid), data=post)
+    res = urlopen(url_for('site.single_post', slug='blog-create-test', _external=True))
+    assert res.code == 200
+    assert b'updated' in res.read()
+
+
+def test_admin_blog_post_delete(client, session):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    post = my_app.site.models.Post.get_by_slug('blog-create-test').get_id()
+    client.get(url_for('admin.delete_post', post_id=post))
+    res = client.get(url_for('site.single_post', slug='blog-create-test'))
+    assert res.status_code == 404
+
+
+#####################
+### ADMIN Comments ##
+#####################
+
+##################
+### ADMIN Pages ##
+##################
+
+##################
+### ADMIN Roles ##
+##################
+
+##################
+### ADMIN Theme ##
+##################
+def test_admin_themes(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.select_theme'))
+    assert res.status_code == 200
+
+def test_admin_theme_pages(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    res = client.get(url_for('admin.theme_admin', page_slug='test-admin'))
+    assert res.status_code == 200
+
+##################
+### ADMIN Users ##
+##################
+
+
+
+####################
+### AUTH Register ##
+####################
+def test_registration(client):
+    credentials = {'email': 'test@example.com', 'password': 'test'}
+    client.post(url_for('auth.registration_view'), data=credentials)
+    assert login.current_user.email == 'test@example.com'
+
+
+##########################################################
+### AUTH Register - default registration gives no roles ##
+##########################################################
+def test_newly_registered_user_has_no_roles(client):
+    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    roles = user.get_roles()
+    assert roles == []
+
+
+##################
+### AUTH Logout ##
+##################
+def test_logout(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    client.get(url_for('auth.logout_view'))
+    assert login.current_user.is_anonymous
+
+
+#################
+### AUTH Login ##
+#################
+
+
+###################################
+### Delete newly registered user ##
+###################################
+def test_delete_newly_registered_user(session):
+    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    session.delete(user)
+    session.commit()
+    assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
+
+
+#################
+### Site theme ##
+#################
+
+
+
+
+
+############################
+### current_user is_admin ##
+############################
+def test_admin_is_admin(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    assert login.current_user.is_admin
+
+
+######################
+### 3 default roles ##
+######################
+def test_there_are_three_roles(client):
+    roles = my_app.auth.models.Role().all()
+    assert len(roles) == 3
+
+
+##############################
+### admin has default roles ##
+##############################
+def test_admin_has_all_roles(client):
+    credentials = {'email': 'admin@example.com', 'password': 'admin'}
+    client.post(url_for('auth.login_view'), data=credentials)
+    assert login.current_user.email == 'admin@example.com'
+    roles = my_app.auth.models.Role().all()
+    for role in roles:
+        assert login.current_user.has_role(role)
+
+
+######################
+### 404 errors work ##
+######################
+def test_post_404(client):
+    assert client.get(url_for('site.single_post', slug='test')).status_code == 404
+
+
+def test_page_404(client):
+    assert client.get(url_for('site.site_page', page='test')).status_code == 404
+
+
+###########################################
+### default site index redirects to blog ##
+###########################################
+def test_site_index_redirect(client):
+    assert client.get(url_for('site.index')).status_code == 302
+
+
+####################
+### User add user ##
+####################
+def test_add_user(session):
+    user = my_app.auth.models.User()
+    user.email = 'test@example.com'
+    session.add(user)
+    session.flush()
+    uid = user.id
+    session.commit()
+    assert uid == my_app.auth.models.User().get_user_by_email('test@example.com').id
+
+
+######################
+### User login user ##
+######################
+def test_login_user(client):
+    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    login.login_user(user)
+    assert login.current_user.email == user.email
+
+
+#######################
+### User delete user ##
+#######################
+def test_delete_user(session):
+    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    session.delete(user)
+    session.commit()
+    assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
+
+
+############################
+### Render_template error ##
+############################
+def test_render_error(client):
+    theme = my_app.site.models.Themes().get_active('error')
+    assert my_app.render_template(theme + '/error/error_template.html', status_code=747, error='big ol plane')

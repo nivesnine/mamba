@@ -60,7 +60,7 @@ def edit_post(post_id):
     if helpers.validate_form_on_submit(form):
         form.populate_obj(post)
         post.slug = slugify(post.title)
-        db.session.merge(post)
+        db.session.add(post)
         db.session.commit()
         return redirect(url_for('admin.blog_list'))
     theme = Themes.get_active('admin')
@@ -123,7 +123,7 @@ def edit_page(page_id):
                     datetime.now().strftime('%m-%d-%Y %I:%M %p'),
                     _unidiff_output(last_edit, page.html),
                     page.history)
-        db.session.merge(page)
+        db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
     theme = Themes.get_active('admin')
@@ -188,7 +188,7 @@ def edit_user(user_id):
         else:
             user.password = generate_password_hash(user.password)
 
-        db.session.merge(user)
+        db.session.add(user)
         db.session.commit()
 
         return redirect(url_for('admin.user_list'))
@@ -242,7 +242,7 @@ def edit_role(role_id):
     form = EditRoleForm(request.form, obj=role)
     if helpers.validate_form_on_submit(form):
         form.populate_obj(role)
-        db.session.merge(role)
+        db.session.add(role)
         db.session.commit()
         return redirect(url_for('admin.role_list'))
     theme = Themes.get_active('admin')
@@ -296,11 +296,11 @@ def edit_comment(comment_id):
     form = EditCommentForm(request.form, obj=comment)
     if request.method == 'GET':
         comment.viewed = 1
-        db.session.merge(comment)
+        db.session.add(comment)
         db.session.commit()
     if helpers.validate_form_on_submit(form):
         form.populate_obj(comment)
-        db.session.merge(comment)
+        db.session.add(comment)
         db.session.commit()
         return redirect(url_for('admin.comment_list'))
     theme = Themes.get_active('admin')
@@ -326,7 +326,7 @@ def site_settings():
     form = SettingsForm(request.form, obj=settings)
     if helpers.validate_form_on_submit(form):
         form.populate_obj(settings)
-        db.session.merge(settings)
+        db.session.add(settings)
         db.session.commit()
         return redirect(url_for('site.index'))
     theme = Themes.get_active('admin')
@@ -349,7 +349,7 @@ def edit_profile():
         else:
             user.password = generate_password_hash(user.password)
 
-        db.session.merge(user)
+        db.session.add(user)
         db.session.commit()
         return redirect(url_for('site.index'))
     theme = Themes.get_active('admin')

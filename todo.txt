@@ -1,5 +1,0 @@
-todo
-
-admin menu organization
-
-simplify admin themes

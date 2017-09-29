@@ -2,6 +2,7 @@ from app import application, db
 from flask_security import RoleMixin
 from flask_login import UserMixin
 from sqlalchemy.orm import column_property
+from sqlalchemy import desc, asc
 
 roles_users = db.Table(
     'roles_users',
@@ -37,7 +38,11 @@ class Role(RoleMixin, db.Model):
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return Role.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        if direction == 'desc':
+            o = desc(order)
+        else:
+            o = asc(order)
+        return Role.query.order_by(o).paginate(page, per_page, error_out=False)
 
     @classmethod
     def all(cls):
@@ -99,7 +104,15 @@ class User(UserMixin, db.Model):
     @classmethod
     def get_sortable_list(cls, order, direction, page):
         per_page = application.config["ADMIN_PER_PAGE"]
-        return User.query.order_by(order + ' ' + direction).paginate(page, per_page, error_out=False)
+        if direction == 'desc':
+            o = desc(order)
+        else:
+            o = asc(order)
+        return User.query.order_by(o).paginate(page, per_page, error_out=False)
+
+    @classmethod
+    def get_by_id(cls, user_id):
+        return db.session.query(cls).get(user_id)
 
     @classmethod
     def get_user_by_email(cls, email):

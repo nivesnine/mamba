@@ -1,4 +1,6 @@
 .idea
+todo.txt
+.cache/
 !/.gitignore
 __pycache__/
 *.py[cod]
