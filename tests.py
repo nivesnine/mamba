@@ -177,7 +177,8 @@ def test_admin_pages_list(client):
     assert login.current_user.email == 'admin@example.com'
     res = client.get(url_for('admin.page_list'))
     assert res.status_code == 200
-
+    res = client.get(url_for('admin.page_list', page=2))
+    assert res.status_code == 200
 
 def test_admin_page_create(live_server, client):
     credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
@@ -390,6 +391,15 @@ def test_delete_user(session):
     session.delete(user)
     session.commit()
     assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
+
+
+############################
+### Render_template error ##
+############################
+def test_home_page(live_server, client):
+    res = urlopen(url_for('site.index', _external=True))
+    assert res.code == 200
+    assert b'Long Hello' in res.read()
 
 
 ############################

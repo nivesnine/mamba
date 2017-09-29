@@ -50,6 +50,28 @@ post.writen_by = 1
 db.session.add(post)
 db.session.commit()
 
+post = Post()
+post.title = 'Long Hello'
+post.slug = 'long-hello'
+post.text = '<p>This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            '</p><p>This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            '</p><p>This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... ' \
+            'This is a long post... it will get truncated... This is a long post... it will get truncated... </p>'
+post.published = 1
+post.writen_by = 1
+db.session.add(post)
+db.session.commit()
+
 page = Page()
 page.title = 'About'
 page.slug = 'about'
@@ -58,7 +80,6 @@ page.html = '<div class="ui one column grid text container"><h1>This is an about
 page.published = 1
 db.session.add(page)
 db.session.commit()
-
 
 template = Themes()
 template.name = 'Basic Semantic-ui Site'
