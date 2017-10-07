@@ -101,7 +101,10 @@ def insert_pages():
 
 @application.context_processor
 def theme_admin_pages():
-    roles_obj = login.current_user.get_roles()
+    try:
+        roles_obj = login.current_user.get_roles()
+    except:
+        return {'theme_admin_pages': ''}
     roles = []
     for role in roles_obj:
         roles.append(role.name)
