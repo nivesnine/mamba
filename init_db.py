@@ -85,7 +85,6 @@ template = Themes()
 template.name = 'Basic Semantic-ui Site'
 template.slug = 'basic-semantic-ui'
 template.author = 'default'
-template.type_ = 'site'
 template.active = 1
 db.session.add(template)
 db.session.commit()
@@ -94,7 +93,6 @@ template = Themes()
 template.name = 'Basic Foundation Site'
 template.slug = 'basic-foundation'
 template.author = 'default'
-template.type_ = 'site'
 template.active = 0
 db.session.add(template)
 db.session.commit()
@@ -103,7 +101,6 @@ template = Themes()
 template.name = 'Basic Bootstrap Site'
 template.slug = 'basic-bootstrap'
 template.author = 'default'
-template.type_ = 'site'
 template.active = 0
 db.session.add(template)
 db.session.commit()
@@ -112,13 +109,11 @@ template = Themes()
 template.name = 'Basic Materialize Site'
 template.slug = 'basic-materialize'
 template.author = 'default'
-template.type_ = 'site'
 template.active = 0
 db.session.add(template)
 db.session.commit()
 
-
-theme_admin_id = ThemeAdminPage.register_admin_page('basic-semantic-ui', 'Test Admin')
+theme_admin_id = ThemeAdminPage.register_admin_page('basic-semantic-ui', 'Test Admin', 'admin')
 ThemeOption.register_theme_options(theme_admin_id, 'Facebook URL')
 ThemeOption.register_theme_options(theme_admin_id, 'G+ URL')
 ThemeOption.register_theme_options(theme_admin_id, 'LinkedIn URL')

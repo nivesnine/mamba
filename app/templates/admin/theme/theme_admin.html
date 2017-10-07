@@ -3,7 +3,7 @@
 {% block title %}{{ page.page_title }}{% endblock %}
 {% block content %}
 
-<div class="ui grid">
+<div class="ui stackable grid">
   <div class="four wide column"></div>
   <div class="ten wide column">
     <form action="{{url_for('admin.theme_admin', page_slug=page.page_slug)}}" method="POST" class="ui form">

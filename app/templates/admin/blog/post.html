@@ -2,7 +2,7 @@
 {% block title %}Blog Post{% endblock %}
 {% block content %}
 
-<div class="ui grid">
+<div class="ui stackable grid">
   <div class="four wide column"></div>
   <div class="ten wide column">
     <form action="{% if form.id %} {{url_for('admin.edit_post', post_id=form.id.data) }} {% else %} {{ url_for('admin.create_post') }} {% endif %}" method="POST" name="post_form" class="ui form">

@@ -393,18 +393,17 @@ def test_delete_user(session):
     assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
 
 
-############################
-### Render_template error ##
-############################
+#############################
+### Test Home Page is blog ##
+#############################
 def test_home_page(live_server, client):
     res = urlopen(url_for('site.index', _external=True))
     assert res.code == 200
     assert b'Long Hello' in res.read()
 
 
-############################
-### Render_template error ##
-############################
-def test_render_error(client):
-    theme = my_app.site.models.Themes().get_active()
-    assert my_app.render_template(theme + '/error/error_template.html', status_code=747, error='big ol plane')
+###############
+### Test 405 ##
+###############
+def test_render_405(client):
+    assert client.put(url_for('site.site_page', page='test'), data={}).status_code == 405

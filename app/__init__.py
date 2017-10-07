@@ -100,8 +100,12 @@ def insert_pages():
 
 
 @application.context_processor
-def insert_theme_admin():
-    return {'theme_admin': ThemeAdminPage.all()}
+def theme_admin_pages():
+    roles_obj = login.current_user.get_roles()
+    roles = []
+    for role in roles_obj:
+        roles.append(role.name)
+    return {'theme_admin_pages': ThemeAdminPage.get_allowed_pages(roles)}
 
 
 @application.context_processor

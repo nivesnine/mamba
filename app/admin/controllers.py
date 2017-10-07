@@ -1,6 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
-                  redirect, url_for, flash
+                  redirect, url_for, flash, abort
 from app import db, check_login, check_admin, has_role
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
@@ -376,13 +376,27 @@ def select_theme():
 
 
 # Theme admin pages
-@admin.route('/theme/<page_slug>', methods=['GET', 'POST'])
-@check_login
-@check_admin
+@admin.route('/theme-admin', methods=['GET'])
+def theme_pages():
+    roles_obj = login.current_user.get_roles()
+    roles = []
+    for role in roles_obj:
+        roles.append(role.name)
+
+    pages = ThemeAdminPage.get_allowed_pages(roles)
+
+    return render_template("admin/theme/theme_admin_pages.html", pages=pages)
+
+
+@admin.route('/theme-admin/<page_slug>', methods=['GET', 'POST'])
 def theme_admin(page_slug):
     theme = Themes.get_active()
 
     page = ThemeAdminPage.get_page(theme, page_slug)
+
+    role = page.get_required_role()
+    if not login.current_user.has_role(role):
+        abort(404)
 
     forms = ThemeOptionsForm(request.form, obj=page)
 

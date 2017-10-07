@@ -204,7 +204,6 @@ class Themes(db.Model):
     name = db.Column(db.String(100))
     slug = db.Column(db.String(100))
     author = db.Column(db.String(100))
-    type_ = db.Column(db.String(100))
     active = db.Column(db.Boolean(), default=0)
 
     @classmethod
@@ -230,14 +229,19 @@ class ThemeAdminPage(db.Model):
     theme_slug = db.Column(db.String(100))
     page_title = db.Column(db.String(100))
     page_slug = db.Column(db.String(100))
+    required_role = db.Column(db.String(100))
     options = db.relationship('ThemeOption', backref=db.backref('theme_admin_page', lazy='select'), lazy='dynamic')
 
+    def get_required_role(self):
+        return self.required_role
+
     @classmethod
-    def register_admin_page(cls, theme_slug, page_title):
+    def register_admin_page(cls, theme_slug, page_title, role):
         page = ThemeAdminPage()
         page.theme_slug = theme_slug
         page.page_title = page_title
         page.page_slug = slugify(page_title)
+        page.required_role = role
         db.session.add(page)
         db.session.flush()
         page_id = page.id
@@ -247,6 +251,10 @@ class ThemeAdminPage(db.Model):
     @classmethod
     def get_page(cls, theme_slug, page_slug):
         return cls.query.filter(and_(cls.theme_slug == theme_slug, cls.page_slug == page_slug)).first()
+
+    @classmethod
+    def get_allowed_pages(cls, roles):
+        return cls.query.filter(cls.required_role.in_(roles)).all()
 
     @classmethod
     def all(cls):

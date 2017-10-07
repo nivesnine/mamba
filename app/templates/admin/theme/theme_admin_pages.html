@@ -1,0 +1,17 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}Theme Admin Pages{% endblock %}
+{% block content %}
+
+<div class="ui stackable grid">
+  <div class="four wide column"></div>
+  <div class="ten wide column">
+      <div class="ui list">
+        {% for page in pages %}
+            <a class="item" href="{{ url_for('admin.theme_admin', page_slug=page.page_slug) }}">{{ page.page_title }}</a>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+
+{% endblock %}
