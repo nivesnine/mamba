@@ -165,12 +165,16 @@ class Settings(db.Model):
     blog_sort = db.Column(db.String(6))
 
     @classmethod
-    def get_site_name(cls):
+    def get_name_or_logo(cls):
         use_logo = cls.get_use_site_logo()
         if use_logo:
             return "<img src='{}' class='logo'>".format(cls.get_site_logo_url())
         else:
             return cls.get_settings().site_name
+
+    @classmethod
+    def get_name(cls):
+        return cls.get_settings().site_name
 
     @classmethod
     def get_use_site_logo(cls):

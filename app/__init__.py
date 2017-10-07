@@ -124,8 +124,13 @@ def get_new_comments():
 
 
 @application.context_processor
+def get_site_name_or_logo():
+    return {'site_name_or_logo': Settings().get_name_or_logo()}
+
+
+@application.context_processor
 def get_site_name():
-    return {'site_name': Settings().get_site_name()}
+    return {'site_name': Settings().get_name()}
 
 
 @application.context_processor
