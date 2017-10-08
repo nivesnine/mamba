@@ -85,7 +85,7 @@ def bad_request_error(e):
     return render_template(template_path + "/error/error_template.html", status_code=405, error=e), 405
 
 
-from app.site.models import PostComment, Settings, Page, ThemeAdminPage, ThemeOption
+from app.site.models import PostComment, Settings, Page, ThemeAdminPage, ThemeOption, Menu
 
 
 # getters for templates
@@ -96,7 +96,14 @@ def inject_now():
 
 @application.context_processor
 def insert_pages():
-    return {'menu_pages': Page.all()}
+    menu = Menu.query.get(1).menu
+    return {'menu_pages': menu}
+
+
+@application.context_processor
+def insert_mobile_pages():
+    menu = Menu.query.get(2).menu
+    return {'mobile_menu_pages': menu}
 
 
 @application.context_processor

@@ -8,8 +8,8 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreateRoleForm, EditRoleForm, \
                             CreateCommentForm, EditCommentForm,\
                             EditProfileForm, SettingsForm, \
-                            ThemeOptionsForm
-from app.site.models import Themes, PostComment, Settings, Post, Page, ThemeAdminPage, ThemeOption
+                            ThemeOptionsForm, MenuForm
+from app.site.models import Themes, PostComment, Settings, Post, Page, ThemeAdminPage, ThemeOption, Menu
 from app.auth.models import User, Role
 from flask_admin import helpers
 import flask_login as login
@@ -404,6 +404,43 @@ def theme_admin(page_slug):
         for form in forms.options.data:
             ThemeOption.update_by_id(form['id'], form['value'])
         flash('theme options updated')
-        return redirect( url_for('admin.theme_admin', page_slug=page_slug))
+        return redirect(url_for('admin.theme_admin', page_slug=page_slug))
 
     return render_template("admin/theme/theme_admin.html", page=page, forms=forms)
+
+
+# Edit Menu
+@admin.route('/menu', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def edit_menu():
+
+    menu = Menu.query.get(1)
+    form = MenuForm(request.form, obj=menu)
+
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(menu)
+        db.session.add(menu)
+        db.session.commit()
+        flash('menu updated')
+        return redirect(url_for('admin.site_settings'))
+
+    return render_template("admin/site/menu.html", form=form)
+
+
+@admin.route('/mobile_menu', methods=['GET', 'POST'])
+@check_login
+@check_admin
+def edit_mobile_menu():
+
+    menu = Menu.query.get(2)
+    form = MenuForm(request.form, obj=menu)
+
+    if helpers.validate_form_on_submit(form):
+        form.populate_obj(menu)
+        db.session.add(menu)
+        db.session.commit()
+        flash('mobile menu updated')
+        return redirect(url_for('admin.site_settings'))
+
+    return render_template("admin/site/menu.html", form=form)
