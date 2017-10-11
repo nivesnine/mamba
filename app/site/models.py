@@ -1,11 +1,9 @@
-from app import db
-from sqlalchemy import (
-    and_, desc, asc
-)
 from flask import current_app as app
+from sqlalchemy import and_, asc, desc
 
+from app import db
 from app.auth.models import User
-from app.utils import slugify
+from app.helpers.utils import slugify
 
 
 class Page(db.Model):

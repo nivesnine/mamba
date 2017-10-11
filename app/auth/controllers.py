@@ -1,6 +1,8 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, \
-                  redirect, url_for, abort
+from flask import (
+    Blueprint, request, render_template,
+    redirect, url_for, abort,
+)
 from app.auth.forms import LoginForm, RegistrationForm
 from app.auth.models import User
 from flask_admin.contrib import sqla
@@ -47,23 +49,23 @@ def login_view():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def registration_view():
-        form = RegistrationForm(request.form)
-        if helpers.validate_form_on_submit(form):
-            if form.validate_registration():
-                user = User()
+    form = RegistrationForm(request.form)
+    if helpers.validate_form_on_submit(form):
+        if form.validate_registration():
+            user = User()
 
-                form.populate_obj(user)
-                user.password = generate_password_hash(form.password.data)
-                user.registered_ip = str(request.remote_addr)
-                user.alias = user.email.split("@")[0]
-                db.session.add(user)
-                db.session.commit()
+            form.populate_obj(user)
+            user.password = generate_password_hash(form.password.data)
+            user.registered_ip = str(request.remote_addr)
+            user.alias = user.email.split("@")[0]
+            db.session.add(user)
+            db.session.commit()
 
-                login.login_user(user)
+            login.login_user(user)
 
-                return redirect(url_for('auth.index'))
-        theme = Themes.get_active()
-        return render_template(theme + '/auth/register.html', form=form)
+            return redirect(url_for('auth.index'))
+    theme = Themes.get_active()
+    return render_template(theme + '/auth/register.html', form=form)
 
 
 @auth.route('/logout')

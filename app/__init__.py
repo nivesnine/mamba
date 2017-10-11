@@ -24,6 +24,4 @@ register_blueprints(app)
 
 db.create_all()
 
-from app.helpers import filters, processors
-from app import decorators, error_handlers
-from app.site.models import Themes
+from app.helpers import filters, processors, decorators, error_handlers

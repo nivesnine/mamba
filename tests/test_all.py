@@ -1,13 +1,14 @@
-import app as my_app
+from urllib.request import urlopen
+
+import flask_login as login
 import pytest
 from flask import url_for
 from flask_login import LoginManager
-import flask_login as login
-from urllib.request import urlopen
 
-from app.auth.models import User, Role
-from app.site.models import Post, Page
-from app.utils import slugify
+import app as my_app
+from app.auth.models import Role, User
+from app.helpers.utils import slugify
+from app.site.models import Page, Post
 
 
 @pytest.fixture

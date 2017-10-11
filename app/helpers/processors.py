@@ -1,15 +1,7 @@
-import flask_login as login
 from datetime import datetime
 
+from app.site.models import Menu, ThemeOption, PostComment, Settings
 from app import app
-from app.site.models import (
-    Page,
-    ThemeAdminPage,
-    ThemeOption,
-    PostComment,
-    Settings,
-    Menu,
-)
 
 
 @app.context_processor
