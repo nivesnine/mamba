@@ -1,21 +1,49 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, \
-                  redirect, url_for, flash, abort
-from app import db, check_login, check_admin, has_role
-from app.admin.forms import CreatePostForm, EditPostForm, \
-                            CreatePageForm, EditPageForm, \
-                            CreateUserForm, EditUserForm, \
-                            CreateRoleForm, EditRoleForm, \
-                            CreateCommentForm, EditCommentForm,\
-                            EditProfileForm, SettingsForm, \
-                            ThemeOptionsForm, MenuForm
-from app.site.models import Themes, PostComment, Settings, Post, Page, ThemeAdminPage, ThemeOption, Menu
-from app.auth.models import User, Role
-from flask_admin import helpers
-import flask_login as login
-from werkzeug.security import generate_password_hash
 from datetime import datetime
-from app.utils import slugify, _unidiff_output
+
+import flask_login as login
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from flask_admin import helpers
+from werkzeug.security import generate_password_hash
+
+from app import db
+from app.admin.forms import (
+    CreateCommentForm,
+    CreatePageForm,
+    CreatePostForm,
+    CreateRoleForm,
+    CreateUserForm,
+    EditCommentForm,
+    EditPageForm,
+    EditPostForm,
+    EditProfileForm,
+    EditRoleForm,
+    EditUserForm,
+    MenuForm,
+    SettingsForm,
+    ThemeOptionsForm,
+)
+from app.auth.models import Role, User
+from app.helpers.decorators import check_admin, check_login, has_role
+from app.helpers.utils import _unidiff_output, slugify
+from app.site.models import (
+    Menu,
+    Page,
+    Post,
+    PostComment,
+    Settings,
+    ThemeAdminPage,
+    ThemeOption,
+    Themes,
+)
 
 # Create blog blueprint
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -27,7 +55,8 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @check_login
 @has_role('editor')
 def blog_list(page):
-    order = 'posts_'+request.args['sort'] if 'sort' in request.args else 'posts_id'
+    order = 'posts_' + request.args[
+        'sort'] if 'sort' in request.args else 'posts_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     posts = Post.get_sortable_list(order, direction, page)
 
@@ -100,7 +129,8 @@ def create_page():
         form.populate_obj(page)
         page.slug = slugify(page.title)
         page.history = "{} created at {}".format(str(login.current_user.email),
-                                                 datetime.now().strftime('%m-%d-%Y %I:%M %p'))
+                                                 datetime.now().strftime(
+                                                     '%m-%d-%Y %I:%M %p'))
         db.session.add(page)
         db.session.commit()
         return redirect(url_for('admin.page_list'))
@@ -118,7 +148,7 @@ def edit_page(page_id):
     if helpers.validate_form_on_submit(form):
         form.populate_obj(page)
         page.slug = slugify(page.title)
-        page.history = '{} updated site at {} \n {} \n\n {}'\
+        page.history = '{} updated site at {} \n {} \n\n {}' \
             .format(login.current_user.email,
                     datetime.now().strftime('%m-%d-%Y %I:%M %p'),
                     _unidiff_output(last_edit, page.html),
@@ -146,7 +176,8 @@ def delete_page(page_id):
 @check_login
 @check_admin
 def user_list(page):
-    order = 'users_'+request.args['sort'] if 'sort' in request.args else 'users_id'
+    order = 'users_' + request.args[
+        'sort'] if 'sort' in request.args else 'users_id'
     direction = request.args['d'] if 'd' in request.args else 'desc'
     users = User.get_sortable_list(order, direction, page)
 
@@ -180,7 +211,7 @@ def edit_user(user_id):
     last_login = user.last_login_ip
     form = EditUserForm(request.form, obj=user)
     if helpers.validate_form_on_submit(form):
-        
+
         form.populate_obj(user)
 
         if user.password == '':
@@ -193,7 +224,8 @@ def edit_user(user_id):
 
         return redirect(url_for('admin.user_list'))
 
-    return render_template("admin/users/user.html", form=form, last_login=last_login)
+    return render_template("admin/users/user.html", form=form,
+                           last_login=last_login)
 
 
 @admin.route('/user/delete/<int:user_id>', methods=['GET'])
@@ -361,7 +393,6 @@ def edit_profile():
 @check_login
 @check_admin
 def select_theme():
-
     themes = Themes.all()
 
     if request.method == 'POST' and 'site' in request.form:
@@ -406,7 +437,8 @@ def theme_admin(page_slug):
         flash('theme options updated')
         return redirect(url_for('admin.theme_admin', page_slug=page_slug))
 
-    return render_template("admin/theme/theme_admin.html", page=page, forms=forms)
+    return render_template("admin/theme/theme_admin.html", page=page,
+                           forms=forms)
 
 
 # Edit Menu
@@ -414,7 +446,6 @@ def theme_admin(page_slug):
 @check_login
 @check_admin
 def edit_menu():
-
     menu = Menu.query.get(1)
     form = MenuForm(request.form, obj=menu)
 
@@ -432,7 +463,6 @@ def edit_menu():
 @check_login
 @check_admin
 def edit_mobile_menu():
-
     menu = Menu.query.get(2)
     form = MenuForm(request.form, obj=menu)
 

@@ -1,6 +1,8 @@
 # Import flask dependencies
-from flask import Blueprint, request, render_template, \
-    redirect, url_for, abort
+from flask import (
+    Blueprint, request, render_template,
+    redirect, url_for, abort,
+)
 from app.site.models import Themes, PostComment, Post, Page
 from app.site.forms import CommentForm
 from flask_admin import helpers
@@ -40,7 +42,8 @@ def single_post(slug):
     if not post:
         abort(404)
     theme = Themes.get_active()
-    return render_template(theme + "/site/single_post.html", post=post, form=form)
+    return render_template(theme + "/site/single_post.html", post=post,
+                           form=form)
 
 
 @site.route('/<page>', methods=['GET'])

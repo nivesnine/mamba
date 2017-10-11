@@ -13,6 +13,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Statement for enabling the development environment
 DEBUG = False
+TESTING = False
 
 # Application threads. A common general assumption is
 # using 2 per available processor cores - to handle

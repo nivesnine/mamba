@@ -1,12 +1,15 @@
 from wtforms import form, fields, validators
 from werkzeug.security import check_password_hash
+
 from app import db
 from app.auth.models import User
 
 
 class LoginForm(form.Form):
-    email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
-    password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
+    email = fields.StringField(
+        validators=[validators.required(), validators.length(max=120)])
+    password = fields.PasswordField(
+        validators=[validators.required(), validators.length(max=255)])
 
     def validate_login(self):
         user = self.get_user_by_email()
@@ -27,12 +30,15 @@ class LoginForm(form.Form):
         return user
 
     def get_user_by_email(self):
-        return db.session.query(User).filter(User.email == self.email.data).first()
+        return db.session.query(User).filter(
+            User.email == self.email.data).first()
 
 
 class RegistrationForm(form.Form):
-    email = fields.StringField(validators=[validators.required(), validators.length(max=120)])
-    password = fields.PasswordField(validators=[validators.required(), validators.length(max=255)])
+    email = fields.StringField(
+        validators=[validators.required(), validators.length(max=120)])
+    password = fields.PasswordField(
+        validators=[validators.required(), validators.length(max=255)])
 
     def validate_registration(self):
         if db.session.query(User).filter_by(email=self.email.data).count() > 0:

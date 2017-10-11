@@ -1,8 +1,10 @@
-from app import application, db
+from app import db
 from flask_security import RoleMixin
 from flask_login import UserMixin
+from flask import current_app as app
 from sqlalchemy.orm import column_property
 from sqlalchemy import desc, asc
+
 
 roles_users = db.Table(
     'roles_users',
@@ -37,7 +39,7 @@ class Role(RoleMixin, db.Model):
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
+        per_page = app.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
             o = desc(order)
         else:
@@ -103,7 +105,7 @@ class User(UserMixin, db.Model):
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
+        per_page = app.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
             o = desc(order)
         else:
