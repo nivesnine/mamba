@@ -1,6 +1,6 @@
 from app import db
 from app.auth.models import User, Role
-from app.site.models import Themes, Settings, Post, Page, ThemeAdminPage, ThemeOption
+from app.site.models import Themes, Settings, Post, Page, ThemeAdminPage, ThemeOption, Menu
 from werkzeug.security import generate_password_hash
 
 settings = Settings()
@@ -111,6 +111,20 @@ template.slug = 'basic-materialize'
 template.author = 'default'
 template.active = 0
 db.session.add(template)
+db.session.commit()
+
+main_menu = Menu()
+main_menu.menu = '<a class="item inverted" href="/about">About</a> <div class="ui dropdown item"> About<i ' \
+                 'class="dropdown icon" aria-hidden="true"></i><div class="menu"><a class="item" href="/about">About ' \
+                 'Us</a></div></div> '
+db.session.add(main_menu)
+db.session.commit()
+
+mobile_menu = Menu()
+mobile_menu.menu = '<a class="item inverted" href="/about">About</a><div class="ui inverted accordion item"><div ' \
+                   'class="title">About<i class="dropdown icon"></i></div><div class="content"><a class="item" ' \
+                   'href="/about">About Us</a></div></div> '
+db.session.add(mobile_menu)
 db.session.commit()
 
 theme_admin_id = ThemeAdminPage.register_admin_page('basic-semantic-ui', 'Test Admin', 'admin')

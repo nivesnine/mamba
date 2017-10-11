@@ -124,3 +124,8 @@ class ThemeOptionEntryForm(form.Form):
 
 class ThemeOptionsForm(form.Form):
     options = fields.FieldList(fields.FormField(ThemeOptionEntryForm))
+
+
+class MenuForm(form.Form):
+    menu = fields.StringField('Menu', widget=TextArea(), validators=[validators.required()])
+    submit = fields.SubmitField('Submit')

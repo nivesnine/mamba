@@ -1,21 +1,20 @@
 {% extends "admin/admin-base.html" %}
-{% block title %}Site Settings{% endblock %}
+{% block title %}Menu{% endblock %}
 {% block content %}
 
 <div class="ui stackable grid">
   <div class="four wide column"></div>
   <div class="ten wide column">
-    <a href="{{ url_for('admin.edit_menu') }}" class="ui button">Edit Menu</a>
-    <a href="{{ url_for('admin.edit_mobile_menu') }}" class="ui button">Edit Mobile Menu</a>
+
     <form method="POST" class="ui form">
-        {% for f in form %}
+          {% for f in form %}
              <div class="field">
             		{% if f.name != 'submit' %}
               			{{ f.label }}
                     {{ f(placeholder=f.name.replace('_', ' ')) }}
                 {% endif %}
               </div>
-        {% endfor %}
+          {% endfor %}
           <div class="field">
             {{ form.submit(class='ui blue right floated button') }}
           </div>

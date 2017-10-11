@@ -215,8 +215,8 @@ class Themes(db.Model):
     active = db.Column(db.Boolean(), default=0)
 
     @classmethod
-    def activate_theme(cls, id):
-        theme = Themes.query.get(id)
+    def activate_theme(cls, id_):
+        theme = Themes.query.get(id_)
         theme.active = 1
         db.session.add(theme)
         db.session.commit()
@@ -262,7 +262,8 @@ class ThemeAdminPage(db.Model):
 
     @classmethod
     def get_allowed_pages(cls, roles):
-        return cls.query.filter(cls.required_role.in_(roles)).all()
+        active_theme = Themes.get_active()
+        return cls.query.filter(and_(cls.required_role.in_(roles), cls.theme_slug == active_theme)).all()
 
     @classmethod
     def all(cls):
@@ -297,3 +298,10 @@ class ThemeOption(db.Model):
     @classmethod
     def get_option(cls, option):
         return db.session.query(cls.value).filter(and_(cls.option == option)).first()[0]
+
+
+class Menu(db.Model):
+    __tablename__ = 'menu'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    menu = db.Column(db.Text())
