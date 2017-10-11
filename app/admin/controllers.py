@@ -1,7 +1,8 @@
 # Import flask dependencies
 from flask import Blueprint, request, render_template, \
                   redirect, url_for, flash, abort
-from app import db, check_login, check_admin, has_role
+
+from app.decorators import check_login, check_admin, has_role
 from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreatePageForm, EditPageForm, \
                             CreateUserForm, EditUserForm, \
@@ -9,6 +10,7 @@ from app.admin.forms import CreatePostForm, EditPostForm, \
                             CreateCommentForm, EditCommentForm,\
                             EditProfileForm, SettingsForm, \
                             ThemeOptionsForm
+from app import db
 from app.site.models import Themes, PostComment, Settings, Post, Page, ThemeAdminPage, ThemeOption
 from app.auth.models import User, Role
 from flask_admin import helpers
@@ -16,6 +18,7 @@ import flask_login as login
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from app.utils import slugify, _unidiff_output
+
 
 # Create blog blueprint
 admin = Blueprint('admin', __name__, url_prefix='/admin')

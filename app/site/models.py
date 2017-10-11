@@ -1,5 +1,9 @@
-from app import application, db
-from sqlalchemy import and_, desc, asc
+from app import db
+from sqlalchemy import (
+    and_, desc, asc
+)
+from flask import current_app as app
+
 from app.auth.models import User
 from app.utils import slugify
 
@@ -21,7 +25,7 @@ class Page(db.Model):
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
+        per_page = app.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
             o = desc(order)
         else:
@@ -89,7 +93,7 @@ class Post(db.Model):
             o = desc('posts_id')
         else:
             o = asc('posts_id')
-        return Post.query.filter(Post.published == 1).order_by(o)\
+        return Post.query.filter(Post.published == 1).order_by(o) \
             .paginate(page, per_page, error_out=False)
 
     @classmethod
@@ -102,7 +106,7 @@ class Post(db.Model):
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
+        per_page = app.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
             o = desc(order)
         else:
@@ -141,7 +145,7 @@ class PostComment(db.Model):
 
     @classmethod
     def get_sortable_list(cls, order, direction, page):
-        per_page = application.config["ADMIN_PER_PAGE"]
+        per_page = app.config["ADMIN_PER_PAGE"]
         if direction == 'desc':
             o = desc(order)
         else:

@@ -1,9 +1,16 @@
+import json
+from pprint import pprint
+
 import app as my_app
 import pytest
 from flask import url_for
 from flask_login import LoginManager
 import flask_login as login
 from urllib.request import urlopen
+
+from app.auth.models import User, Role
+from app.site.models import Post, Page
+from app.utils import slugify
 
 
 @pytest.fixture
@@ -15,7 +22,7 @@ def app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return my_app.auth.models.User().get_by_id(user_id)
+        return User().get_by_id(user_id)
 
     return app
 
@@ -51,7 +58,7 @@ class TestLiveServer:
 #################
 def test_slugify(client):
     expected = 'test-this'
-    assert my_app.utils.slugify('test this') == expected
+    assert slugify('test this') == expected
 
 
 #######################
@@ -102,7 +109,7 @@ def test_admin_blog_post_edit(live_server, client):
     credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    pid = my_app.site.models.Post.get_by_slug('blog-create-test').get_id()
+    pid = Post.get_by_slug('blog-create-test').get_id()
     post = {'id' : pid, 'title' : 'blog create test', 'text' : 'updated testing blog post','published' : '1'}
     client.post(url_for('admin.edit_post', post_id=pid), data=post)
     res = urlopen(url_for('site.single_post', slug='blog-create-test', _external=True))
@@ -114,7 +121,7 @@ def test_admin_blog_post_delete(live_server, client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    post = my_app.site.models.Post.get_by_slug('blog-create-test').get_id()
+    post = Post.get_by_slug('blog-create-test').get_id()
     client.get(url_for('admin.delete_post', post_id=post))
     res = client.get(url_for('site.single_post', slug='blog-create-test'))
     assert res.status_code == 404
@@ -135,7 +142,7 @@ def test_admin_comment_create(live_server, client):
     credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    post = my_app.site.models.Post.get_by_id(1)
+    post = Post.get_by_id(1)
     comment = {'written_by' : '1', 'post' : post.get_id(), 'comment' : 'testing comment','published' : '1'}
     client.post(url_for('admin.create_comment'), data=comment)
     res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
@@ -147,7 +154,7 @@ def test_admin_comment_edit(live_server, client):
     credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    post = my_app.site.models.Post.get_by_id(1)
+    post = Post.get_by_id(1)
     cid = post.comments[-1].get_id()
     comment = {'id' : cid, 'written_by' : '1', 'post' : post.get_id(), 'comment' : 'updated testing comment','published' : '1'}
     client.post(url_for('admin.edit_comment', comment_id=cid), data=comment)
@@ -160,7 +167,7 @@ def test_admin_comment_delete(live_server, client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    post = my_app.site.models.Post.get_by_id(1)
+    post = Post.get_by_id(1)
     cid = post.comments[-1].get_id()
     client.get(url_for('admin.delete_comment', comment_id=cid))
     res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
@@ -195,7 +202,7 @@ def test_admin_page_edit(live_server, client):
     credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    pid = my_app.site.models.Page.get_by_slug('test-page').get_id()
+    pid = Page.get_by_slug('test-page').get_id()
     page = {'id' : pid, 'title': 'test page', 'html': 'updated testing page', 'published': '1'}
     client.post(url_for('admin.edit_page', page_id=pid), data=page)
     res = urlopen(url_for('site.site_page', page='test-page', _external=True))
@@ -207,7 +214,7 @@ def test_admin_page_delete(live_server, client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    pid = my_app.site.models.Page.get_by_slug('test-page').get_id()
+    pid = Page.get_by_slug('test-page').get_id()
     client.get(url_for('admin.delete_page', page_id=pid))
     res = client.get(url_for('site.site_page', page='test-page'))
     assert res.status_code == 404
@@ -277,7 +284,7 @@ def test_registration(client):
 ### AUTH Register - default registration gives no roles ##
 ##########################################################
 def test_newly_registered_user_has_no_roles(client):
-    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    user = User().get_user_by_email('test@example.com')
     roles = user.get_roles()
     assert roles == []
 
@@ -302,10 +309,10 @@ def test_logout(client):
 ### Delete newly registered user ##
 ###################################
 def test_delete_newly_registered_user(session):
-    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    user = User().get_user_by_email('test@example.com')
     session.delete(user)
     session.commit()
-    assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
+    assert User().get_user_by_email('test@example.com') == None
 
 
 #################
@@ -327,7 +334,7 @@ def test_admin_is_admin(client):
 ### 3 default roles ##
 ######################
 def test_there_are_three_roles(client):
-    roles = my_app.auth.models.Role().all()
+    roles = Role().all()
     assert len(roles) == 3
 
 
@@ -338,7 +345,7 @@ def test_admin_has_all_roles(client):
     credentials = {'email': 'admin@example.com', 'password': 'admin'}
     client.post(url_for('auth.login_view'), data=credentials)
     assert login.current_user.email == 'admin@example.com'
-    roles = my_app.auth.models.Role().all()
+    roles = Role().all()
     for role in roles:
         assert login.current_user.has_role(role)
 
@@ -365,20 +372,20 @@ def test_site_index_redirect(client):
 ### User add user ##
 ####################
 def test_add_user(session):
-    user = my_app.auth.models.User()
+    user = User()
     user.email = 'test@example.com'
     session.add(user)
     session.flush()
     uid = user.id
     session.commit()
-    assert uid == my_app.auth.models.User().get_user_by_email('test@example.com').id
+    assert uid == User().get_user_by_email('test@example.com').id
 
 
 ######################
 ### User login user ##
 ######################
 def test_login_user(client):
-    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    user = User().get_user_by_email('test@example.com')
     login.login_user(user)
     assert login.current_user.email == user.email
 
@@ -387,10 +394,10 @@ def test_login_user(client):
 ### User delete user ##
 #######################
 def test_delete_user(session):
-    user = my_app.auth.models.User().get_user_by_email('test@example.com')
+    user = User().get_user_by_email('test@example.com')
     session.delete(user)
     session.commit()
-    assert my_app.auth.models.User().get_user_by_email('test@example.com') == None
+    assert User().get_user_by_email('test@example.com') == None
 
 
 #############################
