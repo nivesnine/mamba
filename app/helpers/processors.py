@@ -2,7 +2,14 @@ import flask_login as login
 from datetime import datetime
 
 from app import app
-from app.site.models import Page, ThemeAdminPage, ThemeOption, PostComment, Settings
+from app.site.models import (
+    Page,
+    ThemeAdminPage,
+    ThemeOption,
+    PostComment,
+    Settings,
+    Menu,
+)
 
 
 @app.context_processor
@@ -12,19 +19,14 @@ def inject_now():
 
 @app.context_processor
 def insert_pages():
-    return {'menu_pages': Page.all()}
+    menu = Menu.query.get(1).menu
+    return {'menu_pages': menu}
 
 
 @app.context_processor
-def theme_admin_pages():
-    try:
-        roles_obj = login.current_user.get_roles()
-    except:
-        return {'theme_admin_pages': ''}
-    roles = []
-    for role in roles_obj:
-        roles.append(role.name)
-    return {'theme_admin_pages': ThemeAdminPage.get_allowed_pages(roles)}
+def insert_mobile_pages():
+    menu = Menu.query.get(2).menu
+    return {'mobile_menu_pages': menu}
 
 
 @app.context_processor

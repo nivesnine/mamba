@@ -1,6 +1,3 @@
-import json
-from pprint import pprint
-
 import app as my_app
 import pytest
 from flask import url_for
