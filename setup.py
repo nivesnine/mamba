@@ -22,7 +22,7 @@ setup(
     maintainer="Dustin Farley",
     maintainer_email="fdustin45@gmail.com",
     url='https://github.com/thewhowhatwhere/flask-blog',
-    license="MIT license",
+    license="GNU GPLv3",
     packages=[
         'cosmic',
     ],
