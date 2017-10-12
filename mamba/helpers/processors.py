@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from app.site.models import Menu, ThemeOption, PostComment, Settings
-from app import app
+from mamba.site.models import Menu, ThemeOption, PostComment, Settings
+from mamba import app
 
 
 @app.context_processor

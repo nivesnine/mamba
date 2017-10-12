@@ -1,7 +1,7 @@
 from flask import render_template
 
-from app.site.models import Themes
-from app import app
+from mamba.site.models import Themes
+from mamba import app
 
 
 @app.errorhandler(404)

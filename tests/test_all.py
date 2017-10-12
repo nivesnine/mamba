@@ -5,10 +5,10 @@ import pytest
 from flask import url_for
 from flask_login import LoginManager
 
-import app as my_app
-from app.auth.models import Role, User
-from app.helpers.utils import slugify
-from app.site.models import Page, Post
+import mamba as my_app
+from mamba.auth.models import Role, User
+from mamba.helpers.utils import slugify
+from mamba.site.models import Page, Post
 
 
 @pytest.fixture

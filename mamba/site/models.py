@@ -1,9 +1,9 @@
 from flask import current_app as app
 from sqlalchemy import and_, asc, desc
 
-from app import db
-from app.auth.models import User
-from app.helpers.utils import slugify
+from mamba import db
+from mamba.auth.models import User
+from mamba.helpers.utils import slugify
 
 
 class Page(db.Model):

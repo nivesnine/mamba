@@ -18,10 +18,10 @@ db = SQLAlchemy(app)
 
 HTMLMIN(app)
 
-from app.blueprints import register_blueprints
+from mamba.blueprints import register_blueprints
 
 register_blueprints(app)
 
 db.create_all()
 
-from app.helpers import filters, processors, decorators, error_handlers
+from mamba.helpers import filters, processors, decorators, error_handlers
