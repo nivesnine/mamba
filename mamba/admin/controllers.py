@@ -14,8 +14,8 @@ from flask import (
 from flask_admin import helpers
 from werkzeug.security import generate_password_hash
 
-from app import db
-from app.admin.forms import (
+from mamba import db
+from mamba.admin.forms import (
     CreateCommentForm,
     CreatePageForm,
     CreatePostForm,
@@ -31,10 +31,10 @@ from app.admin.forms import (
     SettingsForm,
     ThemeOptionsForm,
 )
-from app.auth.models import Role, User
-from app.helpers.decorators import check_admin, check_login, has_role
-from app.helpers.utils import _unidiff_output, slugify
-from app.site.models import (
+from mamba.auth.models import Role, User
+from mamba.helpers.decorators import check_admin, check_login, has_role
+from mamba.helpers.utils import _unidiff_output, slugify
+from mamba.site.models import (
     Menu,
     Page,
     Post,

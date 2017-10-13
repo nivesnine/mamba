@@ -6,4 +6,4 @@ python wsgi.py &
 LASTPID=$!
 sleep 4; kill $LASTPID
 
-py.test tests/ --cov=./app
+py.test tests/ --cov=./mamba

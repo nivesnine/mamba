@@ -1,4 +1,4 @@
-from app import app
+from mamba import app
 
 
 @app.template_filter('truncate_after_tag')

@@ -3,14 +3,14 @@ from flask import (
     Blueprint, request, render_template,
     redirect, url_for, abort,
 )
-from app.auth.forms import LoginForm, RegistrationForm
-from app.auth.models import User
+from mamba.auth.forms import LoginForm, RegistrationForm
+from mamba.auth.models import User
 from flask_admin.contrib import sqla
 from flask_admin import helpers
 import flask_login as login
-from app import db
+from mamba import db
 from werkzeug.security import generate_password_hash
-from app.site.models import Themes
+from mamba.site.models import Themes
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 

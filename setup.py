@@ -4,7 +4,7 @@
 
 from setuptools import setup
 
-from app import __version__
+from mamba import __version__
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -13,9 +13,9 @@ with open('CHANGELOG.md') as history_file:
     changelog = history_file.read()
 
 setup(
-    name='Cosmic Goat',
+    name='mamba',
     version='.'.join([str(v) for v in __version__]),
-    description="personal blogging app",
+    description='personal blogging app',
     long_description=readme + '\n\n' + changelog,
     author="Dustin Farley",
     author_email="fdustin45@gmail.com",
@@ -26,7 +26,7 @@ setup(
     packages=[
         'cosmic',
     ],
-    package_dir={'cosmic': 'app'},
+    package_dir={'mamba': 'mamba'},
     include_package_data=True,
     install_requires=[
         'click',

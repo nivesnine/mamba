@@ -1,7 +1,7 @@
-from app import application
-from app import db
+from mamba import application
+from mamba import db
 from flask_login import LoginManager
-from app.auth.models import User
+from mamba.auth.models import User
 
 login_manager = LoginManager()
 login_manager.init_app(application)

@@ -1,8 +1,8 @@
 from wtforms import form, fields, validators
 from werkzeug.security import check_password_hash
 
-from app import db
-from app.auth.models import User
+from mamba import db
+from mamba.auth.models import User
 
 
 class LoginForm(form.Form):

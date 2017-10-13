@@ -1,8 +1,8 @@
 from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
-from app.auth.models import Role
+from mamba.auth.models import Role
 from wtforms_alchemy import QuerySelectMultipleField
-from app.site.models import Page
+from mamba.site.models import Page
 
 
 # Blog post creation form

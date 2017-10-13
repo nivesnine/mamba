@@ -1,4 +1,4 @@
-from app import db
+from mamba import db
 from flask_security import RoleMixin
 from flask_login import UserMixin
 from flask import current_app as app

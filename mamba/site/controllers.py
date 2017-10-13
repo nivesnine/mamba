@@ -3,11 +3,11 @@ from flask import (
     Blueprint, request, render_template,
     redirect, url_for, abort,
 )
-from app.site.models import Themes, PostComment, Post, Page
-from app.site.forms import CommentForm
+from mamba.site.models import Themes, PostComment, Post, Page
+from mamba.site.forms import CommentForm
 from flask_admin import helpers
 import flask_login as login
-from app import db
+from mamba import db
 
 site = Blueprint('site', __name__, url_prefix='')
 

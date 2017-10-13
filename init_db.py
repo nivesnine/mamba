@@ -1,6 +1,6 @@
-from app import db
-from app.auth.models import User, Role
-from app.site.models import Themes, Settings, Post, Page, ThemeAdminPage, ThemeOption, Menu
+from mamba import db
+from mamba.auth.models import User, Role
+from mamba.site.models import Themes, Settings, Post, Page, ThemeAdminPage, ThemeOption, Menu
 from werkzeug.security import generate_password_hash
 
 settings = Settings()
