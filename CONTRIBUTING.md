@@ -1,9 +1,17 @@
-For now, contributing will be extreamly hard as the code changes too frequently.
+## Below you will find some ways to help!
+### If what you seek is not here, just ask!
 
-However that should not stop you from trying. I am open to suggestions.
+### Issues
+#### Found a bug? add it to the issues!
+We will do our best to fix the problem as fast as possible.
+#### If you have an idea for Mamba, add an issue with "IDEA: " at the beginning of the title.
+We will discuss with and/or without you about your idea and how we might implement it.
+You may also feel free to clone Mamba and submit a pull request.
 
-In the near future, theme development will be gladly excepted.
-
-Feel free to notice critical bugs and report them at any time.
-
-Other than that, just comment on things you would love to see in the project.
+### Contributing to code
+#### Structure
+It is important to stay consistent with our structure (or at least our belief in structure). We want our code laid out in an extremely easy to use and understand fashion.
+#### Pep8
+Do your best to make your code Pep8 compliant. We may ask for changes to be made before a pull request is accepted.
+#### Testing
+It's best to add test cases for your code, although this is not exactly required.
