@@ -6,7 +6,9 @@
 We will do our best to fix the problem as fast as possible.
 #### If you have an idea for Mamba, add an issue with "IDEA: " at the beginning of the title.
 We will discuss with and/or without you about your idea and how we might implement it.
-You may also feel free to clone Mamba and submit a pull request.
+If we like the idea we will add it to the ideas list in the Projects tab.
+Once we know what release the idea will be in, it will be moved into the release project.
+You may also feel free to fork Mamba and submit a pull request.
 
 ### Contributing to code
 #### Structure
