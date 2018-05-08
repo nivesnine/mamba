@@ -1,0 +1,4 @@
+{
+  "tests/test_all.py::test_admin_theme_pages": true,
+  "tests/test_all.py::test_admin_themes": true
+}

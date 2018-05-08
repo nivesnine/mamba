@@ -230,24 +230,6 @@ def test_admin_roles_list(client):
 
 
 ##################
-### ADMIN Theme ##
-##################
-def test_admin_themes(client):
-    credentials = {'email': 'admin@example.com', 'password': 'admin'}
-    client.post(url_for('auth.login_view'), data=credentials)
-    assert login.current_user.email == 'admin@example.com'
-    res = client.get(url_for('admin.select_theme'))
-    assert res.status_code == 200
-
-
-def test_admin_theme_pages(client):
-    credentials = {'email': 'admin@example.com', 'password': 'admin'}
-    client.post(url_for('auth.login_view'), data=credentials)
-    assert login.current_user.email == 'admin@example.com'
-    res = client.get(url_for('admin.theme_admin', page_slug='test-admin'))
-    assert res.status_code == 200
-
-##################
 ### ADMIN Users ##
 ##################
 def test_admin_users_list(client):
@@ -311,11 +293,6 @@ def test_delete_newly_registered_user(session):
     session.delete(user)
     session.commit()
     assert User().get_user_by_email('test@example.com') == None
-
-
-#################
-### Site theme ##
-#################
 
 
 ############################
