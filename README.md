@@ -1,7 +1,7 @@
 # Mamba
 ------------
-[![Build Status](https://travis-ci.org/thewhowhatwhere/mamba.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/flask-blog)
-[![codecov](https://codecov.io/gh/thewhowhatwhere/flask-blog/branch/master/graph/badge.svg)](https://codecov.io/gh/thewhowhatwhere/flask-blog)
+[![Build Status](https://travis-ci.org/thewhowhatwhere/mamba.svg?branch=master)](https://travis-ci.org/thewhowhatwhere/mamba)
+[![codecov](https://codecov.io/gh/thewhowhatwhere/mamba/branch/master/graph/badge.svg)](https://codecov.io/gh/thewhowhatwhere/mamba)
 
 Mamba is a blogging platform built on the Flask framework. It is theme-able, customizable, and easy to understand. It is intended to be as user friendly as Wordpress. (we're not quite there yet)
 
