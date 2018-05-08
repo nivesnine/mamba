@@ -10,7 +10,6 @@ from flask_admin import helpers
 import flask_login as login
 from mamba import db
 from werkzeug.security import generate_password_hash
-from mamba.site.models import Themes
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -43,8 +42,7 @@ def login_view():
                 return redirect(url_for('site.index'))
             else:
                 abort(404)
-    theme = Themes.get_active()
-    return render_template(theme + '/auth/login.html', form=form)
+    return render_template('/auth/login.html', form=form)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -64,8 +62,7 @@ def registration_view():
             login.login_user(user)
 
             return redirect(url_for('auth.index'))
-    theme = Themes.get_active()
-    return render_template(theme + '/auth/register.html', form=form)
+    return render_template('/auth/register.html', form=form)
 
 
 @auth.route('/logout')

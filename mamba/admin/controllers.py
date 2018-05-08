@@ -28,8 +28,7 @@ from mamba.admin.forms import (
     EditRoleForm,
     EditUserForm,
     MenuForm,
-    SettingsForm,
-    ThemeOptionsForm,
+    SettingsForm
 )
 from mamba.auth.models import Role, User
 from mamba.helpers.decorators import check_admin, check_login, has_role
@@ -39,10 +38,7 @@ from mamba.site.models import (
     Page,
     Post,
     PostComment,
-    Settings,
-    ThemeAdminPage,
-    ThemeOption,
-    Themes,
+    Settings
 )
 
 # Create blog blueprint
@@ -386,59 +382,6 @@ def edit_profile():
         return redirect(url_for('site.index'))
 
     return render_template("admin/site/edit_profile.html", form=form)
-
-
-# Theme admin pages
-@admin.route('/theme', methods=['GET', 'POST'])
-@check_login
-@check_admin
-def select_theme():
-    themes = Themes.all()
-
-    if request.method == 'POST' and 'site' in request.form:
-
-        db.session.query(Themes).update({Themes.active: 0})
-        db.session.commit()
-
-        Themes.activate_theme(request.form['site'])
-        flash('theme updated')
-
-    return render_template("admin/theme/theme_selector.html", themes=themes)
-
-
-# Theme admin pages
-@admin.route('/theme-admin', methods=['GET'])
-def theme_pages():
-    roles_obj = login.current_user.get_roles()
-    roles = []
-    for role in roles_obj:
-        roles.append(role.name)
-
-    pages = ThemeAdminPage.get_allowed_pages(roles)
-
-    return render_template("admin/theme/theme_admin_pages.html", pages=pages)
-
-
-@admin.route('/theme-admin/<page_slug>', methods=['GET', 'POST'])
-def theme_admin(page_slug):
-    theme = Themes.get_active()
-
-    page = ThemeAdminPage.get_page(theme, page_slug)
-
-    role = page.get_required_role()
-    if not login.current_user.has_role(role):
-        abort(404)
-
-    forms = ThemeOptionsForm(request.form, obj=page)
-
-    if helpers.validate_form_on_submit(forms):
-        for form in forms.options.data:
-            ThemeOption.update_by_id(form['id'], form['value'])
-        flash('theme options updated')
-        return redirect(url_for('admin.theme_admin', page_slug=page_slug))
-
-    return render_template("admin/theme/theme_admin.html", page=page,
-                           forms=forms)
 
 
 # Edit Menu

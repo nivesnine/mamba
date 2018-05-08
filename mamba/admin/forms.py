@@ -116,16 +116,6 @@ class SettingsForm(form.Form):
     submit = fields.SubmitField('Submit')
 
 
-class ThemeOptionEntryForm(form.Form):
-    id = fields.HiddenField()
-    option = fields.StringField()
-    value = fields.StringField()
-
-
-class ThemeOptionsForm(form.Form):
-    options = fields.FieldList(fields.FormField(ThemeOptionEntryForm))
-
-
 class MenuForm(form.Form):
     menu = fields.StringField('Menu', widget=TextArea(), validators=[validators.required()])
     submit = fields.SubmitField('Submit')

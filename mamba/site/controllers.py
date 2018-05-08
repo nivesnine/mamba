@@ -3,7 +3,7 @@ from flask import (
     Blueprint, request, render_template,
     redirect, url_for, abort,
 )
-from mamba.site.models import Themes, PostComment, Post, Page
+from mamba.site.models import PostComment, Post, Page
 from mamba.site.forms import CommentForm
 from flask_admin import helpers
 import flask_login as login
@@ -16,8 +16,7 @@ site = Blueprint('site', __name__, url_prefix='')
 def index():
     home = Page.get_home_page()
     if home:
-        theme = Themes.get_active()
-        return render_template(theme + "/site/page.html", page=home)
+        return render_template("/site/page.html", page=home)
     return redirect(url_for('site.blog'))
 
 
@@ -25,8 +24,7 @@ def index():
 @site.route('/blog/<int:page>', methods=['GET'])
 def blog(page):
     posts = Post.get_blog(page)
-    theme = Themes.get_active()
-    return render_template(theme + "/site/blog.html", posts=posts)
+    return render_template("/site/blog.html", posts=posts)
 
 
 @site.route('/blog/<slug>', methods=['GET', 'POST'])
@@ -41,8 +39,7 @@ def single_post(slug):
     post = Post.get_by_slug(slug)
     if not post:
         abort(404)
-    theme = Themes.get_active()
-    return render_template(theme + "/site/single_post.html", post=post,
+    return render_template("/site/single_post.html", post=post,
                            form=form)
 
 
@@ -51,5 +48,4 @@ def site_page(page):
     page = Page.get_page(page)
     if not page:
         abort(404)
-    theme = Themes.get_active()
-    return render_template(theme + "/site/page.html", page=page)
+    return render_template("/site/page.html", page=page)

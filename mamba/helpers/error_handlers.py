@@ -1,6 +1,5 @@
 from flask import render_template
 
-from mamba.site.models import Themes
 from mamba import app
 
 
@@ -15,8 +14,7 @@ def bad_request_error(e):
 
 
 def render_error_template(e, status_code):
-    template_path = Themes.get_active()
     return render_template(
-        template_path + "/error/error_template.html",
+        "/error/error_template.html",
         status_code=status_code, error=e
     ), status_code

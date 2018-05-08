@@ -2,9 +2,6 @@
 
 <div class="ui container">
   <div class="ui large inverted secondary pointing menu">
-    <a class="toc item">
-      <i class="sidebar icon"></i>
-    </a>
       <div class="right item" style="padding: 0;">
            <a class="item inverted" href="{{ url_for('site.index') }}">View Site</a>
           <a class="item inverted" href="{{ url_for('auth.logout_view') }}">Logout</a>
@@ -25,12 +22,6 @@
        <a class="item" href="{{ url_for('admin.page_list') }}">Pages</a>
        <a class="item" href="{{ url_for('admin.comment_list') }}">Comments</a>
       {% endif %}
-      {% if current_user.is_admin() %}
-      <a class="item" href="{{ url_for('admin.select_theme') }}">Theme</a>
-      {% endif %}
-     {% if theme_admin_pages %}
-      <a class="item" href="{{ url_for('admin.theme_pages') }}">Theme Admin</a>
-     {% endif %}
       {% if current_user.is_admin() %}
       <a class="item" href="{{ url_for('admin.user_list') }}">Users</a>
       <a class="item" href="{{ url_for('admin.role_list') }}">Roles</a>

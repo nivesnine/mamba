@@ -66,17 +66,6 @@
       <div class="row">
 		    <p><i class='copyright icon'></i> {{ now.year }} {{ site_name }}</p>
       </div>
-        <div class="row">
-            {% if theme_option('Facebook URL') %}
-              <a class="item inverted" href="{{ theme_option('Facebook URL') }}"><i class="large icon facebook square"></i></a>
-            {% endif %}
-            {% if theme_option('G+ URL') %}
-              <a class="item inverted" href="{{ theme_option('G+ URL') }}"><i class="large icon google plus square"></i></a>
-            {% endif %}
-            {% if theme_option('LinkedIn URL') %}
-              <a class="item inverted" href="{{ theme_option('LinkedIn URL') }}"><i class="large icon linkedin square"></i></a>
-            {% endif %}
-        </div>
     </div>
   </div>
 {%- endmacro %}

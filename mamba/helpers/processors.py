@@ -1,6 +1,5 @@
 from datetime import datetime
-import flask_login as login
-from mamba.site.models import Menu, ThemeOption, PostComment, Settings, ThemeAdminPage
+from mamba.site.models import Menu, PostComment, Settings
 from mamba import app
 
 
@@ -19,27 +18,6 @@ def insert_pages():
 def insert_mobile_pages():
     menu = Menu.query.get(2).menu
     return {'mobile_menu_pages': menu}
-
-
-@app.context_processor
-def theme_admin_pages():
-    try:
-        roles_obj = login.current_user.get_roles()
-    except:
-        return {'theme_admin_pages': ''}
-    roles = []
-    for role in roles_obj:
-        roles.append(role.name)
-    return {'theme_admin_pages': ThemeAdminPage.get_allowed_pages(roles)}
-
-
-
-@app.context_processor
-def get_theme_options():
-    def get_theme_option(theme_option):
-        return ThemeOption.get_option(theme_option)
-
-    return {'theme_option': get_theme_option}
 
 
 @app.context_processor

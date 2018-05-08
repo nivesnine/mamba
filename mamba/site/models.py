@@ -3,7 +3,6 @@ from sqlalchemy import and_, asc, desc
 
 from mamba import db
 from mamba.auth.models import User
-from mamba.helpers.utils import slugify
 
 
 class Page(db.Model):
@@ -201,101 +200,6 @@ class Settings(db.Model):
     @classmethod
     def get_settings(cls):
         return cls.query.get(1)
-
-
-class Themes(db.Model):
-    __tablename__ = 'themes'
-
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(100))
-    slug = db.Column(db.String(100))
-    author = db.Column(db.String(100))
-    active = db.Column(db.Boolean(), default=0)
-
-    @classmethod
-    def activate_theme(cls, id_):
-        theme = Themes.query.get(id_)
-        theme.active = 1
-        db.session.add(theme)
-        db.session.commit()
-
-    @classmethod
-    def get_active(cls):
-        return str(db.session.query(Themes.slug).filter(Themes.active == 1).first()[0])
-
-    @classmethod
-    def all(cls):
-        return db.session.query(cls).all()
-
-
-class ThemeAdminPage(db.Model):
-    __tablename__ = 'theme_admin_page'
-
-    id = db.Column(db.Integer(), primary_key=True)
-    theme_slug = db.Column(db.String(100))
-    page_title = db.Column(db.String(100))
-    page_slug = db.Column(db.String(100))
-    required_role = db.Column(db.String(100))
-    options = db.relationship('ThemeOption', backref=db.backref('theme_admin_page', lazy='select'), lazy='dynamic')
-
-    def get_required_role(self):
-        return self.required_role
-
-    @classmethod
-    def register_admin_page(cls, theme_slug, page_title, role):
-        page = ThemeAdminPage()
-        page.theme_slug = theme_slug
-        page.page_title = page_title
-        page.page_slug = slugify(page_title)
-        page.required_role = role
-        db.session.add(page)
-        db.session.flush()
-        page_id = page.id
-        db.session.commit()
-        return page_id
-
-    @classmethod
-    def get_page(cls, theme_slug, page_slug):
-        return cls.query.filter(and_(cls.theme_slug == theme_slug, cls.page_slug == page_slug)).first()
-
-    @classmethod
-    def get_allowed_pages(cls, roles):
-        active_theme = Themes.get_active()
-        return cls.query.filter(and_(cls.required_role.in_(roles), cls.theme_slug == active_theme)).all()
-
-    @classmethod
-    def all(cls):
-        return db.session.query(cls).all()
-
-
-class ThemeOption(db.Model):
-    __tablename__ = 'theme_option'
-
-    id = db.Column(db.Integer(), primary_key=True)
-    theme_admin_id = db.Column(db.Integer(), db.ForeignKey('theme_admin_page.id'))
-    option = db.Column(db.String(100))
-    value = db.Column(db.String(100))
-    __table_args__ = (db.UniqueConstraint('theme_admin_id', 'option', name='_theme_option_uc'),)
-
-    # will need error handling
-    @classmethod
-    def register_theme_options(cls, theme_admin_id, theme_option):
-        option = ThemeOption()
-        option.theme_admin_id = theme_admin_id
-        option.option = theme_option
-        db.session.add(option)
-        db.session.commit()
-
-    @classmethod
-    def update_by_id(cls, option_id, option_value):
-        option = ThemeOption.query.get(option_id)
-        option.value = option_value
-        db.session.add(option)
-        db.session.commit()
-
-    @classmethod
-    def get_option(cls, option):
-        return db.session.query(cls.value).filter(and_(cls.option == option)).first()[0]
 
 
 class Menu(db.Model):
