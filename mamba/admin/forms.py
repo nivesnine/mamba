@@ -1,9 +1,8 @@
 from wtforms import form, fields, validators
 from wtforms.widgets import TextArea
-from mamba.auth.models import Role
-from wtforms_alchemy import QuerySelectMultipleField
-from mamba.site.models import Page
-
+from mamba.auth.models import Role, User
+from wtforms_alchemy import QuerySelectMultipleField, QuerySelectField
+from mamba.site.models import Page, Post
 
 # Blog post creation form
 class CreatePostForm(form.Form):
@@ -55,6 +54,8 @@ class CreateUserForm(form.Form):
 
 class EditUserForm(CreateUserForm):
     id = fields.HiddenField()
+    roles = QuerySelectMultipleField('User Roles', query_factory=roles,
+                                     allow_blank=False)
 
 
 class CreateRoleForm(form.Form):
@@ -64,18 +65,6 @@ class CreateRoleForm(form.Form):
 
 
 class EditRoleForm(CreateRoleForm):
-    id = fields.HiddenField()
-
-
-class CreateCommentForm(form.Form):
-    comment = fields.StringField('comment', widget=TextArea(), validators=[validators.required()])
-    published = fields.BooleanField()
-    post = fields.StringField()
-    writen_by = fields.StringField()
-    submit = fields.SubmitField('Submit')
-
-
-class EditCommentForm(CreateCommentForm):
     id = fields.HiddenField()
 
 

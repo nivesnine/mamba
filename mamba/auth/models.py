@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     full_name = column_property(first_name + " " + last_name)
-    display_name = db.Column(db.String(255), default='email')
+    display_name = db.Column(db.String(255), default='alias')
     alias = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     email = db.Column(db.String(120), unique=True)
@@ -70,6 +70,9 @@ class User(UserMixin, db.Model):
     comments = db.relationship('PostComment', backref='users', lazy='joined')
     registered_ip = db.Column(db.String(255))
     last_login_ip = db.Column(db.String(255))
+
+    def __str__(self):
+        return self.get_display_name()
 
     # Flask-Login integration
     def is_authenticated(self):

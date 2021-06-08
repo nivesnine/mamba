@@ -9,7 +9,7 @@
     <table class="ui striped table">
         <thead>
             <tr>
-                <th>role id
+                <th>Role ID
                     <a href="{{url_for('admin.role_list', page=1)}}?sort=id&d=asc">
                       <i class='caret up icon'></i>
                     </a>
@@ -25,9 +25,9 @@
                       <i class='caret down icon'></i>
                     </a>
                 </th>
-                <th>description</th>
-                <th>edit</th>
-                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
+                <th>Description</th>
+                <th>Edit</th>
+                {% if current_user.is_admin() %}<th>Delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>

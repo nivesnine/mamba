@@ -16,12 +16,10 @@ from werkzeug.security import generate_password_hash
 
 from mamba import db
 from mamba.admin.forms import (
-    CreateCommentForm,
     CreatePageForm,
     CreatePostForm,
     CreateRoleForm,
     CreateUserForm,
-    EditCommentForm,
     EditPageForm,
     EditPostForm,
     EditProfileForm,
@@ -298,41 +296,6 @@ def comment_list(page):
     comments = PostComment.get_sortable_list(order, direction, page)
 
     return render_template("admin/comments/list.html", comments=comments)
-
-
-@admin.route('/comment/create', methods=['GET', 'POST'])
-@check_login
-@has_role('writer')
-def create_comment():
-    form = CreateCommentForm(request.form)
-    if helpers.validate_form_on_submit(form):
-        comment = PostComment()
-        form.populate_obj(comment)
-        comment.viewed = 1
-        db.session.add(comment)
-        db.session.commit()
-        return redirect(url_for('admin.comment_list'))
-
-    return render_template("admin/comments/comment.html", form=form)
-
-
-@admin.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
-@check_login
-@has_role('editor')
-def edit_comment(comment_id):
-    comment = PostComment.query.get(comment_id)
-    form = EditCommentForm(request.form, obj=comment)
-    if request.method == 'GET':
-        comment.viewed = 1
-        db.session.add(comment)
-        db.session.commit()
-    if helpers.validate_form_on_submit(form):
-        form.populate_obj(comment)
-        db.session.add(comment)
-        db.session.commit()
-        return redirect(url_for('admin.comment_list'))
-
-    return render_template("admin/comments/comment.html", form=form)
 
 
 @admin.route('/comment/delete/<int:comment_id>', methods=['GET'])

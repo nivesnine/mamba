@@ -9,7 +9,7 @@
     <table class="ui striped table">
         <thead>
             <tr>
-                <th>user id
+                <th>User ID
                   <a href="{{url_for('admin.user_list', page=1)}}?sort=id&d=asc">
                     <i class='caret up icon'></i>
                   </a>
@@ -17,7 +17,7 @@
                     <i class='caret down icon'></i>
                   </a>
                 </th>
-                <th>email
+                <th>Email
                   <a href="{{url_for('admin.user_list', page=1)}}?sort=email&d=asc">
                     <i class='caret up icon'></i>
                   </a>
@@ -25,7 +25,7 @@
                     <i class='caret down icon'></i>
                   </a>
                 </th>
-                <th>name
+                <th>Name
                   <a href="{{url_for('admin.user_list', page=1)}}?sort=first_name&d=asc">
                     <i class='caret up icon'></i>
                   </a>
@@ -33,7 +33,7 @@
                     <i class='caret down icon'></i>
                   </a>
                 </th>
-                <th>alias
+                <th>Alias
                   <a href="{{url_for('admin.user_list', page=1)}}?sort=alias&d=asc">
                     <i class='caret up icon'></i>
                   </a>
@@ -41,8 +41,8 @@
                     <i class='caret down icon'></i>
                   </a>
                 </th>
-                <th>display name</th>
-                <th>is active
+                <th>Display Name</th>
+                <th>Active
                   <a href="{{url_for('admin.user_list', page=1)}}?sort=active&d=asc">
                     <i class='caret up icon'></i>
                   </a>
@@ -50,8 +50,8 @@
                     <i class='caret down icon'></i>
                   </a>
                 </th>
-                <th>edit</th>
-                {% if current_user.is_admin() %}<th>delete</th>{% endif %}
+                <th>Edit</th>
+                {% if current_user.is_admin() %}<th>Delete</th>{% endif %}
             </tr>
         </thead>
         <tbody>

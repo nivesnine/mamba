@@ -17,6 +17,9 @@ class Page(db.Model):
     history = db.Column(db.Text())
     published = db.Column(db.Boolean(), default=0)
 
+    def __repr__(self):
+        return self.title
+
     def get_id(self):
         return self.id
 
@@ -65,6 +68,9 @@ class Post(db.Model):
                               onupdate=db.func.current_timestamp())
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     comments = db.relationship('PostComment', backref='posts', lazy='joined')
+
+    def __str__(self):
+        return self.title
 
     def get_id(self):
         return self.id
@@ -123,8 +129,8 @@ class PostComment(db.Model):
     writen_by = db.Column(db.Integer(), db.ForeignKey('users.id'))
     post = db.Column(db.Integer(), db.ForeignKey('posts.id'))
     date_created = db.Column(db.DateTime,  default=db.func.current_timestamp())
-    published = db.Column(db.Boolean(), default=0)
-    viewed = db.Column(db.Boolean(), default=0)
+    published = db.Column(db.Boolean(), default=1)
+    viewed = db.Column(db.Boolean(), default=1)
 
     def get_id(self):
         return self.id
