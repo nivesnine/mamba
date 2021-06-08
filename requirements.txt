@@ -27,7 +27,6 @@ iniconfig==1.1.1
 intervals==0.9.1
 itsdangerous==2.0.1
 Jinja2==3.0.1
-mamba==0.0.1a0
 MarkupSafe==2.0.1
 packaging==20.9
 passlib==1.7.4
