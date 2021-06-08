@@ -3,7 +3,18 @@
 [![Build Status](https://travis-ci.org/nivesnine/mamba.svg?branch=master)](https://travis-ci.org/nivesnine/mamba)
 [![codecov](https://codecov.io/gh/nivesnine/mamba/branch/master/graph/badge.svg)](https://codecov.io/gh/nivesnine/mamba)
 
-Mamba is a blogging platform built on the Flask framework. It is theme-able, customizable, and easy to understand. It is intended to be as user friendly as Wordpress. (we're not quite there yet)
+Mamba is a simple blogging platform built on the Flask framework.
+
+## Known Issues
+
+1) user edit form in admin area does not show a users current roles
+2) boolean fields do not properly show checked/unchecked in forms
+3) tests need to be rewritten / updated
+
+## TODO
+
+1) create an easier way to edit and manage the site menus
+2) fix known issues
 
 ## Getting Started
 
@@ -11,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 ```
- 1. Python 3.x
+ 1. Python 3.9
  2. virtualenv
  3. sqlite3
  4. git 
@@ -22,7 +33,7 @@ These instructions will get you a copy of the project up and running on your loc
 ```
 git clone <repo>
 cd mamba
-virtualenv -p '/path/to/python3.x' env
+virtualenv -p '/path/to/python3.9' env
 source env/bin/activate
 pip install -r requirements.txt
 Edit config.py (replace 'secret')
@@ -48,9 +59,9 @@ Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of 
 
 ## Authors
 
-* **Dustin Farley** - *Initial work* - [TheWhoWhatWhere](https://github.com/thewhowhatwhere)
+* **Dustin Farley** - *Initial work* - [nivesnine](https://github.com/nivesnine)
 
-See also the list of [contributors](https://github.com/thewhowhatwhere/mamba/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/nivesnine/mamba/contributors) who participated in this project.
 
 ## License
 This project is licensed under the GPLv2 License - see the [LICENSE.md](LICENSE.md) file for details
