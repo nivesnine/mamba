@@ -136,43 +136,6 @@ def test_admin_comments_list(client):
     assert res.status_code == 200
 
 
-def test_admin_comment_create(live_server, client):
-    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
-    client.post(url_for('auth.login_view'), data=credentials)
-    assert login.current_user.email == 'admin@example.com'
-    post = Post.get_by_id(1)
-    comment = {'written_by' : '1', 'post' : post.get_id(), 'comment' : 'testing comment','published' : '1'}
-    client.post(url_for('admin.create_comment'), data=comment)
-    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
-    assert res.code == 200
-    assert b'testing comment' in res.read()
-
-
-def test_admin_comment_edit(live_server, client):
-    credentials = {'email' : 'admin@example.com', 'password' : 'admin'}
-    client.post(url_for('auth.login_view'), data=credentials)
-    assert login.current_user.email == 'admin@example.com'
-    post = Post.get_by_id(1)
-    cid = post.comments[-1].get_id()
-    comment = {'id' : cid, 'written_by' : '1', 'post' : post.get_id(), 'comment' : 'updated testing comment','published' : '1'}
-    client.post(url_for('admin.edit_comment', comment_id=cid), data=comment)
-    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
-    assert res.code == 200
-    assert b'updated testing comment' in res.read()
-
-
-def test_admin_comment_delete(live_server, client):
-    credentials = {'email': 'admin@example.com', 'password': 'admin'}
-    client.post(url_for('auth.login_view'), data=credentials)
-    assert login.current_user.email == 'admin@example.com'
-    post = Post.get_by_id(1)
-    cid = post.comments[-1].get_id()
-    client.get(url_for('admin.delete_comment', comment_id=cid))
-    res = urlopen(url_for('site.single_post', slug=post.get_slug(), _external=True))
-    assert res.code == 200
-    assert b'updated testing comment' not in res.read()
-
-
 ##################
 ### ADMIN Pages ##
 ##################
